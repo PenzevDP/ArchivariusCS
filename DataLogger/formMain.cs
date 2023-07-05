@@ -17,11 +17,13 @@ namespace DataLogger
         public formMain()
         {
             InitializeComponent();
+            NLogger.logger.Trace($"Service. formMain has initialized");
         }        
 
         private void frmMain_Load(object sender, EventArgs e)
         {
             hide();
+            NLogger.logger.Trace($"Service. formMain hide method has done");
             UpdateConfigState(Config.State);
             Config.StateChange += ConfigStateChange;
             Config.Statistics += ConfigStatistics;
@@ -30,6 +32,7 @@ namespace DataLogger
         private void ConfigStateChange(object sender, ConfigStateEventArgs e)
         {
             UpdateConfigState(e.State);
+            NLogger.logger.Trace("Service. formMain config state has changet to: {state}" ,  e.State);
         }
 
         private void UpdateRowStatistics(DataRow row, ConfigStatisticsEventArgs e)
@@ -41,6 +44,7 @@ namespace DataLogger
             row["Passed"] = e.TransactionStatistics.Passed;
             row["Failed"] = e.TransactionStatistics.Failed;
             row["% Passed"] = e.TransactionStatistics.Percent;
+            NLogger.logger.Trace("Service. formMain updated statistic: OPC - {OPC}, ODBC - {ODBC}, Total - {total}, Passed - {passed}, Failed - {failed}", e.OPCUAConnState, e.ODBCConnState, e.TransactionStatistics.Total, e.TransactionStatistics.Passed, e.TransactionStatistics.Failed);
         }
         
         private void NewStatistics(Form form, DataTable dt, ConfigStatisticsEventArgs e)
@@ -76,7 +80,7 @@ namespace DataLogger
         {
             trayNotifyIcon.Text = Application.ProductName + " - " + state.ToString();            
 
-            SafeThread.SetTextStripItem(statusbar, statusConfigLabel, "Configuration state: " + state.ToString());
+            SafeThread.SetTextStripItem(statusbar, statusConfigLabel, "Config state is: " + state.ToString());
             switch (state)
             {
                 case ConfigState.Starting:
@@ -136,6 +140,8 @@ namespace DataLogger
         //----OPCUA---
         private void defineOPCUA()
         {
+            NLogger.logger.Trace("Service. formDefineOPCUA has called");
+
             formDefineOPCUA form = new formDefineOPCUA();
             form.ShowDialog(this);
         }
@@ -143,6 +149,7 @@ namespace DataLogger
 
         private void defineODBC()
         {
+            NLogger.logger.Trace("Service. formDefineODBC has called");
             formDefineODBC form = new formDefineODBC();
             form.ShowDialog(this);            
             checkStartPossibility();
@@ -150,6 +157,7 @@ namespace DataLogger
 
         private void defineTransaction()
         {
+            NLogger.logger.Trace("Service. formDefineTran has called");
             formDefineTran form = new formDefineTran();
             form.ShowDialog(this);
             checkStartPossibility();
@@ -157,6 +165,7 @@ namespace DataLogger
 
         private void about()
         {
+            NLogger.logger.Trace("Service. formAbout has called");
             formAbout form = new formAbout();
             form.ShowDialog(this);
            
@@ -183,23 +192,27 @@ namespace DataLogger
 
         private void start(bool saving)
         {
+            NLogger.logger.Trace("Service. formMain. Action - Start");
             Config.Start();
             if (saving) Config.Save();
         }
 
         private void stop(bool saving)
         {
+            NLogger.logger.Trace("Service. formMain. Action - Stop");
             Config.Stop();
             if (saving) Config.Save();
         }
 
         private void exit()
         {
+            NLogger.logger.Trace("Service. formMain try to EXIT");
             DialogResult result = MessageBox.Show("Application will be closed. You sure?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result == DialogResult.Yes)
             {
                 closing = true;
                 Close();
+                NLogger.logger.Trace("Service. formMain has Closed");
             }
         }
 
@@ -209,6 +222,7 @@ namespace DataLogger
             this.Hide();
             hideTrayMenuItem.Visible = false;
             restoreTrayMenuItem.Visible = true;
+            NLogger.logger.Trace("Service. formMain has moved to TRAY");
         }
 
         private void restore()
@@ -217,76 +231,91 @@ namespace DataLogger
             this.WindowState = FormWindowState.Normal;
             hideTrayMenuItem.Visible = true;
             restoreTrayMenuItem.Visible = false;
+            NLogger.logger.Trace("Service. formMain has restored from TRAY");
         }
 
 
         private void odbcConnectorMenuItem_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain ODBC click");
             defineODBC();
         }
 
         private void odbcConnectorButton_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain ODBC button click");
             defineODBC();
         }
 
         private void transactionMenuItem_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain transaction menu click");
             defineTransaction();
         }
 
         private void transactionButton_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain transaction button click");
             defineTransaction();
         }
 
         private void startButton_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain start button click");
             start(true);
         }
 
         private void startMenuItem_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain startmenu click");
             start(true);
         }
 
         private void startTrayMenuItem_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain tray start button click");
             start(true);
         }
 
         private void stopButton_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain stop button click");
             stop(true);
         }
 
         private void stopMenuItem_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain stoptmenu click");
             stop(true);
         }
 
         private void stopTrayMenuItem_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain tray stop button click");
             stop(true);
         }
 
         private void exitMenuItem_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain exit menu click");
             exit();
         }
 
         private void exitTrayMenuItem_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain tray exit button click");
             exit();
         }
 
         private void aboutMenuItem_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain about menu click");
             about();
         }
 
         private void aboutButton_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain about button click");
             about();
         }
 
@@ -295,6 +324,7 @@ namespace DataLogger
             if (this.WindowState == FormWindowState.Minimized)
             {
                 if (this.Visible) hide();
+                NLogger.logger.Trace("Service. formMain Minimised = hiden");
             }
         }
 
@@ -305,10 +335,13 @@ namespace DataLogger
                 if (this.Visible)
                 {
                     hide();
+                    NLogger.logger.Trace("Service. formMain tray icon click = hide");
+                    
                 }
                 else
                 {
                     restore();
+                    NLogger.logger.Trace("Service. formMain tray icon click = maximize");
                 }
             }
         }
@@ -319,6 +352,7 @@ namespace DataLogger
             {
                 if (this.Visible) hide();
                 e.Cancel = true;
+                NLogger.logger.Trace("Service. formMain close = hide");
             }
             else
             {
@@ -332,21 +366,26 @@ namespace DataLogger
         private void restoreTrayMenuItem_Click(object sender, EventArgs e)
         {
             restore();
+            NLogger.logger.Trace("Service. formMain restore tray button click");
         }
 
         private void hideTraMenuItem_Click(object sender, EventArgs e)
         {
             hide();
+            NLogger.logger.Trace("Service. formMain hide tray button click");
         }
 
         //---OPCUA----
         private void opcuaConnectorButton_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain define OPC button click");
             defineOPCUA();
+            
         }
 
         private void opcuaConnectorMenuItem_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formMain define OPC menu click");
             defineOPCUA();
         }
         

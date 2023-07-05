@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using Opc.Ua;
 using Siemens.UAClientHelper;
 
+
+
 namespace Siemens.OpcUA.Client
 {
     public partial class BrowseControl : UserControl 

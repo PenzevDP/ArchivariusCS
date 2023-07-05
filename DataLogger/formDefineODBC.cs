@@ -13,7 +13,9 @@ namespace DataLogger
         private List<OdbcSource> sources;
 
         public formDefineODBC()
+
         {
+            NLogger.logger.Trace("Service. formDefineODBC has initialized");
             InitializeComponent();
         }
 
@@ -93,6 +95,7 @@ namespace DataLogger
         {
             try
             {
+                NLogger.logger.Trace("Service. formDefineODBC  ODBC button click");
                 Process process = new Process();
                 process.StartInfo.FileName = "odbcad32.exe";
                 process.Start();
@@ -103,6 +106,7 @@ namespace DataLogger
             }
 
             this.Close();
+            NLogger.logger.Trace("Service. formDefineODBC closed");
         }
 
         private void comboBoxDSN_SelectedIndexChanged(object sender, EventArgs e)

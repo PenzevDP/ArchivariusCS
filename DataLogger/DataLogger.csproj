@@ -120,8 +120,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="BrowseControl.cs">
-      <SubType>UserControl</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="BrowseControl.designer.cs">
       <DependentUpon>BrowseControl.cs</DependentUpon>

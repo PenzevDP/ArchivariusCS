@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Settings;
 using Tools;
+using NLog;
 
 //---OPCUA---
 using Siemens.UAClientHelper;
@@ -26,6 +27,14 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace DataManager
 {
+    
+    public class NLogger
+    {
+        public static readonly Logger logger = LogManager.GetCurrentClassLogger();
+    }
+     
+        
+
 
     public enum ConfigState
     {
@@ -2453,6 +2462,6 @@ namespace DataManager
         }
 
     }
-    //---OPCUA---
+//---OPCUA---
 }
 

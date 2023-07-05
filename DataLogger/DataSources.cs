@@ -3,6 +3,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Data.Odbc;
+using DataManager;
 
 
 namespace SQLDataSources
@@ -29,6 +30,7 @@ namespace SQLDataSources
         public static extern short SQLSetEnvAttr(IntPtr envHandle, ushort attribute, IntPtr val, int stringLength);
         public static List<OdbcSource> ListODBCsources()
         {
+            NLogger.logger.Trace($"Service. ODBC Source list has called");
             int envHandle = 0;
             const int SQL_FETCH_NEXT = 1;
             const int SQL_FETCH_FIRST = 2;

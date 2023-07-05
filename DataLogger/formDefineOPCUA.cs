@@ -22,6 +22,7 @@ namespace DataLogger
     {
         public formDefineOPCUA()
         {
+            NLogger.logger.Trace("Service. formDefineOPCUA has initialized");
             InitializeComponent();
 
         }
@@ -106,7 +107,9 @@ namespace DataLogger
 
 
         private void btnGetEndpoints_Click(object sender, EventArgs e)
+
         {
+            NLogger.logger.Trace("Service. formDefineOPCUA button GET ENDPOINTS click");
             using (new WaitCursor())
             {
                 try
@@ -189,6 +192,7 @@ namespace DataLogger
                                 }
                                 catch (Exception ex)
                                 {
+                                    NLogger.logger.Error("Define OpcUa. Get Endpoint Description error:{error}" , ex.Message);
                                     Config.Log.WriteEntry("Define OpcUa. Get Endpoint Description error: " + ex.Message);
 
                                 }
@@ -197,6 +201,7 @@ namespace DataLogger
                         }
                         catch (Exception ex)
                         {
+                            NLogger.logger.Error("Define OpcUa. Find servers error:{error}", ex.Message);
                             Config.Log.WriteEntry("Define OpcUa. Find servers error: " + ex.Message);
 
                         }
@@ -210,6 +215,7 @@ namespace DataLogger
                 }
                 catch (Exception ex)
                 {
+                    NLogger.logger.Error("Define OpcUa. Get endpoint error:{error}", ex.Message);
                     Config.Log.WriteEntry("Define OpcUa. Get endpoint error: " + ex.Message);
 
 
@@ -285,6 +291,7 @@ namespace DataLogger
             }
             catch (Exception ex)
             {
+                NLogger.logger.Error("Define OpcUa. Setting Up connection error:{error}", ex.Message);
                 Config.Log.WriteEntry("Define OpcUa. Setting Up connection error: " + ex.Message);
 
             }
@@ -304,6 +311,7 @@ namespace DataLogger
             }
             catch (Exception ex)
             {
+                NLogger.logger.Error("Define OpcUa. Breaking Up connection error:{error}", ex.Message);
                 Config.Log.WriteEntry("Define OpcUa. Breaking Up connection error: " + ex.Message);
 
             }
@@ -383,6 +391,7 @@ namespace DataLogger
             }
             catch (Exception ex)
             {
+                NLogger.logger.Error("Define OpcUa. Closing connection on exit error:{error}", ex.Message);
                 Config.Log.WriteEntry("Define OpcUa. Closing connection on exit error: " + ex.Message);
 
             }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Windows.Forms;
+using DataManager;
 
 namespace DataLogger
 {
@@ -31,7 +32,9 @@ namespace DataLogger
         }
         
         public formAbout()
+            
         {
+            NLogger.logger.Trace("Service. formAbout has initialized");
             InitializeComponent();
         }
 
@@ -44,6 +47,7 @@ namespace DataLogger
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            NLogger.logger.Trace("Service. formAbout has Closed");
             Close();
          
         }
