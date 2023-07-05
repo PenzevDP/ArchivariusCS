@@ -44,7 +44,7 @@
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.Location = new System.Drawing.Point(135, 121);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 23);
+            this.btnOK.Size = new System.Drawing.Size(93, 23);
             this.btnOK.TabIndex = 5;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
