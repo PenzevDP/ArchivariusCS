@@ -89,14 +89,12 @@ namespace DataManager
     {
         private string tranName;
         private ConnectionState odbcState;
-        // private OPCState opcState;
         private OPCUAState opcuaState;
         private Statistics tranStat;
 
         public ConfigStatisticsEventArgs(Transaction tran)
         {
             tranName = tran.tranName;
-            //opcState = tran.opcConn.State;
             opcuaState = tran.opcuaConn.State;
             odbcState = tran.odbcConn.State;
             tranStat = new Statistics(tran.stat);
@@ -116,14 +114,7 @@ namespace DataManager
             }
         }
 
-        /*public OPCState OPCConnState
-        {
-            get
-            {
-                return opcState;
-            }
-        }
-        */
+      
         public OPCUAState OPCUAConnState
         {
             get
@@ -304,24 +295,7 @@ namespace DataManager
             }
         }
 
-        /*private static void OPCStateChanged(object sender, OPCStateEventArgs e)
-        {
-            if (state == ConfigState.Started && e.State != OPCState.Running && !reconnect)
-            {
-                reconnect = true;
-                StopTransact();
-                if (!stopping)
-                {
-                    Thread.Sleep(1000);
-                    if (!stopping)
-                    {
-                        CreateTransact();
-                        StartTransact();
-                    }
-                }
-                reconnect = false;
-            }
-        }*/
+        
 
         //-------OPCUA--------
         private static void OPCUAStateChanged(object sender, OPCUAStateEventArgs e)
@@ -408,8 +382,7 @@ namespace DataManager
                 Transaction tran = new Transaction(Log);
 
                 tran.tranName = row["Transaction Name"].ToString();
-                // tran.S7ConnName = row["Connection Name"].ToString();
-                // tran.S7DbNumber = row["DB #"] is int ? (int)row["DB #"] : 0;
+                
 
                 //--------OPCUA------
                 tran.uaNSNumber = row["ns#"] is int ? (int)row["ns#"] : 0;
@@ -421,19 +394,13 @@ namespace DataManager
 
                 tran.odbcConn.GenerateCommand(tableName, fTranDT, fCtrlDT, fParID, fParVal);
                 tran.Statistics += TransactStatistics;
-                //tran.OPConnStateChange += OPCStateChanged;
+               
 
                 //-----OPCUA---------
                 tran.OPCUAconnStateChange += OPCUAStateChanged;
                 //-----------------
 
                 tran.ConnectToODBC();
-
-                //-----OPCUA---------
-                ///Отключение команды подключения к OPCDA при создании транзакции
-                ///
-                ///
-                //tran.ConnectToOPC();
 
                 //-----OPCUA---------
                 tran.ConnectToOPCUA();
@@ -480,13 +447,6 @@ namespace DataManager
 
                 //-------OPCUA-----------
                 tran.ConnectToOPCUA();
-                //-----------------------
-
-
-                ///Отключение команды подключения к OPCDA при запуске транзакции
-                ///
-                ///
-                //tran.ConnectToOPC();
             }
         }
         private static void StopTransact()
@@ -752,6 +712,7 @@ namespace DataManager
             if (parameters.Count > 0)
             {
                 cmd = new OdbcCommand(sqlIns.ToString() + sqlVal.ToString(), conn);
+                NLogger.logger.Trace(cmd.CommandText);
                 foreach (OdbcParameter par in parameters) cmd.Parameters.Add(par);
                 return true;
             }
@@ -767,7 +728,7 @@ namespace DataManager
             if (!rec.valid)
             {
                 string message = "Record was dropped. ";
-
+                NLogger.logger.Trace($"Record was dropped. ");
                 if (rec.dtValid)
                 {
                     message += "Timestamp " + dt + ". ";
@@ -775,6 +736,7 @@ namespace DataManager
                 else
                 {
                     message += "Timestamp invalid. ";
+                    NLogger.logger.Trace($"Timestamp invalid. ");
                 }
                 if (rec.idValid)
                 {
@@ -783,6 +745,7 @@ namespace DataManager
                 else
                 {
                     message += "ID invalid. ";
+                    NLogger.logger.Trace($"ID invalid. ");
                 }
                 if (rec.valValid)
                 {
@@ -791,6 +754,7 @@ namespace DataManager
                 else
                 {
                     message += "Value invalid";
+                    NLogger.logger.Trace($"Value invalid");
                 }
 
                 log.WriteEntry(message);
@@ -837,6 +801,7 @@ namespace DataManager
                 if (count <= 0)
                 {
                     isValid = true;
+                    NLogger.logger.Trace(isValid.ToString);
                     return true;
                 }
                 //--------------------
@@ -866,6 +831,7 @@ namespace DataManager
                     transaction = conn.BeginTransaction();
                     cmd.Transaction = transaction;
                     da.InsertCommand = cmd;
+                    NLogger.logger.Trace(da.InsertCommand.CommandText);
                 }
                 catch (Exception e)
                 {
@@ -881,10 +847,11 @@ namespace DataManager
                 for (int i = 0; i < count; i++)
                 {
                     rec = tran.records[i];
+                    NLogger.logger.Trace(rec.valua.ToString());
                     if (rec.valid)
                     {
                         newRow = newRecords.NewRow();
-
+                        
                         foreach (OdbcParameter par in cmd.Parameters)
                         {
                             switch (par.ParameterName)
@@ -895,7 +862,7 @@ namespace DataManager
                                 case "@dt":
 
                                     objVal = rec.dtua;
-                                    if (objVal is DateTime)
+                                    if (objVal is Decimal)
                                     {
                                         newRow[par.SourceColumn] = (DateTime)objVal;
                                         break;
@@ -941,8 +908,10 @@ namespace DataManager
 
                 if (newRecords.Rows.Count > 0)
                 {
+                   // NLogger.logger.Trace(newRecords.Rows.Count);
                     try
                     {
+                        NLogger.logger.Trace(newRecords.ToString()) ;
                         da.Update(newRecords);
                     }
                     catch (Exception e)
@@ -1259,9 +1228,7 @@ namespace DataManager
                 }
                 try
                 {
-
-                    //clientAPI.Connect((EndpointDescription)endpointListView.FocusedItem.Tag, btnUserPwd.Checked, userTextBox.Text, pwTextBox.Text);
-                    opcuaConn.Connect(Config.Sets.Primary_OPCUA_EndpointURL, Config.Sets.Primary_OPCUA_EndpointSecurityPolicyUri, (MessageSecurityMode)Config.Sets.Primary_OPCUA_EndpointSecurityMode, Config.Sets.Primary_OPCUA_LoginMode, Config.Sets.Primary_OPCUA_User, Config.Sets.Primary_OPCUA_Pass, Config.Sets.UpdateRate, Config.Sets.KeepAliveInterval);
+                   opcuaConn.Connect(Config.Sets.Primary_OPCUA_EndpointURL, Config.Sets.Primary_OPCUA_EndpointSecurityPolicyUri, (MessageSecurityMode)Config.Sets.Primary_OPCUA_EndpointSecurityMode, Config.Sets.Primary_OPCUA_LoginMode, Config.Sets.Primary_OPCUA_User, Config.Sets.Primary_OPCUA_Pass, Config.Sets.UpdateRate, Config.Sets.KeepAliveInterval);
 
                 }
                 catch (Exception ex)
@@ -1344,12 +1311,11 @@ namespace DataManager
                 timercheckCount.Start();
 
                 opcuaConn.IsSubscribed = true;
-                //bgwTransact.RunWorkerAsync();
+              
             }
             else
             {
-                //if (opcuaConn.State != OPCUAState.Disconnected || opcuaConn.State != OPCUAState.Unknown)
-                if (opcuaConn.State == OPCUAState.Running)
+               if (opcuaConn.State == OPCUAState.Running)
                 {
                     try
                     {
@@ -1763,8 +1729,7 @@ namespace DataManager
                         subscriptionObj = serverObj.Subscribe(updateRate);
                         serverObj.Session.KeepAliveInterval = KeepAliveInterval;
 
-                        //serverObj.Session.SessionClosing += OPCUAShutDown;
-                        //subscriptionObj.StateChanged += OPCUASubscriptionStateChanged;
+                        
                         log.WriteEntry(serverName + " Connection established");
                     }
                     catch (Exception e)
@@ -2242,6 +2207,7 @@ namespace DataManager
                         records[i].dtValid = ReadDateTimeValue((NodeID + $"[{i}].DateTime"), out records[i].dtua);
                         records[i].idValid = ReadDIntValue((NodeID + $"[{i}].ID"), out records[i].idua);
                         records[i].valValid = ReadRealValue((NodeID + $"[{i}].Value"), out records[i].valua);
+                        NLogger.logger.Trace(records[i].valua);
                         records[i].valid = (records[i].dtValid && records[i].idValid && records[i].valValid);
                     }
 
@@ -2256,6 +2222,7 @@ namespace DataManager
             }
             else
             {
+                NLogger.logger.Trace($"Can't Read Array. Server isn't running:");
                 log.WriteEntry(serverName + "Can't Read Array. Server isn't running:");
 
             }
@@ -2464,4 +2431,7 @@ namespace DataManager
     }
 //---OPCUA---
 }
+
+
+
 

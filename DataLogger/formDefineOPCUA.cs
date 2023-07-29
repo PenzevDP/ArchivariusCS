@@ -14,6 +14,8 @@ using Opc.Ua;
 using DataManager;
 using Opc.Ua.Client;
 using System.Security.Cryptography.X509Certificates;
+using SQLDataSources;
+
 
 
 namespace DataLogger

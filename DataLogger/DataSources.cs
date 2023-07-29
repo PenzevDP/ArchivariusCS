@@ -4,10 +4,14 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Data.Odbc;
 using DataManager;
+using NLog;
 
 
 namespace SQLDataSources
-{
+{ 
+
+
+
     public struct OdbcSource
     {
         public string ServerName;

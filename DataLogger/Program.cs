@@ -1,8 +1,10 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DataManager;
+using SQLDataSources;
 
 namespace DataLogger
 {
@@ -15,6 +17,7 @@ namespace DataLogger
         [STAThread]
         static void Main()
         {
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             /*  Console.WriteLine($"Start App");
               logger.Trace($"Trace Log");
               logger.Debug($"Debug Log");

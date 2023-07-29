@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using DataLogger.Properties;
 using DataManager;
+//using SQLDataSources;
 using Tools;
 
 namespace DataLogger
@@ -135,7 +136,13 @@ namespace DataLogger
             }
         }
 
-        
+        private void testSQLOracle()
+        {
+            NLogger.logger.Trace("Service. formTestOracle has called");
+            formTestOracle form = new formTestOracle();
+            form.ShowDialog(this);
+            
+        }
 
         //----OPCUA---
         private void defineOPCUA()
@@ -388,7 +395,12 @@ namespace DataLogger
             NLogger.logger.Trace("Service. formMain define OPC menu click");
             defineOPCUA();
         }
-        
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            testSQLOracle();
+        }
+
         //---OPCUA----
     }
 }
