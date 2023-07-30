@@ -12,7 +12,6 @@ using Settings;
 using Tools;
 using NLog;
 
-//---OPCUA---
 using Siemens.UAClientHelper;
 using Siemens.OpcUA;
 using Siemens;
@@ -22,20 +21,15 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-//---OPCUA---
-
+using System.Reflection;
 
 namespace DataManager
-{
-    
+{  
     public class NLogger
     {
         public static readonly Logger logger = LogManager.GetCurrentClassLogger();
     }
-     
-        
-
-
+           
     public enum ConfigState
     {
         Starting,
@@ -44,7 +38,6 @@ namespace DataManager
         Stopped,
     }
 
-    //---OPCUA----
     public enum OPCUAState
     {
         Unknown,
@@ -65,9 +58,6 @@ namespace DataManager
         CommunicationFault = 6,
         Unknown = 7
     }
-    //---------------
-
-
 
     public class ConfigStateEventArgs : EventArgs
     {
@@ -75,7 +65,7 @@ namespace DataManager
 
         public ConfigStateEventArgs(ConfigState state)
         {
-            this.state = state;
+           this.state = state;
         }
         public ConfigState State
         {
@@ -130,9 +120,6 @@ namespace DataManager
             }
         }
     }
-
-
-    //----------OPCUA----------------
     public class OPCUAEventArgs : EventArgs
     {
         private string desc;
@@ -194,12 +181,9 @@ namespace DataManager
     public delegate void ConfigStateEventHandler(object sender, ConfigStateEventArgs e);
     public delegate void StatisticsEventHandler(object sender, ConfigStatisticsEventArgs e);
 
-    //----------OPCUA----------------
     public delegate void OPCUAEventHandler(object sender, OPCUAEventArgs e);
     public delegate void OPCUADataEventHandler(object sender, OPCUADataEventArgs e);
     public delegate void OPCUAStateEventHandler(object sender, OPCUAStateEventArgs e);
-
-    //---------------------------
 
     public static class Config
     {
@@ -280,22 +264,13 @@ namespace DataManager
                 return state;
             }
         }
-        public static bool IsDisposing
-        {
-            get
-            {
-                return disposing;
-            }
-        }
         public static bool IsDisposed
         {
             get
             {
                 return disposed;
             }
-        }
-
-        
+        }    
 
         //-------OPCUA--------
         private static void OPCUAStateChanged(object sender, OPCUAStateEventArgs e)
@@ -801,7 +776,6 @@ namespace DataManager
                 if (count <= 0)
                 {
                     isValid = true;
-                    NLogger.logger.Trace(isValid.ToString);
                     return true;
                 }
                 //--------------------
@@ -810,7 +784,6 @@ namespace DataManager
                 {
                     try
                     {
-                        //tran.tagCount.Write(0);
                         //log.WriteEntry("Trying to Zeroing Counter in invalid records");
                         tran.opcuaConn.WriteDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, 0);
                     }
@@ -847,7 +820,7 @@ namespace DataManager
                 for (int i = 0; i < count; i++)
                 {
                     rec = tran.records[i];
-                    NLogger.logger.Trace(rec.valua.ToString());
+                    
                     if (rec.valid)
                     {
                         newRow = newRecords.NewRow();
@@ -908,11 +881,10 @@ namespace DataManager
 
                 if (newRecords.Rows.Count > 0)
                 {
-                   // NLogger.logger.Trace(newRecords.Rows.Count);
+                   
                     try
                     {
-                        NLogger.logger.Trace(newRecords.ToString()) ;
-                        da.Update(newRecords);
+                      da.Update(newRecords);
                     }
                     catch (Exception e)
                     {
@@ -937,6 +909,7 @@ namespace DataManager
                     {
                         transaction.Commit();
                         cmd.Transaction = null;
+                        NLogger.logger.Trace($"Trying to Zeroing Counter in Commit transactions");
                         //log.WriteEntry("Trying to Zeroing Counter in Committransactions");
                         tran.opcuaConn.WriteDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, 0);
                     }
@@ -1039,36 +1012,24 @@ namespace DataManager
     }
 
     public class Transaction
-    {
-        //private int size = 0;
+    {      
         private SingleEventLog log;
         private BackgroundWorker bgwODBCConn;
         private BackgroundWorker bgwTransact;
 
-
-
-
         public Statistics stat;
         public ODBCConnector odbcConn;
 
-
         public string tranName = "";
-
 
         public bool active = false;
         public bool error = false;
-
-        //private bool disconnectOPC = false;
-
+   
         public List<Record> records;
-
-
-
-        //---OPCUA----
+        
         private int uasize = 0;
         private BackgroundWorker bgwOPCUAConn;
-        public OPCUA opcuaConn;
-        //public MonitoredItem uatagSize = null;
+        public OPCUA opcuaConn;      
         public MonitoredItem uatagCount = null;
         public int uaNSNumber = 0;
         public string uaDbName = "";
@@ -1077,17 +1038,11 @@ namespace DataManager
         public string uaArrName = "";
         private bool disconnectopcua = false;
 
-        System.Timers.Timer timercheckCount = null;
-        //----OPCUA----
-
+        System.Timers.Timer timercheckCount = null;        
 
         public event StateChangeEventHandler ODBCConnStateChange;
-        //public event OPCStateEventHandler OPConnStateChange;
-        public event StatisticsEventHandler Statistics;
-
-        //-----OPCUA----
-        public event OPCUAStateEventHandler OPCUAconnStateChange;
-        //--------------
+        public event StatisticsEventHandler Statistics;    
+        public event OPCUAStateEventHandler OPCUAconnStateChange;     
 
         public bool IsBusy
         {
@@ -1161,8 +1116,6 @@ namespace DataManager
             if (odbcConn.State != ConnectionState.Closed) odbcConn.Disconnect();
         }
 
-
-        //----OPCUA-----
         public void ConnectToOPCUA()
         {
             disconnectopcua = false;
@@ -1177,10 +1130,7 @@ namespace DataManager
                 if (!bgwOPCUAConn.IsBusy) bgwOPCUAConn.RunWorkerAsync();
             }
         }
-        //------------
-
-
-        //----OPCUA-----
+       
         public void DisonnectFromOPCUA()
         {
             disconnectopcua = true;
@@ -1202,9 +1152,7 @@ namespace DataManager
             timercheckCount.Stop();
             opcuaConn.Disconnect();
         }
-        //------------
-
-
+        
         public void StopTransact()
         {
             active = false;
@@ -1214,8 +1162,7 @@ namespace DataManager
                 while (bgwTransact.IsBusy) Application.DoEvents();
             }
         }
-
-        //----------OPCUA------------
+      
         private void OPCUAConnecting(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
@@ -1229,7 +1176,6 @@ namespace DataManager
                 try
                 {
                    opcuaConn.Connect(Config.Sets.Primary_OPCUA_EndpointURL, Config.Sets.Primary_OPCUA_EndpointSecurityPolicyUri, (MessageSecurityMode)Config.Sets.Primary_OPCUA_EndpointSecurityMode, Config.Sets.Primary_OPCUA_LoginMode, Config.Sets.Primary_OPCUA_User, Config.Sets.Primary_OPCUA_Pass, Config.Sets.UpdateRate, Config.Sets.KeepAliveInterval);
-
                 }
                 catch (Exception ex)
                 {
@@ -1258,9 +1204,7 @@ namespace DataManager
             if (!(e.Cancelled || disconnectopcua))
             {
                 bool result = false;
-
                 uatagCount = opcuaConn.AddTrigger(uaNSNumber, uaDbName, uaCounterName, "item_ ns#" + uaNSNumber + " DB:" + uaDbName + " Tag:" + uaCounterName, 1);
-
                 if (uatagCount == null)
                 {
                     if (!disconnectopcua)
@@ -1301,17 +1245,13 @@ namespace DataManager
                     {
                         records.Add(new Record());
                     }
-
                 }
                 else
                 {
                     return;
                 }
-
                 timercheckCount.Start();
-
-                opcuaConn.IsSubscribed = true;
-              
+                opcuaConn.IsSubscribed = true;              
             }
             else
             {
@@ -1331,9 +1271,7 @@ namespace DataManager
                 }
             }
         }
-
-        //--------------------------
-
+        
         private void ODBCConnecting(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
@@ -1372,7 +1310,6 @@ namespace DataManager
                     }
                 }
             }
-
         }
         private void ODBCConnected(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -1434,7 +1371,6 @@ namespace DataManager
         }
 
         // Events
-
         //-------OPCUA------------
         private void OPCUADataChanged(object sender, OPCUADataEventArgs e)
         {
@@ -1443,15 +1379,11 @@ namespace DataManager
             if (count > 0 && !active && (!bgwTransact.IsBusy))
             {
                 active = true;
-                //log.WriteEntry("Transaction in OPCUADataChanged");
                 if (!bgwTransact.IsBusy) bgwTransact.RunWorkerAsync();
             }
         }
-
         private void TickDataChanged(object sender, ElapsedEventArgs e)
-        {
-            // if (opcuaConn.State == OPCUAState.Running)
-
+        {          
             if (opcuaConn.State == OPCUAState.Running && !active && (!bgwTransact.IsBusy))
             {
                 int Tickcount = 0;
@@ -1466,14 +1398,12 @@ namespace DataManager
                 }
             }
         }
-
         private void OPCUAStateChange(object sender, OPCUAStateEventArgs e)
         {
             if (e.State != OPCUAState.Running) active = false;
             if (OPCUAconnStateChange != null) OPCUAconnStateChange(this, e);
             if (Statistics != null) Statistics(this, new ConfigStatisticsEventArgs(this));
         }
-        //----------------------
 
         private void ODBCStateChange(object sender, StateChangeEventArgs e)
         {
@@ -1481,34 +1411,21 @@ namespace DataManager
             if (Statistics != null) Statistics(this, new ConfigStatisticsEventArgs(this));
         }
     }
-
-
-
-    //---OPCUA---
+ 
     class OpcUaEndpointWrapper
     {
-        #region Construction
+        //Construction
         public OpcUaEndpointWrapper(EndpointDescription endpoint)
         {
             m_endpoint = endpoint;
         }
-        #endregion
 
-        #region Fields
+        // Fields
         private EndpointDescription m_endpoint;
-        #endregion
 
-        #region Properties
-        /// <summary>
+        // Properties  
         /// Provides the session being established with an OPC UA server.
-        /// </summary>
-        public EndpointDescription Endpoint
-        {
-            get { return m_endpoint; }
-            set { m_endpoint = value; }
-        }
-        #endregion
-
+             
         public override string ToString()
         {
             string sRet = m_endpoint.Server.ApplicationName.Text;
@@ -1525,7 +1442,6 @@ namespace DataManager
         }
     }
 
-
     public class OPCUA
     {
         private bool disposed = false;
@@ -1538,14 +1454,8 @@ namespace DataManager
         private MonitoredItem groupTriggers = null;
         private MonitoredItem groupItems = null;
         private System.Timers.Timer timer = null;
-
-        //private int updateRate = 1000;
-        //private int KeepAliveInterval = 1000;
-
         public event OPCUADataEventHandler DataChanged;
         public event OPCUAStateEventHandler StateChange;
-
-
 
         public bool IsSubscribed
         {
@@ -1580,15 +1490,7 @@ namespace DataManager
                 return state;
             }
         }
-
-        public string ServerName
-        {
-            get
-            {
-                return serverName;
-            }
-        }
-
+               
         public OPCUA(SingleEventLog eventLog)
         {
             log = eventLog;
@@ -1599,42 +1501,6 @@ namespace DataManager
 
 
         }
-
-        ~OPCUA()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    //if (State == OPCUAState.Running) Disconnect();
-                    if (State != OPCUAState.Disconnected && State != OPCUAState.Unknown) Disconnect();
-                }
-
-                //if (groupTriggers != null)
-                //{
-                //     Marshal.ReleaseComObject(groupTriggers);
-                //     groupTriggers = null;
-                //}
-                //  if (serverObj != null)
-                //  {
-                //      Marshal.ReleaseComObject(serverObj);
-                //      serverObj = null;
-                // }
-            }
-            disposed = true;
-        }
-
 
         private void OPCUADataChange(MonitoredItem monitoredItem, MonitoredItemNotificationEventArgs e)
         {
@@ -1653,23 +1519,6 @@ namespace DataManager
 
         }
 
-
-
-        private void OPCUAShutDown(object sender, EventArgs e)
-        {
-            timer.Stop();
-            state = GetOPCUAserverState(serverObj);
-            log.WriteEntry(serverName + "OPC Ua ShutDown");
-            if (StateChange != null) StateChange(this, new OPCUAStateEventArgs(state));
-        }
-
-        private void OPCUASubscriptionStateChanged(Subscription subscription, SubscriptionStateChangedEventArgs e)
-        {
-            //timer.Stop();
-            //state = GetOPCUAserverState(serverObj);
-            //if (StateChange != null) StateChange(this, new OPCUAStateEventArgs(state));
-        }
-
         private void Tick(object sender, ElapsedEventArgs e)
         {
             OPCUAState getstate = GetOPCUAserverState(serverObj);
@@ -1686,8 +1535,6 @@ namespace DataManager
                 }
             }
         }
-
-
 
         private OPCUAState GetOPCUAserverState(UAClientHelperAPI server)
         {
@@ -1760,9 +1607,7 @@ namespace DataManager
 
                 return false;
             }
-
-            //this.updateRate = updateRate;
-            //this.KeepAliveInterval = KeepAliveInterval;
+                     
             return true;
         }
 
@@ -1797,13 +1642,11 @@ namespace DataManager
                     try
                     {
 
-                        //serverObj.Session.SessionClosing -= OPCUAShutDown;
+                       
                         serverObj.KeepAliveNotification -= new KeepAliveEventHandler(clientAPI_KeepAlive);
                         serverObj.CertificateValidationNotification -= new CertificateValidationEventHandler(clientAPI_CertificateEvent);
-                        //serverObj.Session.Close();
-                        //serverObj.RemoveSubscription(subscriptionObj);
                         serverObj.Disconnect();
-                        //log.WriteEntry(serverName + " disconnect!");
+                        
                     }
                     catch (Exception e)
                     {
@@ -1825,7 +1668,7 @@ namespace DataManager
 
         public MonitoredItem AddTrigger(int NodeNum, string DBName, string VarName, string ItemName, int SamplingInterval)
         {
-            //if (State == OPCUAState.Disconnected) return null;
+            
             if (State != OPCUAState.Running) return null;
             if (subscriptionObj == null) return null;
             string itemID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
@@ -1845,28 +1688,7 @@ namespace DataManager
                 return null;
             }
         }
-
-        public MonitoredItem AddItem(int NodeNum, string DBName, string VarName, string ItemName, int SamplingInterval)
-        {
-            if (State == OPCUAState.Disconnected) return null;
-            if (subscriptionObj == null) return null;
-            string itemID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
-            try
-            {
-                if (groupItems == null)
-                {
-                    groupItems = serverObj.AddMonitoredItem(subscriptionObj, itemID, ItemName, SamplingInterval);
-                    subscriptionObj.ApplyChanges();
-                }
-                return groupItems;
-            }
-            catch (Exception ex)
-            {
-                log.WriteEntry(serverName + "Error of addition of the item " + itemID + ". " + ex.Message);
-                return null;
-            }
-        }
-
+               
         public bool ReadDIntValue(int NodeNum, string DBName, string VarName, out int value)
         {
             string NodeID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
@@ -1897,77 +1719,9 @@ namespace DataManager
                 value = 0;
                 return false;
             }
-
-        }
-        public bool ReadRealValue(int NodeNum, string DBName, string VarName, out float value)
-        {
-            string NodeID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
-            if (State == OPCUAState.Running)
-            {
-                List<string> ReadData = new List<string>();
-                List<string> NodeList = new List<string>();
-                try
-                {
-                    NodeList.Add(NodeID);
-                    ReadData = serverObj.ReadValues(NodeList);
-                    value = float.Parse(ReadData[0]);
-                    return true;
-
-                }
-                catch (Exception e)
-                {
-                    log.WriteEntry(serverName + " read error RealItem= " + NodeID + "! " + e.Message);
-                    value = 0.0F;
-                    return false;
-                }
-            }
-            else
-            {
-                log.WriteEntry(serverName + "RealItem= " + NodeID + " doesn't Read! Server is stopped ");
-                value = 0.0F;
-                return false;
-            }
-
-        }
-        public bool ReadDateTimeValue(int NodeNum, string DBName, string VarName, out DateTime dt)
-        {
-            string NodeID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
-            if (state == OPCUAState.Running)
-            {
-                List<string> NodeList = new List<string>();
-                List<string> readarray = new List<string>();
-
-                try
-                {
-                    NodeList.Add(NodeID);
-                    readarray = serverObj.ReadValues(NodeList);
-                    string[] dts = readarray[0].Split(';');
-
-                    dt = new DateTime(2000 + Int32.Parse(dts[0]), Int32.Parse(dts[1]), Int32.Parse(dts[2]), Int32.Parse(dts[3]), Int32.Parse(dts[4]), Int32.Parse(dts[5]), Int32.Parse(dts[6]) * 10);
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    log.WriteEntry(serverName + " read error DateTimeItem= " + NodeID + "! " + e.Message);
-                    dt = new DateTime();
-                    return false;
-
-                }
-
-            }
-            else
-            {
-                log.WriteEntry(serverName + "DateTimeItem= " + NodeID + " doesn't Read! Server is stopped ");
-                dt = new DateTime();
-                return false;
-            }
-
-        }
-
-
+        }     
         public bool ReadDIntValue(string Node, out int value)
         {
-
             if (state == OPCUAState.Running)
             {
                 try
@@ -1980,9 +1734,7 @@ namespace DataManager
                     log.WriteEntry(serverName + " read error DInt= " + Node + "! " + e.Message);
                     value = 0;
                     return false;
-
                 }
-
             }
             else
             {
@@ -1990,7 +1742,6 @@ namespace DataManager
                 value = 0;
                 return false;
             }
-
         }
         public bool ReadRealValue(string Node, out float value)
         {
@@ -2045,8 +1796,6 @@ namespace DataManager
             }
 
         }
-
-
         public bool WriteDIntValue(int NodeNum, string DBName, string VarName, in int value)
         {
             string NodeID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
@@ -2076,120 +1825,7 @@ namespace DataManager
                 log.WriteEntry(serverName + "DIntItem= " + NodeID + " doesn't Write! Server is stopped");
                 return false;
             }
-
-        }
-
-        public void ReadStructUdt(int NodeNum, string DBName, string VarName, int count, List<Record> records)
-        {
-            string NodeID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
-            if (state == OPCUAState.Running)
-            {
-                List<string[]> readarray = new List<string[]>();
-                try
-                {
-                    readarray = serverObj.ReadStructUdt(NodeID);
-                    //Разбор считанного массива на записи
-                    for (int i = 0; i < count; i++)
-                    {
-                        try
-                        {
-
-                            GetDateTimeFromRecord(readarray[i * 5 + 2].ElementAt(1), records[i], i);
-                            GetIDFormRecord(readarray[i * 5 + 3].ElementAt(1), records[i], i);
-                            GetValFormRecord(readarray[i * 5 + 4].ElementAt(1), records[i], i);
-                            records[i].valid = (records[i].dtValid && records[i].idValid && records[i].valValid);
-
-                        }
-
-                        catch (Exception ex)
-                        {
-                            log.WriteEntry(serverName + " Read Record# " + i + "! Error:" + ex.Message);
-
-                        }
-
-                    }
-
-                }
-
-                catch (Exception ex)
-                {
-
-                    log.WriteEntry(serverName + " Read Array Item =:" + NodeID + "!" + ex.Message);
-                }
-
-
-            }
-            else
-            {
-                log.WriteEntry(serverName + "Can't Read Array. Server isn't running:");
-
-            }
-
-        }
-
-        public void ReadValues(int NodeNum, string DBName, string VarName, int count, List<Record> records)
-        {
-            string NodeID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
-            if (state == OPCUAState.Running)
-            {
-                List<string> readarray = new List<string>();
-                List<string> _nodes = new List<string>();
-
-
-                try
-                {
-
-                    //Разбор считанного массива на записи
-                    for (int i = 0; i < count; i++)
-                    {
-                        try
-                        {
-                            _nodes.Add(NodeID + $"[{i}].DateTime");
-                            _nodes.Add(NodeID + $"[{i}].ID");
-                            _nodes.Add(NodeID + $"[{i}].Value");
-                        }
-
-                        catch (Exception ex)
-                        {
-                            log.WriteEntry(serverName + " Add NodeRecord# " + i + "! Error:" + ex.Message);
-                            throw;
-                        }
-
-                    }
-                    readarray = serverObj.ReadValues(_nodes);
-                    for (int i = 0; i < count; i++)
-                    {
-                        try
-                        {
-                            GetDateTimeFromRecord_1(readarray[i * 3], records[i], i);
-                            GetIDFormRecord(readarray[i * 3 + 1], records[i], i);
-                            GetValFormRecord(readarray[i * 3 + 2], records[i], i);
-                            records[i].valid = (records[i].dtValid && records[i].idValid && records[i].valValid);
-                        }
-
-                        catch (Exception ex)
-                        {
-                            log.WriteEntry(serverName + " Read Record# " + i + "! Error:" + ex.Message);
-                            throw;
-                        }
-
-                    }
-
-                }
-                catch (Exception ex)
-                {
-
-                    log.WriteEntry(serverName + " Read Array Error Item =:" + NodeID + "!" + ex.Message);
-                }
-            }
-            else
-            {
-                log.WriteEntry(serverName + "Can't Read Array. Server isn't running:");
-
-            }
-
-        }
-
+        }             
         public void ReadDiffTypeValues(int NodeNum, string DBName, string VarName, int count, List<Record> records)
         {
             string NodeID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
@@ -2198,8 +1834,6 @@ namespace DataManager
                 List<string> readarray = new List<string>();
                 List<string> _nodes = new List<string>();
 
-
-
                 for (int i = 0; i < count; i++)
                 {
                     try
@@ -2207,182 +1841,20 @@ namespace DataManager
                         records[i].dtValid = ReadDateTimeValue((NodeID + $"[{i}].DateTime"), out records[i].dtua);
                         records[i].idValid = ReadDIntValue((NodeID + $"[{i}].ID"), out records[i].idua);
                         records[i].valValid = ReadRealValue((NodeID + $"[{i}].Value"), out records[i].valua);
-                        NLogger.logger.Trace(records[i].valua);
                         records[i].valid = (records[i].dtValid && records[i].idValid && records[i].valValid);
                     }
-
                     catch (Exception ex)
                     {
                         log.WriteEntry(serverName + " Read Record# " + i + "! Error:" + ex.Message);
-
                     }
-
                 }
-
             }
             else
             {
                 NLogger.logger.Trace($"Can't Read Array. Server isn't running:");
                 log.WriteEntry(serverName + "Can't Read Array. Server isn't running:");
-
             }
-
         }
-
-
-        private void GetDateTimeFromRecord_1(string str, Record record, int i)
-        {
-            if (str != null)
-            {
-                try
-                {
-                    var s = DateTime.Parse(str);
-                    //s = s.Replace(':', '_');
-                    //var dts = s.Split(' ');
-                    //dts[0] = Convert.ToString(Convert.ToInt32(dts[0]);
-                    //int year = 2000 + (Int32.Parse(dts[0]));
-                    //int year = (Int32.Parse(dts[0]));
-                    ////dts[1] = Convert.ToString(Convert.ToInt32(dts[1], 10), 16);
-                    //int month = (Int32.Parse(dts[1]));
-                    ////dts[2] = Convert.ToString(Convert.ToInt32(dts[2], 10), 16);
-                    //int day = (Int32.Parse(dts[2]));
-                    ////dts[3] = Convert.ToString(Convert.ToInt32(dts[3], 10), 16);
-                    //int hour = (Int32.Parse(dts[3]));
-                    ////dts[4] = Convert.ToString(Convert.ToInt32(dts[4], 10), 16);
-                    //int min = (Int32.Parse(dts[4]));
-                    ////dts[5] = Convert.ToString(Convert.ToInt32(dts[5], 10), 16);
-                    //int sec = (Int32.Parse(dts[5]));
-                    ////dts[6] = Convert.ToString(Convert.ToInt32(dts[6], 10), 16);
-                    //int ms = (Int32.Parse(dts[6]) * 10);
-                    //record.dtua = new DateTime(year, month, day, hour, min, sec, ms);
-                    //record.dtValid = true;
-
-                    record.dtua = s;
-                    record.dtValid = true;
-                }
-                catch (Exception ex)
-                {
-                    record.dtua = new DateTime();
-                    record.dtValid = false;
-
-                    log.WriteEntry(serverName + " Convert DT Record# " + i + "! Error:" + ex.Message);
-                }
-
-            }
-            else
-            {
-                record.dtua = new DateTime();
-                record.dtValid = false;
-                log.WriteEntry(serverName + " Convert DT Record# " + i + "! Error - str is null");
-            }
-
-
-        }
-
-        private void GetDateTimeFromRecord(string str, Record record, int i)
-        {
-            if (str != null)
-            {
-                try
-                {
-                    string[] dts;
-                    dts = str.Split(';');
-                    dts[0] = Convert.ToString(Convert.ToInt32(dts[0], 10), 16);
-                    int year = 2000 + (Int32.Parse(dts[0]));
-                    dts[1] = Convert.ToString(Convert.ToInt32(dts[1], 10), 16);
-                    int month = (Int32.Parse(dts[1]));
-                    dts[2] = Convert.ToString(Convert.ToInt32(dts[2], 10), 16);
-                    int day = (Int32.Parse(dts[2]));
-                    dts[3] = Convert.ToString(Convert.ToInt32(dts[3], 10), 16);
-                    int hour = (Int32.Parse(dts[3]));
-                    dts[4] = Convert.ToString(Convert.ToInt32(dts[4], 10), 16);
-                    int min = (Int32.Parse(dts[4]));
-                    dts[5] = Convert.ToString(Convert.ToInt32(dts[5], 10), 16);
-                    int sec = (Int32.Parse(dts[5]));
-                    dts[6] = Convert.ToString(Convert.ToInt32(dts[6], 10), 16);
-                    int ms = (Int32.Parse(dts[6]) * 10);
-                    record.dtua = new DateTime(year, month, day, hour, min, sec, ms);
-                    record.dtValid = true;
-                }
-                catch (Exception ex)
-                {
-                    record.dtua = new DateTime();
-                    record.dtValid = false;
-
-                    log.WriteEntry(serverName + " Convert DT Record# " + i + "! Error:" + ex.Message);
-                }
-
-            }
-            else
-            {
-                record.dtua = new DateTime();
-                record.dtValid = false;
-                log.WriteEntry(serverName + " Convert DT Record# " + i + "! Error - str is null");
-            }
-
-
-        }
-
-        private void GetIDFormRecord(string str, Record record, int i)
-        {
-            if (str != null)
-            {
-                try
-                {
-
-                    record.idua = Int32.Parse(str);
-                    record.idValid = true;
-
-                }
-                catch (Exception ex)
-                {
-                    record.idua = 0;
-                    record.idValid = false;
-
-                    log.WriteEntry(serverName + " Convert ID Record# " + i + "! Error:" + ex.Message);
-                }
-
-            }
-            else
-            {
-                record.idua = 0;
-                record.idValid = false;
-                log.WriteEntry(serverName + " Convert ID Record# " + i + "! Error - str is null");
-            }
-
-        }
-
-        private void GetValFormRecord(string str, Record record, int i)
-        {
-            if (str != null)
-            {
-                try
-                {
-                    record.valua = float.Parse(str);
-                    record.valValid = true;
-
-                }
-                catch (Exception ex)
-                {
-                    record.valua = 0;
-                    record.valValid = false;
-                    log.WriteEntry(serverName + " Convert Val Record# " + i + "! Error:" + ex.Message);
-
-                }
-
-            }
-            else
-            {
-                record.valua = 0;
-                record.valValid = false;
-                log.WriteEntry(serverName + " Convert Val Record# " + i + "! Error - str is null");
-
-            }
-
-        }
-
-
-
         private void clientAPI_CertificateEvent(CertificateValidator cert, CertificateValidationEventArgs e)
         {
             try
@@ -2402,7 +1874,6 @@ namespace DataManager
                 {
                     if (!e.Accept)
                     {
-
                         try
                         {
                             store.Open(OpenFlags.ReadWrite);
@@ -2422,14 +1893,11 @@ namespace DataManager
                 log.WriteEntry("Error read certificate from store");
             }
         }
-
         private void clientAPI_KeepAlive(Session sender, KeepAliveEventArgs e)
         {
             Quality = (OPCUAQuality)((int)e.CurrentState);
         }
-
     }
-//---OPCUA---
 }
 
 

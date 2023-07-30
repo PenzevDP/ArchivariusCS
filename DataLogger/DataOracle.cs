@@ -99,11 +99,45 @@ namespace DataOracle
 
         public void Command(string command)
         {
-            DateTime value = new DateTime(2028, 7, 28, 08, 0, 0, 12);
+            string fTranDT = "2023/05/05 10:11:00 AM";
+            string fullTableName = "Logger";
+            List<OdbcParameter> parameters = new List<OdbcParameter>();
+            OdbcTransaction transaction;
+            StringBuilder sqlIns = new StringBuilder("Insert into " + fullTableName + " (");
+            StringBuilder sqlVal = new StringBuilder(" Values (to_timestamp(");
+            
+            dt = new DataTable(fullTableName.ToString());
+            sqlIns.Append(fTranDT + ")");
+            sqlVal.Append("? , 'YYYY/MM/DD HH24:Mi:SS.ff'));");
+
+            OdbcParameter parameter = new OdbcParameter();
+            parameter.ParameterName = "@tdt";
+            parameter.OdbcType = OdbcType.DateTime;
+            parameter.SourceColumn = fTranDT;
+            parameters.Add(parameter);
+            dt.Columns.Add(fTranDT, System.Type.GetType("System.DateTime"));
+                    
+            
+
+            foreach (OdbcParameter par in cmd.Parameters)
+            {
+                switch (par.ParameterName)
+                {
+                    case "@tdt":
+                        par.SourceColumn = DateTime.Now.ToString();
+                        break;
+                }
+            }
+
+
+
+
+           /* DateTime value = new DateTime(2028, 7, 28, 08, 0, 0, 12);
             comm1 = string.Format("insert into test (tdt) values (to_timestamp('" + value.ToString("yyyy/MM/dd HH:mm:ss.ff") + "', 'YYYY/MM/DD HH24:Mi:SS.ff'));");
             cmd = new OdbcCommand(comm1,conn);
             da = new OdbcDataAdapter(cmd);
             NLogger.logger.Trace(cmd.CommandText);
+           */
 
             OdbcConnectionStringBuilder connStringBuilder = new OdbcConnectionStringBuilder();
             connStringBuilder.Dsn = "toOracle";
@@ -112,18 +146,24 @@ namespace DataOracle
 
             conn.ConnectionString = connStringBuilder.ConnectionString;
             conn.Open();
-            cmd.ExecuteNonQuery();
+            transaction = conn.BeginTransaction();
+            cmd.Transaction = transaction;
+            da.InsertCommand = cmd;
+           // cmd.ExecuteNonQuery();
             conn.Close();
             
         }
 
     }
+     
+           
+            
+              
 
 
 
 
 
-    
     internal class DataOracle
     {
     }
