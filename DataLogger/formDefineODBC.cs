@@ -6,7 +6,7 @@ using DataManager;
 using SQLDataSources;
 using Tools;
 
-namespace DataLogger
+namespace Archivarius
 {
     public partial class formDefineODBC : Form
     {
@@ -64,11 +64,14 @@ namespace DataLogger
 
             UpdateConfigState(Config.State);
             Config.StateChange += ConfigStateChange;
+            Config.Sets.Driver_Type = textBoxDriverName.Text;
         }
 
         private void ConfigStateChange(object sender, ConfigStateEventArgs e)
         {
             UpdateConfigState(e.State);
+            Config.Sets.Driver_Type = textBoxDriverName.Text;
+           
         }
 
         private void btnApply_Click(object sender, EventArgs e)
@@ -76,11 +79,15 @@ namespace DataLogger
             if (comboBoxDSN.SelectedIndex >= 0)
             {
                 Config.Sets.Primary_ODBC_DSN = sources[comboBoxDSN.SelectedIndex].ServerName;
+                
+                //Config.Sets.Driver_Type =sources[comboBox.SelectedIndex].DriverName;
             }
             if (textBoxUserName.Text != "")
             {
                 Config.Sets.Primary_ODBC_User = textBoxUserName.Text;
                 Config.Sets.Primary_ODBC_Pass = textBoxPassword.Text;
+                
+
             }
             else
             {
@@ -138,5 +145,7 @@ namespace DataLogger
                 }
             }
         }
+
+        
     }
 }

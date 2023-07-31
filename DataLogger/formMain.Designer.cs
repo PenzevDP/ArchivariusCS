@@ -1,4 +1,4 @@
-﻿namespace DataLogger
+﻿namespace Archivarius
 {
     partial class formMain
     {
@@ -123,7 +123,7 @@
             // startMenuItem
             // 
             this.startMenuItem.Enabled = false;
-            this.startMenuItem.Image = global::DataLogger.Properties.Resources.PlayHS;
+            this.startMenuItem.Image = global::Archivarius.Properties.Resources.PlayHS;
             this.startMenuItem.Name = "startMenuItem";
             this.startMenuItem.Size = new System.Drawing.Size(98, 22);
             this.startMenuItem.Text = "Start";
@@ -132,7 +132,7 @@
             // stopMenuItem
             // 
             this.stopMenuItem.Enabled = false;
-            this.stopMenuItem.Image = global::DataLogger.Properties.Resources.StopHS;
+            this.stopMenuItem.Image = global::Archivarius.Properties.Resources.StopHS;
             this.stopMenuItem.Name = "stopMenuItem";
             this.stopMenuItem.Size = new System.Drawing.Size(98, 22);
             this.stopMenuItem.Text = "Stop";
@@ -162,7 +162,7 @@
             // 
             // opcuaConnectorMenuItem
             // 
-            this.opcuaConnectorMenuItem.Image = global::DataLogger.Properties.Resources.OPCUA_database;
+            this.opcuaConnectorMenuItem.Image = global::Archivarius.Properties.Resources.OPCUA_database;
             this.opcuaConnectorMenuItem.Name = "opcuaConnectorMenuItem";
             this.opcuaConnectorMenuItem.Size = new System.Drawing.Size(173, 22);
             this.opcuaConnectorMenuItem.Text = "OPCUA Connector";
@@ -170,7 +170,7 @@
             // 
             // odbcConnectorMenuItem
             // 
-            this.odbcConnectorMenuItem.Image = global::DataLogger.Properties.Resources.VSProject_database;
+            this.odbcConnectorMenuItem.Image = global::Archivarius.Properties.Resources.VSProject_database;
             this.odbcConnectorMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.odbcConnectorMenuItem.Name = "odbcConnectorMenuItem";
             this.odbcConnectorMenuItem.Size = new System.Drawing.Size(173, 22);
@@ -179,7 +179,7 @@
             // 
             // transactionMenuItem
             // 
-            this.transactionMenuItem.Image = global::DataLogger.Properties.Resources.Control_DataNavigator;
+            this.transactionMenuItem.Image = global::Archivarius.Properties.Resources.Control_DataNavigator;
             this.transactionMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.transactionMenuItem.Name = "transactionMenuItem";
             this.transactionMenuItem.Size = new System.Drawing.Size(173, 22);
@@ -196,7 +196,7 @@
             // 
             // aboutMenuItem
             // 
-            this.aboutMenuItem.Image = global::DataLogger.Properties.Resources.Help;
+            this.aboutMenuItem.Image = global::Archivarius.Properties.Resources.Help;
             this.aboutMenuItem.Name = "aboutMenuItem";
             this.aboutMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
             this.aboutMenuItem.Size = new System.Drawing.Size(184, 26);
@@ -224,7 +224,7 @@
             // 
             this.startButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.startButton.Enabled = false;
-            this.startButton.Image = global::DataLogger.Properties.Resources.PlayHS;
+            this.startButton.Image = global::Archivarius.Properties.Resources.PlayHS;
             this.startButton.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(24, 24);
@@ -235,7 +235,7 @@
             // 
             this.stopButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.stopButton.Enabled = false;
-            this.stopButton.Image = global::DataLogger.Properties.Resources.StopHS;
+            this.stopButton.Image = global::Archivarius.Properties.Resources.StopHS;
             this.stopButton.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.stopButton.Name = "stopButton";
             this.stopButton.Size = new System.Drawing.Size(24, 24);
@@ -251,7 +251,7 @@
             // opcuaConnectorButton
             // 
             this.opcuaConnectorButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.opcuaConnectorButton.Image = global::DataLogger.Properties.Resources.OPCUA_database;
+            this.opcuaConnectorButton.Image = global::Archivarius.Properties.Resources.OPCUA_database;
             this.opcuaConnectorButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.opcuaConnectorButton.Name = "opcuaConnectorButton";
             this.opcuaConnectorButton.Size = new System.Drawing.Size(24, 24);
@@ -261,7 +261,7 @@
             // odbcConnectorButton
             // 
             this.odbcConnectorButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.odbcConnectorButton.Image = global::DataLogger.Properties.Resources.VSProject_database;
+            this.odbcConnectorButton.Image = global::Archivarius.Properties.Resources.VSProject_database;
             this.odbcConnectorButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.odbcConnectorButton.Name = "odbcConnectorButton";
             this.odbcConnectorButton.Size = new System.Drawing.Size(24, 24);
@@ -272,7 +272,7 @@
             // transactionButton
             // 
             this.transactionButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.transactionButton.Image = global::DataLogger.Properties.Resources.Control_DataNavigator;
+            this.transactionButton.Image = global::Archivarius.Properties.Resources.Control_DataNavigator;
             this.transactionButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.transactionButton.Name = "transactionButton";
             this.transactionButton.Size = new System.Drawing.Size(24, 24);
@@ -288,7 +288,7 @@
             // aboutButton
             // 
             this.aboutButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.aboutButton.Image = global::DataLogger.Properties.Resources.Help;
+            this.aboutButton.Image = global::Archivarius.Properties.Resources.Help;
             this.aboutButton.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.aboutButton.Name = "aboutButton";
             this.aboutButton.Size = new System.Drawing.Size(24, 24);
@@ -492,11 +492,11 @@
             // 
             // statusConfigLabel
             // 
-            this.statusConfigLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            this.statusConfigLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
             | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.statusConfigLabel.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
-            this.statusConfigLabel.Image = global::DataLogger.Properties.Resources.Stop;
+            this.statusConfigLabel.Image = global::Archivarius.Properties.Resources.Stop;
             this.statusConfigLabel.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.statusConfigLabel.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.statusConfigLabel.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
@@ -546,7 +546,7 @@
             // 
             // startTrayMenuItem
             // 
-            this.startTrayMenuItem.Image = global::DataLogger.Properties.Resources.PlayHS;
+            this.startTrayMenuItem.Image = global::Archivarius.Properties.Resources.PlayHS;
             this.startTrayMenuItem.Name = "startTrayMenuItem";
             this.startTrayMenuItem.Size = new System.Drawing.Size(117, 26);
             this.startTrayMenuItem.Text = "Start";
@@ -554,7 +554,7 @@
             // 
             // stopTrayMenuItem
             // 
-            this.stopTrayMenuItem.Image = global::DataLogger.Properties.Resources.StopHS;
+            this.stopTrayMenuItem.Image = global::Archivarius.Properties.Resources.StopHS;
             this.stopTrayMenuItem.Name = "stopTrayMenuItem";
             this.stopTrayMenuItem.Size = new System.Drawing.Size(117, 26);
             this.stopTrayMenuItem.Text = "Stop";

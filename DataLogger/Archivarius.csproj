@@ -8,11 +8,11 @@
     <ProjectGuid>{D685C6C7-EBD6-4424-91D9-F105B93FFB32}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DataLogger</RootNamespace>
-    <AssemblyName>DataLogger</AssemblyName>
+    <RootNamespace>Archivarius</RootNamespace>
+    <AssemblyName>Archivarius</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <StartupObject>DataLogger.Program</StartupObject>
+    <StartupObject>Archivarius.Program</StartupObject>
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <ApplicationIcon>services.ico</ApplicationIcon>
     <ManifestCertificateThumbprint>08D78CA1F1310AB54712B898AAD92F94D8796D74</ManifestCertificateThumbprint>

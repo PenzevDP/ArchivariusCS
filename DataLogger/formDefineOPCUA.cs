@@ -18,7 +18,7 @@ using SQLDataSources;
 
 
 
-namespace DataLogger
+namespace Archivarius
 {
     public partial class formDefineOPCUA : Form
     {

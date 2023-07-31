@@ -1,4 +1,4 @@
-﻿namespace DataLogger
+﻿namespace Archivarius
 {
     partial class formAbout
     {
@@ -62,7 +62,7 @@
             // 
             // pictureBox
             // 
-            this.pictureBox.Image = global::DataLogger.Properties.Resources.RAUFFE_LOGO;
+            this.pictureBox.Image = global::Archivarius.Properties.Resources.RAUFFE_LOGO;
             this.pictureBox.Location = new System.Drawing.Point(5, 22);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(97, 58);

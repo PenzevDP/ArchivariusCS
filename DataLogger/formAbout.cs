@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using DataManager;
 //using SQLDataSources;
 
-namespace DataLogger
+namespace Archivarius
 {
     public partial class formAbout : Form
     {

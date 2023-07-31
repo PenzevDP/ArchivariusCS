@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using DataManager;
 using SQLDataSources;
 
-namespace DataLogger
+namespace Archivarius
 {
     static class Program
     {

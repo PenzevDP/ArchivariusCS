@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31005.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLogger", "DataLogger\DataLogger.csproj", "{D685C6C7-EBD6-4424-91D9-F105B93FFB32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archivarius", "DataLogger\Archivarius.csproj", "{D685C6C7-EBD6-4424-91D9-F105B93FFB32}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DataLoggerSetup", "DataLoggerSetup\DataLoggerSetup.vdproj", "{DFB9083B-E4D2-4483-8980-F6A48CDFF71C}"
 EndProject

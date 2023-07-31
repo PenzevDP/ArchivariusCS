@@ -8,7 +8,7 @@ using DataManager;
 using Tools;
 using Siemens.OpcUA.Client;
 
-namespace DataLogger
+namespace Archivarius
 {
     partial class formDefineOPCUA
     {

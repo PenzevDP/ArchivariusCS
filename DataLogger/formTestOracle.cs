@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using DataManager;
 
 
-namespace DataLogger
+namespace Archivarius
 {
     
     public partial class formTestOracle : Form

@@ -2,12 +2,12 @@
 using System.Data;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using DataLogger.Properties;
+using Archivarius.Properties;
 using DataManager;
 //using SQLDataSources;
 using Tools;
 
-namespace DataLogger
+namespace Archivarius
 {
     delegate void NewStatisticsCallback(Form form, DataTable dt, ConfigStatisticsEventArgs e);
     
@@ -17,7 +17,8 @@ namespace DataLogger
         
         public formMain()
         {
-            InitializeComponent();
+            InitializeComponent();          
+            NLogger.logger.Trace(DataManager.Config.driverType);
             NLogger.logger.Trace($"Service. formMain has initialized");
         }        
 
@@ -227,6 +228,7 @@ namespace DataLogger
         {
             foreach (Form form in OwnedForms) form.Close();
             this.Hide();
+            Config.Save();
             hideTrayMenuItem.Visible = false;
             restoreTrayMenuItem.Visible = true;
             NLogger.logger.Trace("Service. formMain has moved to TRAY");
@@ -305,12 +307,14 @@ namespace DataLogger
         private void exitMenuItem_Click(object sender, EventArgs e)
         {
             NLogger.logger.Trace("Service. formMain exit menu click");
+            Config.Save();
             exit();
         }
 
         private void exitTrayMenuItem_Click(object sender, EventArgs e)
         {
             NLogger.logger.Trace("Service. formMain tray exit button click");
+            Config.Save();
             exit();
         }
 

@@ -1,4 +1,4 @@
-﻿namespace DataLogger
+﻿namespace Archivarius
 {
     partial class formDefineTran
     {

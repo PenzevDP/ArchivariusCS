@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 using System.Reflection;
 using System.Data;
 using Tools;
-
+using DataManager;
 //--OPCUA---
 using Opc.Ua;
 //---
@@ -135,15 +135,22 @@ namespace Settings
                 Type t = this.GetType();
                 foreach (PropertyInfo p in t.GetProperties())
                 {
+                    
                     if (p.GetCustomAttributes(typeof(XmlIgnoreAttribute),
                         true).Length == 0)
                         p.SetValue(this, p.GetValue(obj, null), null);
+
+                   
                 }
-                foreach (FieldInfo f in t.GetFields())
+
+               
+                foreach (FieldInfo f in t.GetFields())                    
                 {
                     if (f.GetCustomAttributes(typeof(XmlIgnoreAttribute),
                         true).Length == 0)
                         f.SetValue(this, f.GetValue(obj));
+
+                   
                 }
             }
         }
@@ -197,6 +204,8 @@ namespace Settings
                 OnException(ex);
                 return;
             }
+
+            NLogger.logger.Trace("The configuration is saved in the file " + Path);
             Log.WriteEntry("The configuration is saved in the file " + Path);
         }
     }
@@ -211,6 +220,7 @@ namespace Settings
         public string Primary_ODBC_DSN;
         public string Primary_ODBC_User;
         public string Primary_ODBC_Pass;
+        public string Driver_Type;
         public DataSet TransactionBase;
         public int UpdateRate;
         public bool Running;
@@ -225,7 +235,7 @@ namespace Settings
         public int KeepAliveInterval;
         //---
 
-        private string Key = "DataLogger";
+        private string Key = "Archivarius";
 
         public AppSettings(string path, SingleEventLog log)
             : base(path, log)
@@ -234,6 +244,7 @@ namespace Settings
             Primary_ODBC_DSN = "";
             Primary_ODBC_User = "";
             Primary_ODBC_Pass = null;
+            Driver_Type = "";
             TransactionBase = null;
             UpdateRate = 0;
             Running = false;
@@ -319,19 +330,7 @@ namespace Settings
             dc.Unique = true;
             dt.Columns.Add(dc);
 
-            ///Отключение столбцов, связанных с DA соединением
-            ///
-            //----OPCUA----
-            //dc = new DataColumn("Connection Name", System.Type.GetType("System.String"));
-            //dc.AllowDBNull = false;
-            //dt.Columns.Add(dc);
-            //uniqueColumns[0] = dc;
-
-            //dc = new DataColumn("DB #", System.Type.GetType("System.Int32"));
-            //dc.AllowDBNull = false;
-            //dt.Columns.Add(dc);
-            //uniqueColumns[1] = dc;
-
+       
             //---OPCUA---
             dc = new DataColumn("ns#", System.Type.GetType("System.Int32"));
             dc.AllowDBNull = false;

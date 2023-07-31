@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using DataManager;
 using Tools;
 
-namespace DataLogger
+namespace Archivarius
 {
     public partial class formDefineTran : Form
     {
