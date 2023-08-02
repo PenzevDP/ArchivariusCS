@@ -584,8 +584,9 @@ namespace DataManager
          
             StringBuilder fullTableName = new StringBuilder();
 
-            if (Config.Sets.Driver_Type.Contains("SQL"))
+            if (Config.Sets.Driver_Type.Contains("SQL Server"))
             {
+                NLogger.logger.Trace("Транзакция по типу 1");
                 if (tableName.Contains("."))
                 {
                     string name;
@@ -709,8 +710,145 @@ namespace DataManager
                     return false;
                 }
             }
-            else if (Config.Sets.Driver_Type.Contains("Oracle"))
+            else if (Config.Sets.Driver_Type.Contains("Oracle") )
             {
+                NLogger.logger.Trace("Транзакция по типу 2");
+                if (tableName.Contains("."))
+                {
+                    string name;
+                    string[] split = tableName.Split('.');
+                    int length = split.Length;
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        name = split[i];
+                        if (name.Contains("[") || name.Contains("]"))
+                        {
+                            if (i == 0) fullTableName.Append(name); else fullTableName.Append("." + name);
+                        }
+                        else
+                        {
+                            if (i == 0) fullTableName.Append("[" + name + "]"); else fullTableName.Append(".[" + name + "]");
+                        }
+                    }
+                }
+                else
+                {
+                    if (tableName.Contains("]") || tableName.Contains("["))
+                    {
+                        fullTableName.Append(tableName);
+                    }
+                    else
+                    {
+                        fullTableName.Append(tableName);
+                    }
+                }
+
+                dt = new DataTable(fullTableName.ToString());
+                StringBuilder sqlIns = new StringBuilder("Insert into " + fullTableName.ToString() + " (");
+                StringBuilder sqlVal = new StringBuilder(" Values (");
+                List<OdbcParameter> parameters = new List<OdbcParameter>();
+                bool prevPar = false;
+
+               if (fTranDT != "")
+                {
+                    sqlIns.Append(fTranDT);
+                    sqlVal.Append("to_timestamp(? , 'YYYY/MM/DD HH24:Mi:SS.ff')");
+                    OdbcParameter parameter = new OdbcParameter();
+                    parameter.ParameterName = "@tdt";
+                    parameter.OdbcType = OdbcType.VarChar;
+                    parameter.SourceColumn = fTranDT;
+                    parameters.Add(parameter);
+                    dt.Columns.Add(fTranDT, System.Type.GetType("System.String"));
+                    prevPar = true;
+
+                }
+                if (fCtrlDT != "")
+                {
+                    if (prevPar)
+                    {
+                        sqlIns.Append(", " + fCtrlDT);
+                        sqlVal.Append(",to_timestamp(?, 'YYYY/MM/DD HH24:Mi:SS.ff')");
+                    }
+                    else
+                    {
+                        sqlIns.Append(fCtrlDT);
+                        sqlVal.Append("?");
+                    }
+                    OdbcParameter parameter = new OdbcParameter();
+                    parameter.ParameterName = "@dt";
+                    parameter.OdbcType = OdbcType.VarChar;
+                    parameter.SourceColumn = fCtrlDT;
+                    parameters.Add(parameter);
+                    dt.Columns.Add(fCtrlDT, System.Type.GetType("System.String"));
+                    prevPar = true;
+                    //  NLogger.logger.Trace("Параметр dt: " + parameters[1].Value.ToString());
+                }
+              
+                if (fParID != "")
+                {
+                    if (prevPar)
+                    {
+                        sqlIns.Append(", " + fParID);
+                        sqlVal.Append(", ?");
+                    }
+                    else
+                    {
+                        sqlIns.Append(fParID);
+                        sqlVal.Append("?");
+                    }
+                    OdbcParameter parameter = new OdbcParameter();
+                    parameter.ParameterName = "@id";
+                    parameter.OdbcType = OdbcType.Decimal;
+                    parameter.SourceColumn = fParID;
+                    parameters.Add(parameter);
+                    dt.Columns.Add(fParID, System.Type.GetType("System.Int32"));
+                    prevPar = true;
+
+                }
+                if (fParVal != "")
+                {
+                    if (prevPar)
+                    {
+                        sqlIns.Append(", " + fParVal);
+                        sqlVal.Append(", ?");
+                    }
+                    else
+                    {
+                        sqlIns.Append(fParVal);
+                        sqlVal.Append("?");
+                    }
+                    OdbcParameter parameter = new OdbcParameter();
+                    parameter.ParameterName = "@val";
+                    parameter.OdbcType = OdbcType.Real;
+                    parameter.SourceColumn = fParVal;
+                    parameters.Add(parameter);
+                    dt.Columns.Add(fParVal, System.Type.GetType("System.Single"));
+
+                }
+
+
+
+                sqlIns.Append(")");
+                sqlVal.Append(");");
+
+                if (parameters.Count > 0)
+                {
+                    cmd = new OdbcCommand(sqlIns.ToString() + sqlVal.ToString(), conn);
+                    NLogger.logger.Trace(cmd.CommandText);
+                    foreach (OdbcParameter par in parameters) cmd.Parameters.Add(par);
+                    return true;
+                }
+                else
+                {
+                    cmd = null;
+                    return false;
+                }
+
+            }
+            else if (Config.Sets.Driver_Type.Contains("Postgre"))
+            {
+                NLogger.logger.Trace("Транзакция по типу 3");
                 if (tableName.Contains("."))
                 {
                     string name;
@@ -751,7 +889,7 @@ namespace DataManager
                 if (fTranDT != "")
                 {
                     sqlIns.Append(fTranDT);
-                    sqlVal.Append("to_timestamp(? , 'YYYY/MM/DD HH24:Mi:SS.ff')");
+                    sqlVal.Append("?");
                     OdbcParameter parameter = new OdbcParameter();
                     parameter.ParameterName = "@tdt";
                     parameter.OdbcType = OdbcType.VarChar;
@@ -766,7 +904,7 @@ namespace DataManager
                     if (prevPar)
                     {
                         sqlIns.Append(", " + fCtrlDT);
-                        sqlVal.Append(",to_timestamp(?, 'YYYY/MM/DD HH24:Mi:SS.ff')");
+                        sqlVal.Append(", ? ");
                     }
                     else
                     {
@@ -843,7 +981,8 @@ namespace DataManager
                     return false;
                 }
 
-            }   
+            }
+
             else
             {
                 return false;
