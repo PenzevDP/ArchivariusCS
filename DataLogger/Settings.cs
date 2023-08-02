@@ -165,8 +165,10 @@ namespace Settings
         {
             if (File.Exists(Path))
             {
+                NLogger.logger.Fatal("файл существует");
                 try
                 {
+
                     Deserialize();
                 }
                 catch (Exception ex)
@@ -180,6 +182,7 @@ namespace Settings
             }
             else
             {
+                NLogger.logger.Fatal("создается файл");
                 Log.WriteEntry("File " + Path + " not found. Empty configuration");
                 SetDefaults();
             }
@@ -372,9 +375,15 @@ namespace Settings
             dc = new DataColumn("Parameter Value", System.Type.GetType("System.String"));
             dc.AllowDBNull = false;
             dt.Columns.Add(dc);
+            
+            dc = new DataColumn("P1", System.Type.GetType("System.String"));
+            dt.Columns.Add(dc);
+
+            dc = new DataColumn("P2", System.Type.GetType("System.String"));
+            dt.Columns.Add(dc);
 
             // Установка ограничей уникальности на группу столбцов
-            dt.Constraints.Add(new UniqueConstraint(uniqueColumns));
+           // dt.Constraints.Add(new UniqueConstraint(uniqueColumns));
 
             TransactionBase = new DataSet("Transaction Manager");
             TransactionBase.Tables.Add(dt);
@@ -382,6 +391,7 @@ namespace Settings
 
         public override void Load()
         {
+            NLogger.logger.Error("столбцы загружаются");
             base.Load();
             if (Primary_ODBC_Pass != null)
             {

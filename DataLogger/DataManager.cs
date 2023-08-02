@@ -349,16 +349,24 @@ namespace DataManager
             string fCtrlDT;
             string fParID;
             string fParVal;
-          
-            transactions.Clear();
+            string fParp1;
+            string fParp2;
+           
 
+            transactions.Clear();
+            
             foreach (DataRow row in Sets.TransactionBase.Tables["TransactionTable"].Rows)
             {
+                
                 tableName = row["Table Name"].ToString();
                 fTranDT = row["Transaction DT"].ToString();
                 fCtrlDT = row["Controller DT"].ToString();
                 fParID = row["Parameter ID"].ToString();
                 fParVal = row["Parameter Value"].ToString();
+               
+                fParp1 = row["P1"].ToString();
+                fParp2 = row["P2"].ToString();
+
                 
                 Transaction tran = new Transaction(Log);
 
@@ -372,8 +380,8 @@ namespace DataManager
                 tran.uaCounterName = row["CounterUA Name"].ToString();
                 tran.uaArrName = row["ArrayUA Name"].ToString();
                 //------------------------
-
-                tran.odbcConn.GenerateCommand(tableName, fTranDT, fCtrlDT, fParID, fParVal);
+                NLogger.logger.Error("здесь пока норм но не точно");
+                tran.odbcConn.GenerateCommand(tableName, fTranDT, fCtrlDT, fParID, fParVal, fParp2, fParp1);
                 
                 tran.Statistics += TransactStatistics;
                
@@ -398,8 +406,9 @@ namespace DataManager
             if (StateChange != null) StateChange(null, new ConfigStateEventArgs(state));
 
             stopping = false;
+            NLogger.logger.Error("создается транзакция");
             CreateTransact();
-
+            NLogger.logger.Error("транзакция создана! УРА!");
             state = ConfigState.Started;
             if (StateChange != null) StateChange(null, new ConfigStateEventArgs(state));
             Log.WriteEntry("The configuration was started");
@@ -577,7 +586,7 @@ namespace DataManager
             }
             return null;
         }
-        public bool GenerateCommand(string tableName, string fTranDT, string fCtrlDT, string fParID, string fParVal)
+        public bool GenerateCommand(string tableName, string fTranDT, string fCtrlDT, string fParID, string fParVal, string fParp1, string fParp2)
         {
             NLogger.logger.Trace("Тип драйвера: " + Config.Sets.Driver_Type.ToString());
 
@@ -960,13 +969,53 @@ namespace DataManager
                     parameter.SourceColumn = fParVal;
                     parameters.Add(parameter);
                     dt.Columns.Add(fParVal, System.Type.GetType("System.Single"));
-
+                    prevPar = true;
                 }
 
+                if (fParp1 != "")
+                {
+                    if (prevPar)
+                    {
+                        sqlIns.Append(", " + fParp1);
+                        sqlVal.Append(", ?");
+                    }
+                    else
+                    {
+                        sqlIns.Append(fParp1);
+                        sqlVal.Append("?");
+                    }
+                    OdbcParameter parameter = new OdbcParameter();
+                    parameter.ParameterName = "@p1";
+                    parameter.OdbcType = OdbcType.Decimal;
+                    parameter.SourceColumn = fParp1;
+                    parameters.Add(parameter);
+                    dt.Columns.Add(fParp1, System.Type.GetType("System.UInt32"));
+                    prevPar = true;
+                }
 
+                if (fParp2 != "")
+                {
+                    if (prevPar)
+                    {
+                        sqlIns.Append(", " + fParp2);
+                        sqlVal.Append(", ?");
+                    }
+                    else
+                    {
+                        sqlIns.Append(fParp2);
+                        sqlVal.Append("?");
+                    }
+                    OdbcParameter parameter = new OdbcParameter();
+                    parameter.ParameterName = "@p2";
+                    parameter.OdbcType = OdbcType.Decimal;
+                    parameter.SourceColumn = fParp2;
+                    parameters.Add(parameter);
+                    dt.Columns.Add(fParp2, System.Type.GetType("System.UInt32"));
+                    
+                }
 
                 sqlIns.Append(")");
-                sqlVal.Append(");");
+                    sqlVal.Append(");");
 
                 if (parameters.Count > 0)
                 {
@@ -1179,8 +1228,42 @@ namespace DataManager
                                     transaction.Rollback();
                                     cmd.Transaction = null;
                                     return false;
+                                case "@p1":
+
+                                    objVal = rec.p1ua;
+                                    if (objVal is uint)
+                                    {
+
+                                        newRow[par.SourceColumn] = objVal;
+                                        NLogger.logger.Trace($"@p1 value is: " + newRow[par.SourceColumn].ToString());
+                                        break;
+                                    }
+
+                                    // Attempt to roll back the transaction.
+                                    transaction.Rollback();
+                                    NLogger.logger.Trace($"Attempt to roll back the transaction from @id");
+                                    cmd.Transaction = null;
+                                    return false;
+
+                                case "@p2":
+
+                                    objVal = rec.p2ua;
+                                    if (objVal is uint)
+                                    {
+
+                                        newRow[par.SourceColumn] = objVal;
+                                        NLogger.logger.Trace($"@p2 value is: " + newRow[par.SourceColumn].ToString());
+                                        break;
+                                    }
+
+                                    // Attempt to roll back the transaction.
+                                    transaction.Rollback();
+                                    NLogger.logger.Trace($"Attempt to roll back the transaction from @id");
+                                    cmd.Transaction = null;
+                                    return false;
                             }
-                           
+                            
+
                         }
                         newRecords.Rows.Add(newRow);
                     }
@@ -1247,12 +1330,17 @@ namespace DataManager
         public DateTime dtua;
         public int idua;
         public float valua;
+        public uint p1ua;
+        public uint p2ua;
+
         //-----OPCUA-----
 
         public bool valid;
         public bool dtValid;
         public bool idValid;
         public bool valValid;
+        public bool p1Valid;
+        public bool p2Valid;
     }
 
     public class Statistics
@@ -1513,7 +1601,9 @@ namespace DataManager
             if (!(e.Cancelled || disconnectopcua))
             {
                 bool result = false;
+                
                 uatagCount = opcuaConn.AddTrigger(uaNSNumber, uaDbName, uaCounterName, "item_ ns#" + uaNSNumber + " DB:" + uaDbName + " Tag:" + uaCounterName, 1);
+                NLogger.logger.Error("OPC is try to subscribe " + uatagCount.DisplayName.ToString());
                 if (uatagCount == null)
                 {
                     if (!disconnectopcua)
@@ -1531,6 +1621,7 @@ namespace DataManager
                 for (int i = 0; i < 10; i++)
                 {
                     result = opcuaConn.ReadDIntValue(uaNSNumber, uaDbName, uaSizeName, out uasize);
+                    NLogger.logger.Error("clipboard is " + result.ToString());
                     if (result)
                     {
                         break;
@@ -1560,7 +1651,8 @@ namespace DataManager
                     return;
                 }
                 timercheckCount.Start();
-                opcuaConn.IsSubscribed = true;              
+                opcuaConn.IsSubscribed = true;
+                NLogger.logger.Error("OPC is subscribed");
             }
             else
             {
@@ -1637,6 +1729,7 @@ namespace DataManager
         }
         private void MakeTransactions(object sender, DoWorkEventArgs e)
         {
+            NLogger.logger.Error("MakeTranzaction void");
             BackgroundWorker worker = sender as BackgroundWorker;
             bool resultOK;
             while (active && !worker.CancellationPending)
@@ -1649,11 +1742,13 @@ namespace DataManager
                     if (worker.CancellationPending) break;
                     try
                     {
+                        NLogger.logger.Error("MakeTranzaction Ok");
                         resultOK = odbcConn.MakeTransactionUA(this);
                     }
                     catch
                     {
                         resultOK = false;
+                        NLogger.logger.Error("ошибка выполнения транзакции ОПС");
                         log.WriteEntry("MakeTransaction Error");
                     }
                     if (resultOK)
@@ -1686,6 +1781,7 @@ namespace DataManager
         //-------OPCUA------------
         private void OPCUADataChanged(object sender, OPCUADataEventArgs e)
         {
+            NLogger.logger.Error("OPC Data Changed");
             int count = e.Value is int ? (int)e.Value : 0;
             //if (count > 0)
             if (count > 0 && !active && (!bgwTransact.IsBusy))
@@ -1816,7 +1912,7 @@ namespace DataManager
 
         private void OPCUADataChange(MonitoredItem monitoredItem, MonitoredItemNotificationEventArgs e)
         {
-
+            NLogger.logger.Error("OPC Data changed");
             MonitoredItemNotification notification = e.NotificationValue as MonitoredItemNotification;
             if (notification == null)
             {
@@ -1825,6 +1921,7 @@ namespace DataManager
 
             if (DataChanged != null)
             {
+                NLogger.logger.Error("OPC Data changed");
                 DataChanged(this, new OPCUADataEventArgs((int)(notification.ClientHandle), notification.Value.WrappedValue.Value));
             }
 
@@ -1980,14 +2077,19 @@ namespace DataManager
 
         public MonitoredItem AddTrigger(int NodeNum, string DBName, string VarName, string ItemName, int SamplingInterval)
         {
-            
+            NLogger.logger.Error("Add trigger for " + ItemName);
+            NLogger.logger.Error(OPCUAState.Running.ToString());
             if (State != OPCUAState.Running) return null;
+            NLogger.logger.Error(subscriptionObj.ToString());
             if (subscriptionObj == null) return null;
+
             string itemID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
+           
             try
             {
                 if (groupTriggers == null)
                 {
+                    NLogger.logger.Error("создается триггер");
                     groupTriggers = serverObj.AddMonitoredItem(subscriptionObj, itemID, ItemName, SamplingInterval);
                     serverObj.ItemChangedNotification += new MonitoredItemNotificationEventHandler(OPCUADataChange);
                 }
@@ -1996,6 +2098,7 @@ namespace DataManager
             }
             catch (Exception ex)
             {
+                NLogger.logger.Error(serverName + "Error of addition of the trigger " + itemID + ". " + ex.Message);
                 log.WriteEntry(serverName + "Error of addition of the trigger " + itemID + ". " + ex.Message);
                 return null;
             }
@@ -2019,6 +2122,7 @@ namespace DataManager
                 }
                 catch (Exception e)
                 {
+                    NLogger.logger.Error(serverName + " read error DIntItem= " + NodeID + "! " + e.Message);
                     log.WriteEntry(serverName + " read error DIntItem= " + NodeID + "! " + e.Message);
 
                     value = 0;
@@ -2027,6 +2131,7 @@ namespace DataManager
             }
             else
             {
+                NLogger.logger.Error(serverName + "DIntItem= " + NodeID + " doesn't Read! Server is stopped ");
                 log.WriteEntry(serverName + "DIntItem= " + NodeID + " doesn't Read! Server is stopped ");
                 value = 0;
                 return false;
@@ -2051,6 +2156,31 @@ namespace DataManager
             else
             {
                 log.WriteEntry(serverName + "DIntItem= " + Node + " doesn't Read! Server is stopped ");
+                value = 0;
+                return false;
+            }
+        }
+        public bool ReadUIntValue(string Node, out uint value)
+        {
+            if (state == OPCUAState.Running)
+            {
+                try
+                {
+                    value = (uint)serverObj.Session.ReadValue(new NodeId(Node)).Value; ;
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    NLogger.logger.Trace(serverName + " read error UInt= " + Node + "! " + e.Message);
+                    log.WriteEntry(serverName + " read error UInt= " + Node + "! " + e.Message);
+                    value = 0;
+                    return false;
+                }
+            }
+            else
+            {
+                NLogger.logger.Trace(serverName + "UIntItem= " + Node + " doesn't Read! Server is stopped ");
+                log.WriteEntry(serverName + "UIntItem= " + Node + " doesn't Read! Server is stopped ");
                 value = 0;
                 return false;
             }
@@ -2138,6 +2268,7 @@ namespace DataManager
                 return false;
             }
         }             
+
         public void ReadDiffTypeValues(int NodeNum, string DBName, string VarName, int count, List<Record> records)
         {
             string NodeID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
@@ -2153,12 +2284,16 @@ namespace DataManager
                         records[i].dtValid = ReadDateTimeValue((NodeID + $"[{i}].DateTime"), out records[i].dtua);
                         records[i].idValid = ReadDIntValue((NodeID + $"[{i}].ID"), out records[i].idua);
                         records[i].valValid = ReadRealValue((NodeID + $"[{i}].Value"), out records[i].valua);
-                        records[i].valid = (records[i].dtValid && records[i].idValid && records[i].valValid);
+                        records[i].p1Valid = ReadUIntValue((NodeID + $"[{i}].p1"), out records[i].p1ua);
+                        records[i].p2Valid = ReadUIntValue((NodeID + $"[{i}].p2"), out records[i].p2ua);
+
+                        records[i].valid = (records[i].dtValid && records[i].idValid && records[i].valValid && records[i].p1Valid && records[i].p2Valid);
                         
                         //NLogger.logger.Trace("dt: " + records[i].dtValid + " id: " + records[i].idValid + " val: " + records[i].valValid);
                     }
                     catch (Exception ex)
                     {
+                        NLogger.logger.Trace(serverName + " Read Record# " + i + "! Error:" + ex.Message);
                         log.WriteEntry(serverName + " Read Record# " + i + "! Error:" + ex.Message);
                     }
                 }

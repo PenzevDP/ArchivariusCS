@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using DataManager;
 using Tools;
+using Settings;
 
 namespace Archivarius
 {
@@ -69,5 +70,7 @@ namespace Archivarius
             MessageBox.Show(e.Exception.Message, Application.ProductName);
             e.Cancel = true;       
         }
+
+       
     }
 }

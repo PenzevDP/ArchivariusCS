@@ -58,10 +58,9 @@
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.CausesValidation = false;
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(841, 498);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCancel.Location = new System.Drawing.Point(631, 405);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(100, 28);
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -69,10 +68,9 @@
             // btnApply
             // 
             this.btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnApply.Location = new System.Drawing.Point(721, 498);
-            this.btnApply.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnApply.Location = new System.Drawing.Point(541, 405);
             this.btnApply.Name = "btnApply";
-            this.btnApply.Size = new System.Drawing.Size(100, 28);
+            this.btnApply.Size = new System.Drawing.Size(75, 23);
             this.btnApply.TabIndex = 3;
             this.btnApply.Text = "Apply";
             this.btnApply.UseVisualStyleBackColor = true;
@@ -93,11 +91,10 @@
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridTrn.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridTrn.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridTrn.Location = new System.Drawing.Point(3, 34);
-            this.dataGridTrn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dataGridTrn.Location = new System.Drawing.Point(2, 28);
             this.dataGridTrn.Name = "dataGridTrn";
             this.dataGridTrn.RowHeadersWidth = 51;
-            this.dataGridTrn.Size = new System.Drawing.Size(965, 449);
+            this.dataGridTrn.Size = new System.Drawing.Size(724, 365);
             this.dataGridTrn.TabIndex = 5;
             this.dataGridTrn.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridTrn_DataError);
             // 
@@ -126,7 +123,7 @@
             this.navigatorTran.MovePreviousItem = this.navigatorMovePreviousItem;
             this.navigatorTran.Name = "navigatorTran";
             this.navigatorTran.PositionItem = this.navigatorPositionItem;
-            this.navigatorTran.Size = new System.Drawing.Size(971, 27);
+            this.navigatorTran.Size = new System.Drawing.Size(728, 27);
             this.navigatorTran.TabIndex = 6;
             // 
             // navigatorAddNewItem
@@ -135,13 +132,13 @@
             this.navigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("navigatorAddNewItem.Image")));
             this.navigatorAddNewItem.Name = "navigatorAddNewItem";
             this.navigatorAddNewItem.RightToLeftAutoMirrorImage = true;
-            this.navigatorAddNewItem.Size = new System.Drawing.Size(29, 24);
+            this.navigatorAddNewItem.Size = new System.Drawing.Size(24, 24);
             this.navigatorAddNewItem.Text = "Add new";
             // 
             // navigatorCountItem
             // 
             this.navigatorCountItem.Name = "navigatorCountItem";
-            this.navigatorCountItem.Size = new System.Drawing.Size(55, 24);
+            this.navigatorCountItem.Size = new System.Drawing.Size(43, 24);
             this.navigatorCountItem.Text = "для {0}";
             this.navigatorCountItem.ToolTipText = "Total number of items";
             // 
@@ -151,7 +148,7 @@
             this.navigatorDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("navigatorDeleteItem.Image")));
             this.navigatorDeleteItem.Name = "navigatorDeleteItem";
             this.navigatorDeleteItem.RightToLeftAutoMirrorImage = true;
-            this.navigatorDeleteItem.Size = new System.Drawing.Size(29, 24);
+            this.navigatorDeleteItem.Size = new System.Drawing.Size(24, 24);
             this.navigatorDeleteItem.Text = "Delete";
             // 
             // navigatorMoveFirstItem
@@ -160,7 +157,7 @@
             this.navigatorMoveFirstItem.Image = ((System.Drawing.Image)(resources.GetObject("navigatorMoveFirstItem.Image")));
             this.navigatorMoveFirstItem.Name = "navigatorMoveFirstItem";
             this.navigatorMoveFirstItem.RightToLeftAutoMirrorImage = true;
-            this.navigatorMoveFirstItem.Size = new System.Drawing.Size(29, 24);
+            this.navigatorMoveFirstItem.Size = new System.Drawing.Size(24, 24);
             this.navigatorMoveFirstItem.Text = "Move first";
             // 
             // navigatorMovePreviousItem
@@ -169,7 +166,7 @@
             this.navigatorMovePreviousItem.Image = ((System.Drawing.Image)(resources.GetObject("navigatorMovePreviousItem.Image")));
             this.navigatorMovePreviousItem.Name = "navigatorMovePreviousItem";
             this.navigatorMovePreviousItem.RightToLeftAutoMirrorImage = true;
-            this.navigatorMovePreviousItem.Size = new System.Drawing.Size(29, 24);
+            this.navigatorMovePreviousItem.Size = new System.Drawing.Size(24, 24);
             this.navigatorMovePreviousItem.Text = "Move previous";
             // 
             // navigatorSeparator
@@ -181,8 +178,9 @@
             // 
             this.navigatorPositionItem.AccessibleName = "Position";
             this.navigatorPositionItem.AutoSize = false;
+            this.navigatorPositionItem.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.navigatorPositionItem.Name = "navigatorPositionItem";
-            this.navigatorPositionItem.Size = new System.Drawing.Size(65, 27);
+            this.navigatorPositionItem.Size = new System.Drawing.Size(50, 23);
             this.navigatorPositionItem.Text = "0";
             this.navigatorPositionItem.ToolTipText = "Current position";
             // 
@@ -197,7 +195,7 @@
             this.navigatorMoveNextItem.Image = ((System.Drawing.Image)(resources.GetObject("navigatorMoveNextItem.Image")));
             this.navigatorMoveNextItem.Name = "navigatorMoveNextItem";
             this.navigatorMoveNextItem.RightToLeftAutoMirrorImage = true;
-            this.navigatorMoveNextItem.Size = new System.Drawing.Size(29, 24);
+            this.navigatorMoveNextItem.Size = new System.Drawing.Size(24, 24);
             this.navigatorMoveNextItem.Text = "Move next";
             // 
             // navigatorMoveLastItem
@@ -206,7 +204,7 @@
             this.navigatorMoveLastItem.Image = ((System.Drawing.Image)(resources.GetObject("navigatorMoveLastItem.Image")));
             this.navigatorMoveLastItem.Name = "navigatorMoveLastItem";
             this.navigatorMoveLastItem.RightToLeftAutoMirrorImage = true;
-            this.navigatorMoveLastItem.Size = new System.Drawing.Size(29, 24);
+            this.navigatorMoveLastItem.Size = new System.Drawing.Size(24, 24);
             this.navigatorMoveLastItem.Text = "Move last";
             // 
             // navigatorSeparator2
@@ -217,16 +215,15 @@
             // formDefineTran
             // 
             this.AcceptButton = this.btnApply;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(971, 534);
+            this.ClientSize = new System.Drawing.Size(728, 434);
             this.Controls.Add(this.navigatorTran);
             this.Controls.Add(this.dataGridTrn);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnApply);
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MinimizeBox = false;
             this.Name = "formDefineTran";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -260,6 +257,5 @@
         private System.Windows.Forms.ToolStripButton navigatorMoveLastItem;
         private System.Windows.Forms.ToolStripSeparator navigatorSeparator2;
         private System.Windows.Forms.BindingSource bindingTran;
-
     }
 }
