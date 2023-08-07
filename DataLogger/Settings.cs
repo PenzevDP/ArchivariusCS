@@ -228,6 +228,9 @@ namespace Settings
         public int UpdateRate;
         public bool Running;
 
+        //---toOPCUA---
+        public DataSet TransactionBaseOPCUA;
+
         //---OPCUA---
         public string Primary_OPCUA_EndpointURL;
         public string Primary_OPCUA_EndpointSecurityPolicyUri;
@@ -249,6 +252,7 @@ namespace Settings
             Primary_ODBC_Pass = null;
             Driver_Type = "";
             TransactionBase = null;
+            TransactionBaseOPCUA = null;
             UpdateRate = 0;
             Running = false;
 
@@ -273,6 +277,7 @@ namespace Settings
             Primary_ODBC_User = "";
             Primary_ODBC_Pass = null;
             TransactionBase = null;
+            TransactionBaseOPCUA = null;
             UpdateRate = 0;
             Running = false;
 
@@ -304,9 +309,13 @@ namespace Settings
             DataTable dt;
             DataColumn dc;
 
+            DataTable dtOPCUA;
+            DataColumn dcOPCUA;
+
             // Ограничение уникальности на группу столбцов
             //DataColumn[] uniqueColumns = new DataColumn[2];
             DataColumn[] uniqueColumns = new DataColumn[2];
+            DataColumn[] uniqueColumnsOPCUA = new DataColumn[2];
 
 
             //Primary_OPC_Node = "";
@@ -327,13 +336,19 @@ namespace Settings
 
 
             dt = new DataTable("TransactionTable");
+            dtOPCUA = new DataTable("TransactionTable");
 
             dc = new DataColumn("Transaction Name", System.Type.GetType("System.String"));
             dc.AllowDBNull = false;
             dc.Unique = true;
             dt.Columns.Add(dc);
 
-       
+            dcOPCUA = new DataColumn("Transaction Name", System.Type.GetType("System.String"));
+            dcOPCUA.AllowDBNull = false;
+            dcOPCUA.Unique = true;
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+
             //---OPCUA---
             dc = new DataColumn("ns#", System.Type.GetType("System.Int32"));
             dc.AllowDBNull = false;
@@ -356,6 +371,7 @@ namespace Settings
             dc = new DataColumn("ArrayUA Name", System.Type.GetType("System.String"));
             dc.AllowDBNull = false;
             dt.Columns.Add(dc);
+                       
             //--OPCUA----
 
             dc = new DataColumn("Table Name", System.Type.GetType("System.String"));
@@ -382,11 +398,63 @@ namespace Settings
             dc = new DataColumn("P2", System.Type.GetType("System.String"));
             dt.Columns.Add(dc);
 
+
+
+            //---toOPCUA transaction---
+            dcOPCUA = new DataColumn("Table Name", System.Type.GetType("System.String"));
+            dcOPCUA.AllowDBNull = false;
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+            dcOPCUA = new DataColumn("Tag Name", System.Type.GetType("System.String"));
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+            dcOPCUA = new DataColumn("Tag ID", System.Type.GetType("System.String"));
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+            dcOPCUA = new DataColumn("Time mode", System.Type.GetType("System.String"));
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+            dcOPCUA = new DataColumn("Agregation mode", System.Type.GetType("System.String"));
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+            dcOPCUA = new DataColumn("Is act", System.Type.GetType("System.String"));
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+            dcOPCUA = new DataColumn("Source lengh", System.Type.GetType("System.String"));
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+            dcOPCUA = new DataColumn("Source DB#", System.Type.GetType("System.Int32"));          
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+            dcOPCUA = new DataColumn("Source offset LSB", System.Type.GetType("System.String"));
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+            dcOPCUA = new DataColumn("Source offset MSB", System.Type.GetType("System.String"));
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+            dcOPCUA = new DataColumn("Source data type", System.Type.GetType("System.String"));
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+            dcOPCUA = new DataColumn("Source memory area", System.Type.GetType("System.String"));
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+            dcOPCUA = new DataColumn("Any ID", System.Type.GetType("System.String"));
+            dtOPCUA.Columns.Add(dcOPCUA);
+
+            dcOPCUA = new DataColumn("PLC Name", System.Type.GetType("System.String"));
+           
+            dtOPCUA.Columns.Add(dcOPCUA);
+            
+
+            
             // Установка ограничей уникальности на группу столбцов
-           // dt.Constraints.Add(new UniqueConstraint(uniqueColumns));
+            // dt.Constraints.Add(new UniqueConstraint(uniqueColumns));
 
             TransactionBase = new DataSet("Transaction Manager");
             TransactionBase.Tables.Add(dt);
+
+            TransactionBaseOPCUA = new DataSet("Transaction Manager");
+            TransactionBaseOPCUA.Tables.Add(dtOPCUA);
         }
 
         public override void Load()

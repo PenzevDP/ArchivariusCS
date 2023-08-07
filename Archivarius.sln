@@ -5,8 +5,6 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archivarius", "DataLogger\Archivarius.csproj", "{D685C6C7-EBD6-4424-91D9-F105B93FFB32}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DataLoggerSetup", "DataLoggerSetup\DataLoggerSetup.vdproj", "{DFB9083B-E4D2-4483-8980-F6A48CDFF71C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,11 +21,6 @@ Global
 		{D685C6C7-EBD6-4424-91D9-F105B93FFB32}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D685C6C7-EBD6-4424-91D9-F105B93FFB32}.Release|x86.ActiveCfg = Release|x86
 		{D685C6C7-EBD6-4424-91D9-F105B93FFB32}.Release|x86.Build.0 = Release|x86
-		{DFB9083B-E4D2-4483-8980-F6A48CDFF71C}.Debug|Any CPU.ActiveCfg = Debug
-		{DFB9083B-E4D2-4483-8980-F6A48CDFF71C}.Debug|x86.ActiveCfg = Debug
-		{DFB9083B-E4D2-4483-8980-F6A48CDFF71C}.Release|Any CPU.ActiveCfg = Release
-		{DFB9083B-E4D2-4483-8980-F6A48CDFF71C}.Release|x86.ActiveCfg = Release
-		{DFB9083B-E4D2-4483-8980-F6A48CDFF71C}.Release|x86.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

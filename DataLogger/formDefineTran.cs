@@ -15,6 +15,8 @@ namespace Archivarius
     public partial class formDefineTran : Form
     {
         private DataSet copyTransaction;
+        private DataSet copyTransactionOPCUA;
+
 
         public formDefineTran()
         {
@@ -27,18 +29,27 @@ namespace Archivarius
             {
                 SafeThread.SetEnableControl(btnApply, true);
                 SafeThread.SetReadOnlyDataGridView(dataGridTrn, false);
+                SafeThread.SetReadOnlyDataGridView(dataGridtrnOPC, false);
                 SafeThread.SetAllowUserToAddRowsDataGridView(dataGridTrn, true);
+                SafeThread.SetAllowUserToAddRowsDataGridView(dataGridtrnOPC, true);
                 SafeThread.SetVisibleStripItem(navigatorTran, navigatorAddNewItem, true);
                 SafeThread.SetVisibleStripItem(navigatorTran, navigatorDeleteItem, true);
+                SafeThread.SetVisibleStripItem(navigatorTranOPC, navigatorAddNewItemOPC, true);
+                SafeThread.SetVisibleStripItem(navigatorTranOPC, navigatorDeleteItemOPC, true);
             }
             else
             {                
                 SafeThread.SetEnableControl(btnApply, false);
                 SafeThread.CancelEditDataGridView(dataGridTrn);
+                SafeThread.CancelEditDataGridView(dataGridtrnOPC);
                 SafeThread.SetReadOnlyDataGridView(dataGridTrn, true);
+                SafeThread.SetReadOnlyDataGridView(dataGridtrnOPC, true);
                 SafeThread.SetAllowUserToAddRowsDataGridView(dataGridTrn, false);
+                SafeThread.SetAllowUserToAddRowsDataGridView(dataGridtrnOPC, false);
                 SafeThread.SetVisibleStripItem(navigatorTran, navigatorAddNewItem, false);
                 SafeThread.SetVisibleStripItem(navigatorTran, navigatorDeleteItem, false);
+                SafeThread.SetVisibleStripItem(navigatorTranOPC, navigatorAddNewItemOPC, false);
+                SafeThread.SetVisibleStripItem(navigatorTranOPC, navigatorDeleteItemOPC, false);
             }
         }
 
@@ -47,7 +58,15 @@ namespace Archivarius
             copyTransaction = Config.Sets.TransactionBase.Copy();
             bindingTran.DataSource = copyTransaction.Tables["TransactionTable"];
             dataGridTrn.DataSource = bindingTran;
+
+            copyTransactionOPCUA = Config.Sets.TransactionBaseOPCUA.Copy();
+            bindingTranOPC.DataSource = copyTransactionOPCUA.Tables["TransactionTable"];
+            dataGridtrnOPC.DataSource = bindingTranOPC;
+            NLogger.logger.Trace(copyTransactionOPCUA.Tables["TransactionTable"].Columns[9].ColumnName.ToString());
+
+
             navigatorTran.BindingSource = bindingTran;
+            navigatorTranOPC.BindingSource = bindingTranOPC;
             UpdateConfigState(Config.State);
             Config.StateChange += ConfigStateChange;
         }
@@ -71,6 +90,29 @@ namespace Archivarius
             e.Cancel = true;       
         }
 
-       
+        private void dataGridTrn_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dataGridtrnOPC_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void OPCUA_transaction_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void navigatorMoveFirstItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void navigatorAddNewItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

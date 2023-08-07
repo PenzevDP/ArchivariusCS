@@ -52,6 +52,11 @@ namespace Archivarius
            connector.Command(command);
          NLogger.logger.Trace(command);
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
     
 }

@@ -405,6 +405,11 @@ namespace Archivarius
             testSQLOracle();
         }
 
+        private void dataGridMonitor_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
         //---OPCUA----
     }
 }

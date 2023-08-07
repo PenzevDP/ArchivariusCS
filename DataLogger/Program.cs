@@ -1,10 +1,16 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 using DataManager;
 using SQLDataSources;
+using TableDependency;
+using TableDependency.SqlClient;
+using TableDependency.SqlClient.Base;
+using TableDependency.SqlClient.Base.EventArgs;
 
 namespace Archivarius
 {
@@ -13,9 +19,11 @@ namespace Archivarius
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+       
+
       
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             /*  Console.WriteLine($"Start App");
@@ -33,7 +41,9 @@ namespace Archivarius
             Application.SetCompatibleTextRenderingDefault(false);
             NLogger.logger.Trace($"Service. formMain has called");
             Application.Run(new formMain());
-               
+
+
         }
-    }
+        
+    }       
 }

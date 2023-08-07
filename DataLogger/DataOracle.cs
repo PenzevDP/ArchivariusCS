@@ -96,15 +96,23 @@ namespace DataOracle
                 }
             }
         }
+         private formTestOracle formTestOracle { get; set; }
+        public ODBCConnector(formTestOracle f)
+        {
+
+            formTestOracle = f;
+        }
+
 
         public void Command(string command)
         {
 
            string value = new DateTime(2028, 7, 28, 08, 0, 0, 12).ToString("yyyy/MM/dd HH:mm:ss.ff");
             string value1 = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.ff");
-            comm1 = string.Format("insert into test (tdt) values (to_timestamp('" + value1 + "', 'YYYY/MM/DD HH24:Mi:SS.ff'));");
+            comm1 = string.Format("Select * from Logger;");
             cmd = new OdbcCommand(comm1,conn);
             da = new OdbcDataAdapter(cmd);
+            DataSet ds = new DataSet();
             NLogger.logger.Trace(cmd.CommandText);
           
 
@@ -118,9 +126,23 @@ namespace DataOracle
             
             
             da.InsertCommand = cmd;
-            cmd.ExecuteNonQuery();
+            da.Fill(ds);
+            //cmd.ExecuteNonQuery();
             conn.Close();
-            
+            NLogger.logger.Error(ds.Tables[0].Rows[0].ToString());
+            ds.WriteXml("d:\\test.xml");
+
+
+
+
+
+
+
+
+
+
+
+
         }
 
     }
