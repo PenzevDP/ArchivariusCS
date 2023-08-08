@@ -89,10 +89,61 @@ namespace DataManager
 
         public ConfigStatisticsEventArgs(Transaction tran)
         {
-            tranName = tran.tranName;
+            tranName = tran.tranName;         
             opcuaState = tran.opcuaConn.State;
             odbcState = tran.odbcConn.State;
             tranStat = new Statistics(tran.stat);
+            
+        }
+        public string TransactionName
+        {
+            get
+            {
+                return tranName;
+            }
+        }
+        public ConnectionState ODBCConnState
+        {
+            get
+            {
+                return odbcState;
+            }
+        }
+
+
+        public OPCUAState OPCUAConnState
+        {
+            get
+            {
+                return opcuaState;
+            }
+        }
+        public Statistics TransactionStatistics
+        {
+            get
+            {
+                return tranStat;
+            }
+        }
+    }
+
+    public class ConfigStatisticsEventArgsOPC : EventArgs
+    {
+        private string tranName;
+        private ConnectionState odbcState;
+        private OPCUAState opcuaState;
+        private Statistics tranStat;
+
+        public ConfigStatisticsEventArgsOPC(Transaction tran)
+        {
+           
+
+            tranName = tran.tranName;
+            NLogger.logger.Error("MMMMMM: " + tranName.ToString());
+            opcuaState = tran.opcuaConn.State;
+            odbcState = tran.odbcConn.State;
+            tranStat = new Statistics(tran.stat);
+
         }
         public string TransactionName
         {
@@ -185,6 +236,7 @@ namespace DataManager
 
     public delegate void ConfigStateEventHandler(object sender, ConfigStateEventArgs e);
     public delegate void StatisticsEventHandler(object sender, ConfigStatisticsEventArgs e);
+    public delegate void StatisticsEventHandlerOPC(object sender, ConfigStatisticsEventArgsOPC e);
 
     public delegate void OPCUAEventHandler(object sender, OPCUAEventArgs e);
     public delegate void OPCUADataEventHandler(object sender, OPCUADataEventArgs e);
@@ -305,7 +357,7 @@ namespace DataManager
                     if (!stopping)
                     {
                         CreateTransact();
-                        CreateTransactOPCUA();
+                    //    CreateTransactOPCUA();
                         StartTransact();
                     }
                 }
@@ -317,12 +369,17 @@ namespace DataManager
 
         private static void TransactStatistics(object sender, ConfigStatisticsEventArgs e)
         {
+            NLogger.logger.Error(e.TransactionName);
+            NLogger.logger.Error("я тут00");
             if (Statistics != null) Statistics(sender, e);
         }
 
-        private static void TransactStatisticsOPCUA(object sender, ConfigStatisticsEventArgs e)
+        private static void TransactStatisticsOPCUA(object sender, ConfigStatisticsEventArgsOPC e)
         {
-            if (Statistics != null) Statistics(sender, e);
+            NLogger.logger.Error("я тут01");
+            NLogger.logger.Error("Вот  тут:" +  e.TransactionName);
+
+            if (StatisticsOPC != null) StatisticsOPC(sender, e);
         }
 
         public static bool Ready
@@ -417,25 +474,28 @@ namespace DataManager
                 tran.uaCounterName = row["CounterUA Name"].ToString();
                 tran.uaArrName = row["ArrayUA Name"].ToString();
                 //------------------------
-                NLogger.logger.Error("здесь пока норм но не точно");
+                
                 tran.odbcConn.GenerateCommand(tableName, fTranDT, fCtrlDT, fParID, fParVal, fParp2, fParp1);
-
+                
                 tran.Statistics += TransactStatistics;
-
+               
 
                 //-----OPCUA---------
                 tran.OPCUAconnStateChange += OPCUAStateChanged;
                 //-----------------
-
+                
                 tran.ConnectToODBC();
-
+               
                 //-----OPCUA---------
                 tran.ConnectToOPCUA();
                 //-----------------
-
+               
                 transactions.Add(tran);
-                if (Statistics != null) Statistics(tran, new ConfigStatisticsEventArgs(tran));
+                
+                 if (Statistics != null) Statistics(tran, new ConfigStatisticsEventArgs(tran)); // ЭТА СТРОКА ДЛЯ ЧЕГО-ТО БЫЛА НУЖНА :(
+                
             }
+            
         }
         private static void CreateTransactOPCUA()
         {
@@ -453,34 +513,47 @@ namespace DataManager
             string fsourceMemArea;
             string fsourceAnyID;
             string fPLCName;
-                                 
 
+            
             foreach (DataRow row in Sets.TransactionBaseOPCUA.Tables["TransactionTable"].Rows)
             {
-
+                
                 tableName = row["Table Name"].ToString();
-                ftagName = row["Transaction DT"].ToString();
-                ftagID = row["Controller DT"].ToString();
-                ftimeMode = row["Parameter ID"].ToString();
-                fagrMode = row["Parameter Value"].ToString();
-                fisAct = row["Parameter Value"].ToString();
-                fsourceLength = row["Parameter Value"].ToString();
-                fsourceDBn = row["Parameter Value"].ToString();
-                fsourceOffsetLSB = row["Parameter Value"].ToString();
-                fsourceOffsetMSB = row["Parameter Value"].ToString();
-                fsourceDataType = row["Parameter Value"].ToString();
-                fsourceMemArea = row["Parameter Value"].ToString();
-                fsourceAnyID = row["Parameter Value"].ToString();
-                fPLCName = row["P1"].ToString();
+                ftagName = row["Tag Name"].ToString();
+                ftagID = row["Tag ID"].ToString();
+                ftimeMode = row["Time mode"].ToString();
+                fagrMode = row["Agregation mode"].ToString();
+                fisAct = row["Is act"].ToString();
+                fsourceLength = row["Source lengh"].ToString();
+                fsourceDBn = row["Source DB#"].ToString();
+                fsourceOffsetLSB = row["Source offset LSB"].ToString();
+                fsourceOffsetMSB = row["Source offset MSB"].ToString();
+                fsourceDataType = row["Source data type"].ToString();
+                fsourceMemArea = row["Source memory area"].ToString();
+                fsourceAnyID = row["Any ID"].ToString();
+                fPLCName = row["PLC Name"].ToString();
 
+                
+                Transaction tranOPC = new Transaction(Log);
 
-                Transaction tran = new Transaction(Log);
+                tranOPC.tranName = row["Transaction Name"].ToString();
+                NLogger.logger.Error("0101010");
+                tranOPC.StatisticsOPC += TransactStatisticsOPCUA;
+                NLogger.logger.Error("1111111");
 
-                tran.tranName = row["Transaction Name"].ToString();
+                transactions.Add(tranOPC);
 
+                if (StatisticsOPC != null)
+                {
+                    StatisticsOPC(tranOPC, new ConfigStatisticsEventArgsOPC(tranOPC)); // ЭТА СТРОКА ДЛЯ ЧЕГО-ТО БЫЛА НУЖНА :(
+                    NLogger.logger.Error("ttttt");
+                }
+                else
+                {
+                    NLogger.logger.Error("ppppp");
+                }
+            }
 
-                NLogger.logger.Error("здесь пока норм но не точно");
-            } 
         }
 
         private static void Starting(object sender, DoWorkEventArgs e)
@@ -489,13 +562,13 @@ namespace DataManager
             if (StateChange != null) StateChange(null, new ConfigStateEventArgs(state));
 
             stopping = false;
-            NLogger.logger.Error("создается транзакция");
-            CreateTransact();
+            
+            CreateTransact();         
             CreateTransactOPCUA();
-            NLogger.logger.Error("транзакция создана! УРА!");
+            
             state = ConfigState.Started;
             if (StateChange != null) StateChange(null, new ConfigStateEventArgs(state));
-            Log.WriteEntry("The configuration was started");
+           
         }
         private static void Stopping(object sender, DoWorkEventArgs e)
         {
@@ -559,6 +632,7 @@ namespace DataManager
 
         public static event ConfigStateEventHandler StateChange;
         public static event StatisticsEventHandler Statistics;
+        public static event StatisticsEventHandlerOPC StatisticsOPC;
     }
 
     public class ODBCConnector : IDisposable
@@ -710,13 +784,13 @@ namespace DataManager
                         fullTableName.Append("[" + tableName + "]");
                     }
                 }
-
+                NLogger.logger.Trace("Начало формирования транзакции");
                 dt = new DataTable(fullTableName.ToString());
                 StringBuilder sqlIns = new StringBuilder("Insert into " + fullTableName.ToString() + " (");
                 StringBuilder sqlVal = new StringBuilder(" Values (");
                 List<OdbcParameter> parameters = new List<OdbcParameter>();
                 bool prevPar = false;
-
+                
                 if (fTranDT != "")
                 {
                     sqlIns.Append(fTranDT);
@@ -728,6 +802,7 @@ namespace DataManager
                     parameters.Add(parameter);
                     dt.Columns.Add(fTranDT, System.Type.GetType("System.DateTime"));
                     prevPar = true;
+                    
                 }
                 if (fCtrlDT != "")
                 {
@@ -745,9 +820,10 @@ namespace DataManager
                     parameter.ParameterName = "@dt";
                     parameter.OdbcType = OdbcType.DateTime;
                     parameter.SourceColumn = fCtrlDT;
-                    parameters.Add(parameter);
-                    dt.Columns.Add(fCtrlDT, System.Type.GetType("System.DateTime"));
+                    parameters.Add(parameter);                
+                    dt.Columns.Add(fCtrlDT, System.Type.GetType("System.DateTime"));                   
                     prevPar = true;
+                    
                 }
                 if (fParID != "")
                 {
@@ -833,9 +909,10 @@ namespace DataManager
 
                 sqlIns.Append(")");
                 sqlVal.Append(")");
-
+                
                 if (parameters.Count > 0)
                 {
+                    
                     cmd = new OdbcCommand(sqlIns.ToString() + sqlVal.ToString(), conn);
                     foreach (OdbcParameter par in parameters) cmd.Parameters.Add(par);
                     return true;
@@ -843,7 +920,9 @@ namespace DataManager
                 else
                 {
                     cmd = null;
+                    
                     return false;
+
                 }
             }
             else if (Config.Sets.Driver_Type.Contains("Oracle"))
@@ -1644,6 +1723,7 @@ namespace DataManager
 
         public event StateChangeEventHandler ODBCConnStateChange;
         public event StatisticsEventHandler Statistics;
+        public event StatisticsEventHandlerOPC StatisticsOPC;
         public event OPCUAStateEventHandler OPCUAconnStateChange;
 
         public bool IsBusy
@@ -1808,7 +1888,7 @@ namespace DataManager
                 bool result = false;
 
                 uatagCount = opcuaConn.AddTrigger(uaNSNumber, uaDbName, uaCounterName, "item_ ns#" + uaNSNumber + " DB:" + uaDbName + " Tag:" + uaCounterName, 1);
-                NLogger.logger.Error("OPC is try to subscribe " + uatagCount.DisplayName.ToString());
+                
                 if (uatagCount == null)
                 {
                     if (!disconnectopcua)
@@ -1974,6 +2054,7 @@ namespace DataManager
                         stat.Fail();
                     }
                     if (Statistics != null) Statistics(this, new ConfigStatisticsEventArgs(this));
+                    if (StatisticsOPC != null) StatisticsOPC(this, new ConfigStatisticsEventArgsOPC(this));
                 }
                 else
                 {
@@ -1991,12 +2072,13 @@ namespace DataManager
         //-------OPCUA------------
         private void OPCUADataChanged(object sender, OPCUADataEventArgs e)
         {
-            NLogger.logger.Error("OPC Data Changed");
+           
             int count = e.Value is int ? (int)e.Value : 0;
             //if (count > 0)
             if (count > 0 && !active && (!bgwTransact.IsBusy))
             {
                 active = true;
+                
                 if (!bgwTransact.IsBusy) bgwTransact.RunWorkerAsync();
             }
         }
@@ -2021,12 +2103,14 @@ namespace DataManager
             if (e.State != OPCUAState.Running) active = false;
             if (OPCUAconnStateChange != null) OPCUAconnStateChange(this, e);
             if (Statistics != null) Statistics(this, new ConfigStatisticsEventArgs(this));
+            if (StatisticsOPC != null) StatisticsOPC(this, new ConfigStatisticsEventArgsOPC(this));
         }
 
         private void ODBCStateChange(object sender, StateChangeEventArgs e)
         {
             if (ODBCConnStateChange != null) ODBCConnStateChange(this, e);
             if (Statistics != null) Statistics(this, new ConfigStatisticsEventArgs(this));
+            if (StatisticsOPC != null) StatisticsOPC(this, new ConfigStatisticsEventArgsOPC(this));
         }
     }
 
@@ -2125,7 +2209,7 @@ namespace DataManager
 
         private void OPCUADataChange(MonitoredItem monitoredItem, MonitoredItemNotificationEventArgs e)
         {
-            NLogger.logger.Error("OPC Data changed");
+            
             MonitoredItemNotification notification = e.NotificationValue as MonitoredItemNotification;
             if (notification == null)
             {
@@ -2134,7 +2218,7 @@ namespace DataManager
 
             if (DataChanged != null)
             {
-                NLogger.logger.Error("OPC Data changed");
+                
                 DataChanged(this, new OPCUADataEventArgs((int)(notification.ClientHandle), notification.Value.WrappedValue.Value));
             }
 
@@ -2290,10 +2374,10 @@ namespace DataManager
 
         public MonitoredItem AddTrigger(int NodeNum, string DBName, string VarName, string ItemName, int SamplingInterval)
         {
-            NLogger.logger.Error("Add trigger for " + ItemName);
-            NLogger.logger.Error(OPCUAState.Running.ToString());
+            
+            
             if (State != OPCUAState.Running) return null;
-            NLogger.logger.Error(subscriptionObj.ToString());
+           
             if (subscriptionObj == null) return null;
 
             string itemID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
@@ -2302,7 +2386,7 @@ namespace DataManager
             {
                 if (groupTriggers == null)
                 {
-                    NLogger.logger.Error("создается триггер");
+                   
                     groupTriggers = serverObj.AddMonitoredItem(subscriptionObj, itemID, ItemName, SamplingInterval);
                     serverObj.ItemChangedNotification += new MonitoredItemNotificationEventHandler(OPCUADataChange);
                 }

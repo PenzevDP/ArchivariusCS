@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -37,14 +38,15 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
             this.menu = new System.Windows.Forms.MenuStrip();
             this.configurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,14 +69,23 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutButton = new System.Windows.Forms.ToolStripButton();
             this.dsMonitor = new System.Data.DataSet();
+            this.dsMonitorOPC = new System.Data.DataSet();
             this.dtTransaction = new System.Data.DataTable();
+            this.dtTransactionOPC = new System.Data.DataTable();
             this.dcTransactionName = new System.Data.DataColumn();
+            this.dcTransactionNameOPC = new System.Data.DataColumn();
             this.dcOPCState = new System.Data.DataColumn();
+            this.dcOPCStateOPC = new System.Data.DataColumn();
             this.dcODBCState = new System.Data.DataColumn();
+            this.dcODBCStateOPC = new System.Data.DataColumn();
             this.dcTransactionTotal = new System.Data.DataColumn();
+            this.dcTransactionTotalOPC = new System.Data.DataColumn();
             this.dcTransactionPassed = new System.Data.DataColumn();
+            this.dcTransactionPassedOPC = new System.Data.DataColumn();
             this.dcTransactionFailed = new System.Data.DataColumn();
+            this.dcTransactionFailedOPC = new System.Data.DataColumn();
             this.dcPercent = new System.Data.DataColumn();
+            this.dcPercentOPC = new System.Data.DataColumn();
             this.statusbar = new System.Windows.Forms.StatusStrip();
             this.statusConfigLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.trayNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -89,7 +100,6 @@
             this.button2 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.DB_transactions = new System.Windows.Forms.TabPage();
-            this.OPCUA_transactions = new System.Windows.Forms.TabPage();
             this.dataGridMonitor = new System.Windows.Forms.DataGridView();
             this.transactionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.oPCDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -98,7 +108,8 @@
             this.passedDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.failedDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.passedDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewOPC = new System.Windows.Forms.DataGridView();
+            this.OPCUA_transactions = new System.Windows.Forms.TabPage();
+            this.dataGridMonitorOPC = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -109,14 +120,17 @@
             this.menu.SuspendLayout();
             this.toolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsMonitor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dsMonitorOPC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtTransaction)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtTransactionOPC)).BeginInit();
+
             this.statusbar.SuspendLayout();
             this.trayMenu.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.DB_transactions.SuspendLayout();
-            this.OPCUA_transactions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridMonitor)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOPC)).BeginInit();
+            this.OPCUA_transactions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridMonitorOPC)).BeginInit();
             this.SuspendLayout();
             // 
             // menu
@@ -323,6 +337,12 @@
             this.dsMonitor.DataSetName = "NewDataSet";
             this.dsMonitor.Tables.AddRange(new System.Data.DataTable[] {
             this.dtTransaction});
+
+            // dsMonitorOPC
+            // 
+            this.dsMonitorOPC.DataSetName = "NewDataSet";
+            this.dsMonitorOPC.Tables.AddRange(new System.Data.DataTable[] {
+            this.dtTransactionOPC});
             // 
             // dtTransaction
             // 
@@ -335,39 +355,80 @@
             this.dcTransactionFailed,
             this.dcPercent});
             this.dtTransaction.TableName = "dtTransaction";
+
+            // dtTransactionOPC
+            // 
+            this.dtTransactionOPC.Columns.AddRange(new System.Data.DataColumn[] {
+            this.dcTransactionNameOPC,
+            this.dcOPCStateOPC,
+            this.dcODBCStateOPC,
+            this.dcTransactionTotalOPC,
+            this.dcTransactionPassedOPC,
+            this.dcTransactionFailedOPC,
+            this.dcPercentOPC});
+            this.dtTransactionOPC.TableName = "dtTransaction";
             // 
             // dcTransactionName
             // 
             this.dcTransactionName.Caption = "Transaction Name";
             this.dcTransactionName.ColumnName = "Transaction";
+
+            // dcTransactionNameOPC
+            // 
+            this.dcTransactionNameOPC.Caption = "Transaction Name";
+            this.dcTransactionNameOPC.ColumnName = "Transaction";
             // 
             // dcOPCState
             // 
             this.dcOPCState.ColumnName = "OPC";
+
+            // dcOPCStateOPC
+            // 
+            this.dcOPCStateOPC.ColumnName = "OPC";
             // 
             // dcODBCState
             // 
             this.dcODBCState.ColumnName = "ODBC";
+            // dcODBCStateOPC
+            // 
+            this.dcODBCStateOPC.ColumnName = "ODBC";
             // 
             // dcTransactionTotal
             // 
             this.dcTransactionTotal.ColumnName = "Total";
             this.dcTransactionTotal.DataType = typeof(long);
+            // dcTransactionTotalOPC
+            // 
+            this.dcTransactionTotalOPC.ColumnName = "Total";
+            this.dcTransactionTotalOPC.DataType = typeof(long);
             // 
             // dcTransactionPassed
             // 
             this.dcTransactionPassed.ColumnName = "Passed";
             this.dcTransactionPassed.DataType = typeof(long);
+            // dcTransactionPassedOPC
+            // 
+            this.dcTransactionPassedOPC.ColumnName = "Passed";
+            this.dcTransactionPassedOPC.DataType = typeof(long);
             // 
             // dcTransactionFailed
             // 
             this.dcTransactionFailed.ColumnName = "Failed";
             this.dcTransactionFailed.DataType = typeof(long);
+            // dcTransactionFailedOPC
+            // 
+            this.dcTransactionFailedOPC.ColumnName = "Failed";
+            this.dcTransactionFailedOPC.DataType = typeof(long);
             // 
             // dcPercent
             // 
             this.dcPercent.ColumnName = "% Passed";
             this.dcPercent.DataType = typeof(float);
+            // 
+            // dcPercentOPC
+            // 
+            this.dcPercentOPC.ColumnName = "% Passed";
+            this.dcPercentOPC.DataType = typeof(float);
             // 
             // statusbar
             // 
@@ -494,17 +555,6 @@
             this.DB_transactions.Text = "DB_transactions";
             this.DB_transactions.UseVisualStyleBackColor = true;
             // 
-            // OPCUA_transactions
-            // 
-            this.OPCUA_transactions.Controls.Add(this.dataGridViewOPC);
-            this.OPCUA_transactions.Location = new System.Drawing.Point(4, 22);
-            this.OPCUA_transactions.Name = "OPCUA_transactions";
-            this.OPCUA_transactions.Padding = new System.Windows.Forms.Padding(3);
-            this.OPCUA_transactions.Size = new System.Drawing.Size(549, 417);
-            this.OPCUA_transactions.TabIndex = 1;
-            this.OPCUA_transactions.Text = "OPCUA_transactions";
-            this.OPCUA_transactions.UseVisualStyleBackColor = true;
-            // 
             // dataGridMonitor
             // 
             this.dataGridMonitor.AllowUserToAddRows = false;
@@ -530,6 +580,14 @@
             this.passedDataGridViewTextBoxColumn1});
             this.dataGridMonitor.DataMember = "dtTransaction";
             this.dataGridMonitor.DataSource = this.dsMonitor;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridMonitor.DefaultCellStyle = dataGridViewCellStyle9;
             this.dataGridMonitor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridMonitor.Location = new System.Drawing.Point(3, 3);
             this.dataGridMonitor.Name = "dataGridMonitor";
@@ -538,6 +596,7 @@
             this.dataGridMonitor.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridMonitor.Size = new System.Drawing.Size(543, 411);
             this.dataGridMonitor.TabIndex = 4;
+            this.dataGridMonitor.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridMonitor_CellContentClick_1);
             // 
             // transactionDataGridViewTextBoxColumn
             // 
@@ -546,7 +605,7 @@
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.transactionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
-            this.transactionDataGridViewTextBoxColumn.HeaderText = "Transaction";
+            this.transactionDataGridViewTextBoxColumn.HeaderText = "DBTransaction";
             this.transactionDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.transactionDataGridViewTextBoxColumn.Name = "transactionDataGridViewTextBoxColumn";
             this.transactionDataGridViewTextBoxColumn.ReadOnly = true;
@@ -638,22 +697,33 @@
             this.passedDataGridViewTextBoxColumn1.ReadOnly = true;
             this.passedDataGridViewTextBoxColumn1.Width = 78;
             // 
-            // dataGridViewOPC
+            // OPCUA_transactions
             // 
-            this.dataGridViewOPC.AllowUserToAddRows = false;
-            this.dataGridViewOPC.AllowUserToDeleteRows = false;
-            this.dataGridViewOPC.AutoGenerateColumns = false;
-            this.dataGridViewOPC.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewOPC.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
-            this.dataGridViewOPC.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewOPC.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.OPCUA_transactions.Controls.Add(this.dataGridMonitorOPC);
+            this.OPCUA_transactions.Location = new System.Drawing.Point(4, 22);
+            this.OPCUA_transactions.Name = "OPCUA_transactions";
+            this.OPCUA_transactions.Padding = new System.Windows.Forms.Padding(3);
+            this.OPCUA_transactions.Size = new System.Drawing.Size(549, 417);
+            this.OPCUA_transactions.TabIndex = 1;
+            this.OPCUA_transactions.Text = "OPCUA_transactions";
+            this.OPCUA_transactions.UseVisualStyleBackColor = true;
+            // 
+            // dataGridMonitorOPC
+            // 
+            this.dataGridMonitorOPC.AllowUserToAddRows = false;
+            this.dataGridMonitorOPC.AllowUserToDeleteRows = false;
+            this.dataGridMonitorOPC.AutoGenerateColumns = false;
+            this.dataGridMonitorOPC.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridMonitorOPC.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            this.dataGridMonitorOPC.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridMonitorOPC.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2,
             this.dataGridViewTextBoxColumn3,
@@ -661,25 +731,33 @@
             this.dataGridViewTextBoxColumn5,
             this.dataGridViewTextBoxColumn6,
             this.dataGridViewTextBoxColumn7});
-            this.dataGridViewOPC.DataMember = "dtTransaction";
-            this.dataGridViewOPC.DataSource = this.dsMonitor;
-            this.dataGridViewOPC.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewOPC.Location = new System.Drawing.Point(3, 3);
-            this.dataGridViewOPC.Name = "dataGridViewOPC";
-            this.dataGridViewOPC.ReadOnly = true;
-            this.dataGridViewOPC.RowHeadersWidth = 51;
-            this.dataGridViewOPC.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewOPC.Size = new System.Drawing.Size(543, 411);
-            this.dataGridViewOPC.TabIndex = 4;
+            this.dataGridMonitorOPC.DataMember = "dtTransaction";
+            this.dataGridMonitorOPC.DataSource = this.dsMonitorOPC;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridMonitorOPC.DefaultCellStyle = dataGridViewCellStyle18;
+            this.dataGridMonitorOPC.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridMonitorOPC.Location = new System.Drawing.Point(3, 3);
+            this.dataGridMonitorOPC.Name = "dataGridMonitor";
+            this.dataGridMonitorOPC.ReadOnly = true;
+            this.dataGridMonitorOPC.RowHeadersWidth = 51;
+            this.dataGridMonitorOPC.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridMonitorOPC.Size = new System.Drawing.Size(543, 411);
+            this.dataGridMonitorOPC.TabIndex = 4;
             // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dataGridViewTextBoxColumn1.DataPropertyName = "Transaction";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle10;
-            this.dataGridViewTextBoxColumn1.HeaderText = "Transaction";
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle11;
+            this.dataGridViewTextBoxColumn1.HeaderText = "OPCTransaction";
             this.dataGridViewTextBoxColumn1.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
@@ -689,9 +767,9 @@
             // 
             this.dataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dataGridViewTextBoxColumn2.DataPropertyName = "OPC";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewTextBoxColumn2.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewTextBoxColumn2.DefaultCellStyle = dataGridViewCellStyle12;
             this.dataGridViewTextBoxColumn2.HeaderText = "OPC";
             this.dataGridViewTextBoxColumn2.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
@@ -702,9 +780,9 @@
             // 
             this.dataGridViewTextBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dataGridViewTextBoxColumn3.DataPropertyName = "ODBC";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewTextBoxColumn3.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewTextBoxColumn3.DefaultCellStyle = dataGridViewCellStyle13;
             this.dataGridViewTextBoxColumn3.HeaderText = "ODBC";
             this.dataGridViewTextBoxColumn3.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
@@ -715,11 +793,11 @@
             // 
             this.dataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dataGridViewTextBoxColumn4.DataPropertyName = "Total";
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle13.Format = "N0";
-            dataGridViewCellStyle13.NullValue = null;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewTextBoxColumn4.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle14.Format = "N0";
+            dataGridViewCellStyle14.NullValue = null;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewTextBoxColumn4.DefaultCellStyle = dataGridViewCellStyle14;
             this.dataGridViewTextBoxColumn4.HeaderText = "Total";
             this.dataGridViewTextBoxColumn4.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
@@ -730,11 +808,11 @@
             // 
             this.dataGridViewTextBoxColumn5.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dataGridViewTextBoxColumn5.DataPropertyName = "Passed";
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle14.Format = "N0";
-            dataGridViewCellStyle14.NullValue = null;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewTextBoxColumn5.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle15.Format = "N0";
+            dataGridViewCellStyle15.NullValue = null;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewTextBoxColumn5.DefaultCellStyle = dataGridViewCellStyle15;
             this.dataGridViewTextBoxColumn5.HeaderText = "Passed";
             this.dataGridViewTextBoxColumn5.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
@@ -745,11 +823,11 @@
             // 
             this.dataGridViewTextBoxColumn6.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dataGridViewTextBoxColumn6.DataPropertyName = "Failed";
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle15.Format = "N0";
-            dataGridViewCellStyle15.NullValue = null;
-            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewTextBoxColumn6.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle16.Format = "N0";
+            dataGridViewCellStyle16.NullValue = null;
+            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewTextBoxColumn6.DefaultCellStyle = dataGridViewCellStyle16;
             this.dataGridViewTextBoxColumn6.HeaderText = "Failed";
             this.dataGridViewTextBoxColumn6.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
@@ -760,11 +838,11 @@
             // 
             this.dataGridViewTextBoxColumn7.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dataGridViewTextBoxColumn7.DataPropertyName = "% Passed";
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle16.Format = "N2";
-            dataGridViewCellStyle16.NullValue = null;
-            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewTextBoxColumn7.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle17.Format = "N2";
+            dataGridViewCellStyle17.NullValue = null;
+            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewTextBoxColumn7.DefaultCellStyle = dataGridViewCellStyle17;
             this.dataGridViewTextBoxColumn7.HeaderText = "% Passed";
             this.dataGridViewTextBoxColumn7.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
@@ -795,14 +873,17 @@
             this.toolbar.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsMonitor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtTransaction)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtTransactionOPC)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dsMonitorOPC)).EndInit();
+            
             this.statusbar.ResumeLayout(false);
             this.statusbar.PerformLayout();
             this.trayMenu.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.DB_transactions.ResumeLayout(false);
-            this.OPCUA_transactions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridMonitor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOPC)).EndInit();
+            this.OPCUA_transactions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridMonitorOPC)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -841,14 +922,23 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Data.DataSet dsMonitor;
+        private System.Data.DataSet dsMonitorOPC;
         private System.Data.DataTable dtTransaction;
+        private System.Data.DataTable dtTransactionOPC;
         private System.Data.DataColumn dcTransactionName;
+        private System.Data.DataColumn dcTransactionNameOPC;
         private System.Data.DataColumn dcOPCState;
+        private System.Data.DataColumn dcOPCStateOPC;
         private System.Data.DataColumn dcODBCState;
+        private System.Data.DataColumn dcODBCStateOPC;
         private System.Data.DataColumn dcTransactionTotal;
+        private System.Data.DataColumn dcTransactionTotalOPC;
         private System.Data.DataColumn dcTransactionPassed;
+        private System.Data.DataColumn dcTransactionPassedOPC;
         private System.Data.DataColumn dcTransactionFailed;
+        private System.Data.DataColumn dcTransactionFailedOPC;
         private System.Data.DataColumn dcPercent;
+        private System.Data.DataColumn dcPercentOPC;
         private System.Windows.Forms.ToolStripButton opcuaConnectorButton;
         private System.Windows.Forms.ToolStripMenuItem opcuaConnectorMenuItem;
         private System.Windows.Forms.Button button2;
@@ -863,7 +953,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn failedDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn passedDataGridViewTextBoxColumn1;
         private System.Windows.Forms.TabPage OPCUA_transactions;
-        private System.Windows.Forms.DataGridView dataGridViewOPC;
+        private System.Windows.Forms.DataGridView dataGridMonitorOPC;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;

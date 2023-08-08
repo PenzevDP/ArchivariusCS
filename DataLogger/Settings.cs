@@ -165,7 +165,6 @@ namespace Settings
         {
             if (File.Exists(Path))
             {
-                NLogger.logger.Fatal("файл существует");
                 try
                 {
 
@@ -182,7 +181,7 @@ namespace Settings
             }
             else
             {
-                NLogger.logger.Fatal("создается файл");
+                
                 Log.WriteEntry("File " + Path + " not found. Empty configuration");
                 SetDefaults();
             }
@@ -459,7 +458,7 @@ namespace Settings
 
         public override void Load()
         {
-            NLogger.logger.Error("столбцы загружаются");
+            
             base.Load();
             if (Primary_ODBC_Pass != null)
             {

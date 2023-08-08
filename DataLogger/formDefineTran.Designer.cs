@@ -54,17 +54,17 @@
             this.OPCUA_transaction = new System.Windows.Forms.TabPage();
             this.dataGridtrnOPC = new System.Windows.Forms.DataGridView();
             this.navigatorTranOPC = new System.Windows.Forms.BindingNavigator(this.components);
+            this.navigatorAddNewItemOPC = new System.Windows.Forms.ToolStripButton();
+            this.navigatorCountItemOPC = new System.Windows.Forms.ToolStripLabel();
+            this.navigatorDeleteItemOPC = new System.Windows.Forms.ToolStripButton();
             this.navigatorMoveFirstItemOPC = new System.Windows.Forms.ToolStripButton();
             this.navigatorMovePreviousItemOPC = new System.Windows.Forms.ToolStripButton();
             this.navigatorSeparatorOPC = new System.Windows.Forms.ToolStripSeparator();
             this.navigatorPositionItemOPC = new System.Windows.Forms.ToolStripTextBox();
-            this.navigatorCountItemOPC = new System.Windows.Forms.ToolStripLabel();
             this.navigatorSeparator1OPC = new System.Windows.Forms.ToolStripSeparator();
             this.navigatorMoveNextItemOPC = new System.Windows.Forms.ToolStripButton();
             this.navigatorMoveLastItemOPC = new System.Windows.Forms.ToolStripButton();
             this.navigatorSeparator2OPC = new System.Windows.Forms.ToolStripSeparator();
-            this.navigatorAddNewItemOPC = new System.Windows.Forms.ToolStripButton();
-            this.navigatorDeleteItemOPC = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.bindingTran)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingTranOPC)).BeginInit();
             this.Tab.SuspendLayout();
@@ -103,13 +103,15 @@
             // 
             // Tab
             // 
+            this.Tab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Tab.Controls.Add(this.DB_transaction);
             this.Tab.Controls.Add(this.OPCUA_transaction);
-            this.Tab.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Tab.Location = new System.Drawing.Point(0, 0);
             this.Tab.Name = "Tab";
             this.Tab.SelectedIndex = 0;
-            this.Tab.Size = new System.Drawing.Size(728, 434);
+            this.Tab.Size = new System.Drawing.Size(728, 399);
             this.Tab.TabIndex = 5;
             // 
             // DB_transaction
@@ -119,7 +121,7 @@
             this.DB_transaction.Location = new System.Drawing.Point(4, 22);
             this.DB_transaction.Name = "DB_transaction";
             this.DB_transaction.Padding = new System.Windows.Forms.Padding(3);
-            this.DB_transaction.Size = new System.Drawing.Size(720, 408);
+            this.DB_transaction.Size = new System.Drawing.Size(720, 373);
             this.DB_transaction.TabIndex = 0;
             this.DB_transaction.Text = "DB_transaction";
             this.DB_transaction.UseVisualStyleBackColor = true;
@@ -258,7 +260,7 @@
             this.dataGridTrn.Location = new System.Drawing.Point(0, 27);
             this.dataGridTrn.Name = "dataGridTrn";
             this.dataGridTrn.RowHeadersWidth = 51;
-            this.dataGridTrn.Size = new System.Drawing.Size(726, 380);
+            this.dataGridTrn.Size = new System.Drawing.Size(726, 345);
             this.dataGridTrn.TabIndex = 7;
             this.dataGridTrn.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridTrn_CellContentClick);
             // 
@@ -269,7 +271,7 @@
             this.OPCUA_transaction.Location = new System.Drawing.Point(4, 22);
             this.OPCUA_transaction.Name = "OPCUA_transaction";
             this.OPCUA_transaction.Padding = new System.Windows.Forms.Padding(3);
-            this.OPCUA_transaction.Size = new System.Drawing.Size(720, 408);
+            this.OPCUA_transaction.Size = new System.Drawing.Size(720, 373);
             this.OPCUA_transaction.TabIndex = 1;
             this.OPCUA_transaction.Text = "OPCUA_transaction";
             this.OPCUA_transaction.UseVisualStyleBackColor = true;
@@ -277,6 +279,9 @@
             // 
             // dataGridtrnOPC
             // 
+            this.dataGridtrnOPC.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridtrnOPC.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
@@ -287,21 +292,18 @@
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridtrnOPC.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridtrnOPC.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridtrnOPC.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridtrnOPC.Location = new System.Drawing.Point(3, 30);
+            this.dataGridtrnOPC.Location = new System.Drawing.Point(3, 33);
             this.dataGridtrnOPC.Name = "dataGridtrnOPC";
             this.dataGridtrnOPC.RowHeadersWidth = 51;
-            this.dataGridtrnOPC.Size = new System.Drawing.Size(714, 375);
+            this.dataGridtrnOPC.Size = new System.Drawing.Size(714, 337);
             this.dataGridtrnOPC.TabIndex = 9;
             // 
             // navigatorTranOPC
             // 
-           
-           
-
             this.navigatorTranOPC.AddNewItem = this.navigatorAddNewItemOPC;
             this.navigatorTranOPC.CountItem = this.navigatorCountItemOPC;
             this.navigatorTranOPC.DeleteItem = this.navigatorDeleteItemOPC;
+            this.navigatorTranOPC.Dock = System.Windows.Forms.DockStyle.None;
             this.navigatorTranOPC.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.navigatorTranOPC.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.navigatorMoveFirstItemOPC,
@@ -316,24 +318,48 @@
             this.navigatorAddNewItemOPC,
             this.navigatorDeleteItemOPC});
             this.navigatorTranOPC.Location = new System.Drawing.Point(3, 3);
-            this.navigatorTranOPC.MoveFirstItem = null;
-            this.navigatorTranOPC.MoveLastItem = null;
-            this.navigatorTranOPC.MoveNextItem = null;
-            this.navigatorTranOPC.MovePreviousItem = null;
+            this.navigatorTranOPC.MoveFirstItem = this.navigatorMoveFirstItemOPC;
+            this.navigatorTranOPC.MoveLastItem = this.navigatorMoveLastItemOPC;
+            this.navigatorTranOPC.MoveNextItem = this.navigatorMoveNextItemOPC;
+            this.navigatorTranOPC.MovePreviousItem = this.navigatorMovePreviousItemOPC;
             this.navigatorTranOPC.Name = "navigatorTranOPC";
             this.navigatorTranOPC.PositionItem = null;
-            this.navigatorTranOPC.Size = new System.Drawing.Size(714, 27);
+            this.navigatorTranOPC.Size = new System.Drawing.Size(269, 27);
             this.navigatorTranOPC.TabIndex = 8;
             // 
+            // navigatorAddNewItemOPC
+            // 
+            this.navigatorAddNewItemOPC.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.navigatorAddNewItemOPC.Image = ((System.Drawing.Image)(resources.GetObject("navigatorAddNewItemOPC.Image")));
+            this.navigatorAddNewItemOPC.Name = "navigatorAddNewItemOPC";
+            this.navigatorAddNewItemOPC.RightToLeftAutoMirrorImage = true;
+            this.navigatorAddNewItemOPC.Size = new System.Drawing.Size(24, 24);
+            this.navigatorAddNewItemOPC.Text = "Add new";
+            // 
+            // navigatorCountItemOPC
+            // 
+            this.navigatorCountItemOPC.Name = "navigatorCountItemOPC";
+            this.navigatorCountItemOPC.Size = new System.Drawing.Size(43, 24);
+            this.navigatorCountItemOPC.Text = "для {0}";
+            this.navigatorCountItemOPC.ToolTipText = "Total number of items";
+            // 
+            // navigatorDeleteItemOPC
+            // 
+            this.navigatorDeleteItemOPC.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.navigatorDeleteItemOPC.Image = ((System.Drawing.Image)(resources.GetObject("navigatorDeleteItemOPC.Image")));
+            this.navigatorDeleteItemOPC.Name = "navigatorDeleteItemOPC";
+            this.navigatorDeleteItemOPC.RightToLeftAutoMirrorImage = true;
+            this.navigatorDeleteItemOPC.Size = new System.Drawing.Size(24, 24);
+            this.navigatorDeleteItemOPC.Text = "Delete";
+            // 
             // navigatorMoveFirstItemOPC
-         
+            // 
             this.navigatorMoveFirstItemOPC.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.navigatorMoveFirstItemOPC.Image = ((System.Drawing.Image)(resources.GetObject("navigatorMoveFirstItemOPC.Image")));
             this.navigatorMoveFirstItemOPC.Name = "navigatorMoveFirstItemOPC";
             this.navigatorMoveFirstItemOPC.RightToLeftAutoMirrorImage = true;
             this.navigatorMoveFirstItemOPC.Size = new System.Drawing.Size(24, 24);
             this.navigatorMoveFirstItemOPC.Click += new System.EventHandler(this.navigatorMoveFirstItem_Click);
-
             // 
             // navigatorMovePreviousItemOPC
             // 
@@ -358,13 +384,6 @@
             this.navigatorPositionItemOPC.Size = new System.Drawing.Size(50, 23);
             this.navigatorPositionItemOPC.Text = "0";
             this.navigatorPositionItemOPC.ToolTipText = "Current position";
-            // 
-            // navigatorCountItemOPC
-            // 
-            this.navigatorCountItemOPC.Name = "navigatorCountItemOPC";
-            this.navigatorCountItemOPC.Size = new System.Drawing.Size(43, 24);
-            this.navigatorCountItemOPC.Text = "для {0}";
-            this.navigatorCountItemOPC.ToolTipText = "Total number of items";
             // 
             // navigatorSeparator1OPC
             // 
@@ -393,24 +412,6 @@
             // 
             this.navigatorSeparator2OPC.Name = "navigatorSeparator2OPC";
             this.navigatorSeparator2OPC.Size = new System.Drawing.Size(6, 27);
-            // 
-            // navigatorAddNewItemOPC
-            // 
-            this.navigatorAddNewItemOPC.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.navigatorAddNewItemOPC.Image = ((System.Drawing.Image)(resources.GetObject("navigatorAddNewItemOPC.Image")));
-            this.navigatorAddNewItemOPC.Name = "navigatorAddNewItemOPC";
-            this.navigatorAddNewItemOPC.RightToLeftAutoMirrorImage = true;
-            this.navigatorAddNewItemOPC.Size = new System.Drawing.Size(24, 24);
-            this.navigatorAddNewItemOPC.Text = "Add new";
-            // 
-            // navigatorDeleteItemOPC
-            // 
-            this.navigatorDeleteItemOPC.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.navigatorDeleteItemOPC.Image = ((System.Drawing.Image)(resources.GetObject("navigatorDeleteItemOPC.Image")));
-            this.navigatorDeleteItemOPC.Name = "navigatorDeleteItemOPC";
-            this.navigatorDeleteItemOPC.RightToLeftAutoMirrorImage = true;
-            this.navigatorDeleteItemOPC.Size = new System.Drawing.Size(24, 24);
-            this.navigatorDeleteItemOPC.Text = "Delete";
             // 
             // formDefineTran
             // 

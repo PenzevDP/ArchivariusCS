@@ -10,7 +10,7 @@ using Tools;
 namespace Archivarius
 {
     delegate void NewStatisticsCallback(Form form, DataTable dt, ConfigStatisticsEventArgs e);
-    
+    delegate void NewStatisticsCallbackOPC(Form form, DataTable dt, ConfigStatisticsEventArgsOPC e);
     public partial class formMain : Form
     {
         private bool closing = false;
@@ -18,7 +18,6 @@ namespace Archivarius
         public formMain()
         {
             InitializeComponent();          
-            NLogger.logger.Trace(DataManager.Config.driverType);
             NLogger.logger.Trace($"Service. formMain has initialized");
         }        
 
@@ -29,6 +28,9 @@ namespace Archivarius
             UpdateConfigState(Config.State);
             Config.StateChange += ConfigStateChange;
             Config.Statistics += ConfigStatistics;
+            NLogger.logger.Error("1aaaaaa");
+            Config.StatisticsOPC += ConfigStatisticsOPC;
+
         }
 
         private void ConfigStateChange(object sender, ConfigStateEventArgs e)
@@ -48,7 +50,19 @@ namespace Archivarius
             row["% Passed"] = e.TransactionStatistics.Percent;
             NLogger.logger.Trace("Service. formMain updated statistic: OPC - {OPC}, ODBC - {ODBC}, Total - {total}, Passed - {passed}, Failed - {failed}", e.OPCUAConnState, e.ODBCConnState, e.TransactionStatistics.Total, e.TransactionStatistics.Passed, e.TransactionStatistics.Failed);
         }
-        
+
+        private void UpdateRowStatisticsOPC(DataRow row, ConfigStatisticsEventArgsOPC e)
+        {
+            row["OPC"] = e.OPCUAConnState;
+            // row["OPC"] = e.OPCConnState;
+            row["ODBC"] = e.ODBCConnState;
+            row["Total"] = 1;
+            row["Passed"] = 2;
+            row["Failed"] = 3;
+            row["% Passed"] = 4;
+            NLogger.logger.Trace("Service. formMain updated statistic: OPC - {OPC}, ODBC - {ODBC}, Total - {total}, Passed - {passed}, Failed - {failed}", e.OPCUAConnState, e.ODBCConnState, e.TransactionStatistics.Total, e.TransactionStatistics.Passed, e.TransactionStatistics.Failed);
+        }
+
         private void NewStatistics(Form form, DataTable dt, ConfigStatisticsEventArgs e)
         {
             if (form.InvokeRequired)
@@ -72,11 +86,47 @@ namespace Archivarius
                 }
             }
         }
-        
+
+        private void NewStatisticsOPC(Form form, DataTable dt, ConfigStatisticsEventArgsOPC e)
+        {
+            if (form.InvokeRequired)
+            {
+                NewStatisticsCallbackOPC callback = new NewStatisticsCallbackOPC(NewStatisticsOPC);
+                form.Invoke(callback, form, dt, e);
+            }
+            else
+            {
+               
+                DataRow[] foundRows = dt.Select("Transaction = '" + e.TransactionName + "'");
+                if (foundRows.Length > 0)
+                {
+                    foreach (DataRow row in foundRows) UpdateRowStatisticsOPC(row, e);
+                }
+                else
+                {
+                    NLogger.logger.Error("Транзакция для OPC: " + e.TransactionName);
+                    DataRow row = dt.NewRow();
+                    row["Transaction"] = e.TransactionName;
+                    UpdateRowStatisticsOPC(row, e);
+                    dt.Rows.Add(row);
+                }
+            }
+        }
+
         private void ConfigStatistics(object sender, ConfigStatisticsEventArgs e)
         {
             NewStatistics(this, dtTransaction, e);
+            NLogger.logger.Error("AAAAAA");
+
         }
+        private void ConfigStatisticsOPC(object sender, ConfigStatisticsEventArgsOPC e)
+        {
+            NLogger.logger.Error("0aaaaaa");
+            NewStatisticsOPC(this, dtTransactionOPC, e);
+            NLogger.logger.Error("aaaaaa");
+        }
+
+
 
         private void UpdateConfigState(ConfigState state)
         {
@@ -364,10 +414,13 @@ namespace Archivarius
                 if (this.Visible) hide();
                 e.Cancel = true;
                 NLogger.logger.Trace("Service. formMain close = hide");
+                
             }
             else
             {
+                
                 Config.Statistics -= ConfigStatistics;
+                Config.StatisticsOPC -= ConfigStatisticsOPC;
                 Config.StateChange -= ConfigStateChange;
                 Config.Dispose();
                 while (!Config.IsDisposed) Application.DoEvents();
@@ -406,6 +459,11 @@ namespace Archivarius
         }
 
         private void dataGridMonitor_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dataGridMonitor_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
         {
 
         }

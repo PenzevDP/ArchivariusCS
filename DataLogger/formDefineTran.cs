@@ -80,6 +80,7 @@ namespace Archivarius
         private void btnApply_Click(object sender, EventArgs e)
         {
             Config.Sets.TransactionBase = copyTransaction.Copy();
+            Config.Sets.TransactionBaseOPCUA = copyTransactionOPCUA.Copy();
             Config.Save();
             this.Close();
         }
@@ -88,6 +89,12 @@ namespace Archivarius
         {
             MessageBox.Show(e.Exception.Message, Application.ProductName);
             e.Cancel = true;       
+        }
+
+        private void dataGridTrnOPC_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            MessageBox.Show(e.Exception.Message, Application.ProductName);
+            e.Cancel = true;
         }
 
         private void dataGridTrn_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -111,6 +118,11 @@ namespace Archivarius
         }
 
         private void navigatorAddNewItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void navigatorDeleteItem_Click(object sender, EventArgs e)
         {
 
         }
