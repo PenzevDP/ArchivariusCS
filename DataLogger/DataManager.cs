@@ -82,6 +82,7 @@ namespace DataManager
     }
     public class ConfigStatisticsEventArgs : EventArgs
     {
+       
         private string tranName;
         private ConnectionState odbcState;
         private OPCUAState opcuaState;
@@ -89,6 +90,7 @@ namespace DataManager
 
         public ConfigStatisticsEventArgs(Transaction tran)
         {
+            NLogger.logger.Error("Void ConfigStatisticsEventArgs has started for: " + tran.tranName);
             tranName = tran.tranName;         
             opcuaState = tran.opcuaConn.State;
             odbcState = tran.odbcConn.State;
@@ -129,6 +131,7 @@ namespace DataManager
 
     public class ConfigStatisticsEventArgsOPC : EventArgs
     {
+        
         private string tranName;
         private ConnectionState odbcState;
         private OPCUAState opcuaState;
@@ -136,10 +139,9 @@ namespace DataManager
 
         public ConfigStatisticsEventArgsOPC(Transaction tran)
         {
-           
+            NLogger.logger.Error("Void ConfigStatisticsEventArgsOPC has started for: " + tran.tranName);
 
             tranName = tran.tranName;
-            NLogger.logger.Error("MMMMMM: " + tranName.ToString());
             opcuaState = tran.opcuaConn.State;
             odbcState = tran.odbcConn.State;
             tranStat = new Statistics(tran.stat);
@@ -261,9 +263,11 @@ namespace DataManager
         {
             get
             {
+                NLogger.logger.Error("BackgroundWorker BGWStarting has started");
                 if (bgwStarting == null)
                 {
                     bgwStarting = new BackgroundWorker();
+                    NLogger.logger.Error("Void Starting has called from BackgroundWorker BGWStarting");
                     bgwStarting.DoWork += Starting;
                 }
                 return bgwStarting;
@@ -317,12 +321,16 @@ namespace DataManager
         {
             get
             {
+                NLogger.logger.Error("public static Sets has started");
                 if (appSets == null)
                 {
+
+                    NLogger.logger.Error("appSets == null, so it needs to be loaded");
                     appSets = new AppSettings(Application.StartupPath + "\\config.xml", Log);
+                    NLogger.logger.Error("void Load has called from Sets");
                     appSets.Load();
                     Config.Sets.Driver_Type = appSets.Driver_Type;
-                    NLogger.logger.Debug("Текущий драйвер - " + Config.Sets.Driver_Type);
+                    
                 }
                 return appSets;
             }
@@ -345,19 +353,28 @@ namespace DataManager
         }
 
         //-------OPCUA--------
-        private static void OPCUAStateChanged(object sender, OPCUAStateEventArgs e)
+        private static void OPCUAStateChanged(object sender, OPCUAStateEventArgs e)//+
         {
+            NLogger.logger.Error("Void OPCUAStateChanged has started");
             if (state == ConfigState.Started && e.State != OPCUAState.Running && !reconnect)
             {
+                NLogger.logger.Error("state == ConfigState.Started && e.State != OPCUAState.Running && !reconnect, so Void StopTransact() has called from OPCUAStateChanged");
                 reconnect = true;
-                StopTransact();
+                StopTransact(); 
                 if (!stopping)
                 {
+                    NLogger.logger.Error("If not yet stopping, freeze thread for 1000ms from OPCUAStateChanged");
+
                     Thread.Sleep(1000);
                     if (!stopping)
                     {
+                        NLogger.logger.Error("If not yet stopping, void CreateTransactOPCUA() has called from OPCUAStateChanged");
+                        CreateTransactOPCUA();
+
+                        NLogger.logger.Error("If not yet stopping, void CreateTransact() has called from OPCUAStateChanged");
                         CreateTransact();
-                    //    CreateTransactOPCUA();
+
+                        NLogger.logger.Error("void StartTransact() has called from OPCUAStateChanged");
                         StartTransact();
                     }
                 }
@@ -367,20 +384,25 @@ namespace DataManager
 
         //---------------------
 
-        private static void TransactStatistics(object sender, ConfigStatisticsEventArgs e)
+        private static void TransactStatistics(object sender, ConfigStatisticsEventArgs e) //+
         {
-            NLogger.logger.Error(e.TransactionName);
-            NLogger.logger.Error("я тут00");
-            if (Statistics != null) Statistics(sender, e);
+            NLogger.logger.Error("Void TransactStatistics has started with:" + e.TransactionName);
+
+            if (Statistics != null)
+            {
+                NLogger.logger.Error("Statistics != null and Eventhandler Statistics has started with:" + e.TransactionName);
+                Statistics(sender, e);
+            }
+            else
+            {
+                NLogger.logger.Error("Statistics = null");
+
+            }
+
+               
         }
 
-        private static void TransactStatisticsOPCUA(object sender, ConfigStatisticsEventArgsOPC e)
-        {
-            NLogger.logger.Error("я тут01");
-            NLogger.logger.Error("Вот  тут:" +  e.TransactionName);
-
-            if (StatisticsOPC != null) StatisticsOPC(sender, e);
-        }
+      
 
         public static bool Ready
         {
@@ -427,8 +449,18 @@ namespace DataManager
         }
         public static void Start()
         {
-            if (!BGWStarting.IsBusy) BGWStarting.RunWorkerAsync();
-            if (!Sets.Running) Sets.Running = true;
+            NLogger.logger.Error("Void Start() has started");
+            if (!BGWStarting.IsBusy)
+            {
+                NLogger.logger.Error("BGWStarting not busy  BGWStarting has called from Start()");
+                BGWStarting.RunWorkerAsync();
+            }
+            else
+            {
+                NLogger.logger.Error("BGWStarting is busy");
+            }
+
+                if (!Sets.Running) Sets.Running = true;
 
         }
         public static void Stop()
@@ -446,9 +478,9 @@ namespace DataManager
             string fParp1;
             string fParp2;
 
+            NLogger.logger.Error("Void CreateTransact has started");
 
-            transactions.Clear();
-
+            
             foreach (DataRow row in Sets.TransactionBase.Tables["TransactionTable"].Rows)
             {
 
@@ -474,25 +506,40 @@ namespace DataManager
                 tran.uaCounterName = row["CounterUA Name"].ToString();
                 tran.uaArrName = row["ArrayUA Name"].ToString();
                 //------------------------
-                
-                tran.odbcConn.GenerateCommand(tableName, fTranDT, fCtrlDT, fParID, fParVal, fParp2, fParp1);
-                
+                NLogger.logger.Error("Void GenerateCommand() has called from void CreateTransact()");
+                tran.odbcConn.GenerateCommand(tableName, fTranDT, fCtrlDT, fParID, fParVal, fParp2, fParp1);//+
+
+                NLogger.logger.Error("Delegate TransactStatistics has called from void CreateTransact()"); //+
                 tran.Statistics += TransactStatistics;
-               
+
 
                 //-----OPCUA---------
+                NLogger.logger.Error("Delegate OPCUAStateChanged has called from void CreateTransact()"); //+
                 tran.OPCUAconnStateChange += OPCUAStateChanged;
                 //-----------------
-                
+                NLogger.logger.Error("Void ConnectToODBC(); has called from void CreateTransact() for transaction: " + tran.tranName); //+
                 tran.ConnectToODBC();
-               
+
                 //-----OPCUA---------
+                NLogger.logger.Error("Void ConnectToOPCUA(); has called from void CreateTransact() for transaction: " + tran.tranName); //+
                 tran.ConnectToOPCUA();
                 //-----------------
-               
+
+                NLogger.logger.Error("Method transactions.Add(tran) has called from void CreateTransact()");
                 transactions.Add(tran);
-                
-                 if (Statistics != null) Statistics(tran, new ConfigStatisticsEventArgs(tran)); // ЭТА СТРОКА ДЛЯ ЧЕГО-ТО БЫЛА НУЖНА :(
+                NLogger.logger.Error("Current counter of tranzactions" + transactions.Count.ToString());
+
+                if (Statistics != null)
+                {
+
+                    NLogger.logger.Error("Statistics != null and void Statistics for" + tran.tranName +  "has called from void CreateTransact()");
+                    Statistics(tran, new ConfigStatisticsEventArgs(tran)); // ЭТА СТРОКА ДЛЯ ЧЕГО-ТО БЫЛА НУЖНА :(
+                }
+                else
+                {
+                    NLogger.logger.Error("Statistics = null  from void CreateTransact()");
+
+                }
                 
             }
             
@@ -513,8 +560,11 @@ namespace DataManager
             string fsourceMemArea;
             string fsourceAnyID;
             string fPLCName;
+            NLogger.logger.Error("Void CreateTransactOPCUA has started");
 
-            
+            NLogger.logger.Error("Method transactions.Clear() has called");
+           transactions.Clear();
+
             foreach (DataRow row in Sets.TransactionBaseOPCUA.Tables["TransactionTable"].Rows)
             {
                 
@@ -537,20 +587,35 @@ namespace DataManager
                 Transaction tranOPC = new Transaction(Log);
 
                 tranOPC.tranName = row["Transaction Name"].ToString();
-                NLogger.logger.Error("0101010");
-                tranOPC.StatisticsOPC += TransactStatisticsOPCUA;
-                NLogger.logger.Error("1111111");
 
+                NLogger.logger.Error("Void TransactStatistics has called");
+                tranOPC.Statistics += TransactStatistics;
+
+                //-----OPCUA---------
+                NLogger.logger.Error("Delegate OPCUAStateChanged has called from void CreateTransact()"); //+
+                tranOPC.OPCUAconnStateChange += OPCUAStateChanged;
+                //-----------------
+                NLogger.logger.Error("Void ConnectToODBC(); has called from void CreateTransact() for transaction: " + tranOPC.tranName); //+
+                tranOPC.ConnectToODBC();
+
+                //-----OPCUA---------
+                NLogger.logger.Error("Void ConnectToOPCUA(); has called from void CreateTransact() for transaction: " + tranOPC.tranName); //+
+                tranOPC.ConnectToOPCUA();
+
+
+                NLogger.logger.Error("Method transactions.Add(tranOPC) has called");
                 transactions.Add(tranOPC);
+                NLogger.logger.Error("Current counter of tranzactions" + transactions.Count.ToString());
 
-                if (StatisticsOPC != null)
+                if (Statistics != null)
                 {
-                    StatisticsOPC(tranOPC, new ConfigStatisticsEventArgsOPC(tranOPC)); // ЭТА СТРОКА ДЛЯ ЧЕГО-ТО БЫЛА НУЖНА :(
-                    NLogger.logger.Error("ttttt");
+                   NLogger.logger.Error("StatisticsOPC != null and Delegate ConfigStatisticsEventArgsOPC(tranOPC) has called");
+                    Statistics(tranOPC, new ConfigStatisticsEventArgs(tranOPC)); // ЭТА СТРОКА ДЛЯ ЧЕГО-ТО БЫЛА НУЖНА :(
+                    
                 }
                 else
                 {
-                    NLogger.logger.Error("ppppp");
+                    NLogger.logger.Error("StatisticsOPC = null from void CreateTransactOPCUA");
                 }
             }
 
@@ -558,17 +623,26 @@ namespace DataManager
 
         private static void Starting(object sender, DoWorkEventArgs e)
         {
+            NLogger.logger.Error("Void Starting has started");
+
             state = ConfigState.Starting;
             if (StateChange != null) StateChange(null, new ConfigStateEventArgs(state));
 
             stopping = false;
+
             
-            CreateTransact();         
+            NLogger.logger.Error("Void CreateTransactOPCUA has called");
             CreateTransactOPCUA();
-            
+
+            NLogger.logger.Error("Void CreateTransact has called");
+            CreateTransact();      
+                     
             state = ConfigState.Started;
-            if (StateChange != null) StateChange(null, new ConfigStateEventArgs(state));
-           
+            if (StateChange != null)
+            {
+                NLogger.logger.Error("Delegate StateChange has called");
+                StateChange(null, new ConfigStateEventArgs(state));
+            }
         }
         private static void Stopping(object sender, DoWorkEventArgs e)
         {
@@ -588,23 +662,34 @@ namespace DataManager
         }
         private static void StartTransact()
         {
+            NLogger.logger.Error("void StartTransact has started");
 
             foreach (Transaction tran in transactions)
             {
+                NLogger.logger.Error("void ConnectToODBC() has called for: " + tran.tranName + "from void StartTransact()");
+
                 tran.ConnectToODBC();
 
+
                 //-------OPCUA-----------
+                NLogger.logger.Error("void ConnectToOPCUA() has called for: " + tran.tranName + "from void StartTransact()");
                 tran.ConnectToOPCUA();
             }
         }
-        private static void StopTransact()
+        private static void StopTransact() //+
         {
+            NLogger.logger.Error("void StopTransact() has started");
+            NLogger.logger.Error("list of trans:" + transactions.Count.ToString());
             foreach (Transaction tran in transactions)
             {
+                NLogger.logger.Error("void DisonnectFromOPCUA() has called for: " + tran.tranName + "from void StopTransact()");
 
                 //-------OPCUA----------
                 tran.DisonnectFromOPCUA();
+
                 //----------------------
+                NLogger.logger.Error("void DisonnectFromODBC() has called for: " + tran.tranName + "from void StopTransact()");
+
                 tran.DisconnectFromODBC();
             }
             bool busy;
@@ -631,8 +716,10 @@ namespace DataManager
         }
 
         public static event ConfigStateEventHandler StateChange;
+
         public static event StatisticsEventHandler Statistics;
-        public static event StatisticsEventHandlerOPC StatisticsOPC;
+
+       //public static event StatisticsEventHandlerOPC StatisticsOPC;
     }
 
     public class ODBCConnector : IDisposable
@@ -746,14 +833,15 @@ namespace DataManager
         }
         public bool GenerateCommand(string tableName, string fTranDT, string fCtrlDT, string fParID, string fParVal, string fParp1, string fParp2)
         {
-            NLogger.logger.Trace("Тип драйвера: " + Config.Sets.Driver_Type.ToString());
+            NLogger.logger.Error("Void GenerateCommand() has started");
+            //NLogger.logger.Trace("Void GenerateCommand() Тип драйвера: " + Config.Sets.Driver_Type.ToString());
 
 
             StringBuilder fullTableName = new StringBuilder();
 
             if (Config.Sets.Driver_Type.Contains("SQL Server"))
             {
-                NLogger.logger.Trace("Транзакция по типу 1");
+                NLogger.logger.Trace("Void GenerateCommand() Транзакция по типу MS SQL");
                 if (tableName.Contains("."))
                 {
                     string name;
@@ -784,7 +872,7 @@ namespace DataManager
                         fullTableName.Append("[" + tableName + "]");
                     }
                 }
-                NLogger.logger.Trace("Начало формирования транзакции");
+               
                 dt = new DataTable(fullTableName.ToString());
                 StringBuilder sqlIns = new StringBuilder("Insert into " + fullTableName.ToString() + " (");
                 StringBuilder sqlVal = new StringBuilder(" Values (");
@@ -914,6 +1002,7 @@ namespace DataManager
                 {
                     
                     cmd = new OdbcCommand(sqlIns.ToString() + sqlVal.ToString(), conn);
+                    NLogger.logger.Trace("Void GenerateCommand() команда для MS SQL сформирована: " + cmd.CommandText);
                     foreach (OdbcParameter par in parameters) cmd.Parameters.Add(par);
                     return true;
                 }
@@ -927,7 +1016,7 @@ namespace DataManager
             }
             else if (Config.Sets.Driver_Type.Contains("Oracle"))
             {
-                NLogger.logger.Trace("Транзакция по типу 2");
+                NLogger.logger.Trace("Void GenerateCommand() Транзакция по типу Oracle");
                 if (tableName.Contains("."))
                 {
                     string name;
@@ -1091,7 +1180,7 @@ namespace DataManager
                 if (parameters.Count > 0)
                 {
                     cmd = new OdbcCommand(sqlIns.ToString() + sqlVal.ToString(), conn);
-                    NLogger.logger.Trace(cmd.CommandText);
+                    NLogger.logger.Trace("Void GenerateCommand() команда для Oracle сформирована: " + cmd.CommandText);
                     foreach (OdbcParameter par in parameters) cmd.Parameters.Add(par);
                     return true;
                 }
@@ -1104,7 +1193,7 @@ namespace DataManager
             }
             else if (Config.Sets.Driver_Type.Contains("Postgre"))
             {
-                NLogger.logger.Trace("Транзакция по типу 3");
+                NLogger.logger.Trace("Void GenerateCommand() Транзакция по типу Postgre"); ;
                 if (tableName.Contains("."))
                 {
                     string name;
@@ -1267,7 +1356,7 @@ namespace DataManager
                 if (parameters.Count > 0)
                 {
                     cmd = new OdbcCommand(sqlIns.ToString() + sqlVal.ToString(), conn);
-                    NLogger.logger.Trace(cmd.CommandText);
+                    NLogger.logger.Trace("Void GenerateCommand() команда для Postgre сформирована: " + cmd.CommandText);
                     foreach (OdbcParameter par in parameters) cmd.Parameters.Add(par);
                     return true;
                 }
@@ -1283,7 +1372,7 @@ namespace DataManager
             {
                 return false;
             }
-        }
+        }//+
 
         private void LogInvalidRecord(Record rec, object dt, object id, object val)
         {
@@ -1700,6 +1789,7 @@ namespace DataManager
 
         public Statistics stat;
         public ODBCConnector odbcConn;
+        
 
         public string tranName = "";
 
@@ -1710,7 +1800,7 @@ namespace DataManager
 
         private int uasize = 0;
         private BackgroundWorker bgwOPCUAConn;
-        public OPCUA opcuaConn;
+        public OPCUA opcuaConn;      
         public MonitoredItem uatagCount = null;
         public int uaNSNumber = 0;
         public string uaDbName = "";
@@ -1723,14 +1813,13 @@ namespace DataManager
 
         public event StateChangeEventHandler ODBCConnStateChange;
         public event StatisticsEventHandler Statistics;
-        public event StatisticsEventHandlerOPC StatisticsOPC;
+       // public event StatisticsEventHandlerOPC StatisticsOPC;
         public event OPCUAStateEventHandler OPCUAconnStateChange;
 
         public bool IsBusy
         {
             get
-            {
-
+            { 
                 return bgwODBCConn.IsBusy || bgwTransact.IsBusy || bgwOPCUAConn.IsBusy;
             }
         }
@@ -1751,14 +1840,14 @@ namespace DataManager
 
             odbcConn = new ODBCConnector(log);
             odbcConn.StateChange += ODBCStateChange;
-
-
-
+         
 
             //---OPCUA-----
             opcuaConn = new OPCUA(log);
             opcuaConn.DataChanged += OPCUADataChanged;
             opcuaConn.StateChange += OPCUAStateChange;
+
+            
 
 
             bgwOPCUAConn = new BackgroundWorker();
@@ -1783,8 +1872,10 @@ namespace DataManager
         }
         public void ConnectToODBC()
         {
+            NLogger.logger.Error("void ConnectToODBC() has started");
             if (!(odbcConn.State == ConnectionState.Open || odbcConn.State == ConnectionState.Connecting || bgwODBCConn.IsBusy))
             {
+                NLogger.logger.Error("thread bgwODBCConn.RunWorkerAsync() has called from void ConnectToODBC()");
                 bgwODBCConn.RunWorkerAsync();
             }
         }
@@ -1960,6 +2051,7 @@ namespace DataManager
 
         private void ODBCConnecting(object sender, DoWorkEventArgs e)
         {
+            NLogger.logger.Error("thread ODBCConnecting has started");
             BackgroundWorker worker = sender as BackgroundWorker;
             while (odbcConn.State != ConnectionState.Open)
             {
@@ -1973,6 +2065,8 @@ namespace DataManager
                     String dsn = Config.Sets.Primary_ODBC_DSN;
                     String uid = Config.Sets.Primary_ODBC_User;
                     String pwd = Config.Sets.Primary_ODBC_Pass;
+
+                    NLogger.logger.Error("void Connect has called with credentials: " + " " + dsn + " " + uid + " " + pwd + " from ODBCConnecting()");
                     odbcConn.Connect(dsn, uid, pwd);
 
                 }
@@ -2053,8 +2147,13 @@ namespace DataManager
                         error = true;
                         stat.Fail();
                     }
-                    if (Statistics != null) Statistics(this, new ConfigStatisticsEventArgs(this));
-                    if (StatisticsOPC != null) StatisticsOPC(this, new ConfigStatisticsEventArgsOPC(this));
+                    if (Statistics != null)
+                    {
+                        NLogger.logger.Error("Statistics != null, so Void Statistics has called for :" + this.tranName + "from MakeTransactions");
+                        Statistics(this, new ConfigStatisticsEventArgs(this));
+                        
+                    } 
+                    
                 }
                 else
                 {
@@ -2082,6 +2181,7 @@ namespace DataManager
                 if (!bgwTransact.IsBusy) bgwTransact.RunWorkerAsync();
             }
         }
+
         private void TickDataChanged(object sender, ElapsedEventArgs e)
         {
             if (opcuaConn.State == OPCUAState.Running && !active && (!bgwTransact.IsBusy))
@@ -2102,16 +2202,29 @@ namespace DataManager
         {
             if (e.State != OPCUAState.Running) active = false;
             if (OPCUAconnStateChange != null) OPCUAconnStateChange(this, e);
-            if (Statistics != null) Statistics(this, new ConfigStatisticsEventArgs(this));
-            if (StatisticsOPC != null) StatisticsOPC(this, new ConfigStatisticsEventArgsOPC(this));
+            if (Statistics != null)
+            {
+                NLogger.logger.Error("Statistics != null, so Void Statistics(this, new ConfigStatisticsEventArgs) has started for: " + this.tranName + "from void OPCUAStateChange()");
+                Statistics(this, new ConfigStatisticsEventArgs(this));
+                
+            }
+
+         
         }
+       
 
         private void ODBCStateChange(object sender, StateChangeEventArgs e)
         {
             if (ODBCConnStateChange != null) ODBCConnStateChange(this, e);
-            if (Statistics != null) Statistics(this, new ConfigStatisticsEventArgs(this));
-            if (StatisticsOPC != null) StatisticsOPC(this, new ConfigStatisticsEventArgsOPC(this));
+
+            if (Statistics != null)
+            {
+                NLogger.logger.Error("Statistics != null, so Void Statistics(this, new ConfigStatisticsEventArgs) has started for: " + this.tranName + "from void ODBCStateChange()");
+
+                Statistics(this, new ConfigStatisticsEventArgs(this));
+            }
         }
+       
     }
 
 

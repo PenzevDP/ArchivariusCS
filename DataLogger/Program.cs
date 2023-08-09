@@ -35,11 +35,16 @@ namespace Archivarius
               logger.Fatal($"Fatal Log");
               Console.ReadLine();
             */
-            NLogger.logger.Trace($"Service. Programm has started");
-            if (Config.Sets.Running) Config.Start();
+            NLogger.logger.Error($"Service. Programm has started");
+            if (Config.Sets.Running)
+            {
+                NLogger.logger.Error("Config.Sets already running so void Config.Start() has called from MAIN()");
+               Config.Start();
+            }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            NLogger.logger.Trace($"Service. formMain has called");
+
+            NLogger.logger.Error($"Service. formMain has called from MAIN()");
             Application.Run(new formMain());
 
 

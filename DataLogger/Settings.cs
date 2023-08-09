@@ -163,17 +163,23 @@ namespace Settings
         /// <param name="path">Путь к файлу настроек</param>
         public virtual void Load()
         {
+            NLogger.logger.Error("Virtual void Load() has started");
             if (File.Exists(Path))
             {
+                NLogger.logger.Error("Config already exist, so try to deserialize that");
                 try
                 {
-
+                    NLogger.logger.Error("Void Deserialize() has called from Load()");
                     Deserialize();
+                    
                 }
                 catch (Exception ex)
                 {
+                    NLogger.logger.Error("Error when loading configuration from the file" + Path);
                     Log.WriteEntry("Error when loading configuration from the file " + Path);
+                    NLogger.logger.Error("Void SetDefaults() has called from exeption of Load()");
                     SetDefaults();
+                    NLogger.logger.Error("Void OnException(ex) has called from exeption of Load()");
                     OnException(ex);
                     return;
                 }
@@ -183,6 +189,7 @@ namespace Settings
             {
                 
                 Log.WriteEntry("File " + Path + " not found. Empty configuration");
+                NLogger.logger.Error("Config already exist at: " + Path + " , so void SetDefaults() called ");
                 SetDefaults();
             }
         }
@@ -452,7 +459,7 @@ namespace Settings
             TransactionBase = new DataSet("Transaction Manager");
             TransactionBase.Tables.Add(dt);
 
-            TransactionBaseOPCUA = new DataSet("Transaction Manager");
+            TransactionBaseOPCUA = new DataSet("Transaction Manager OPC");
             TransactionBaseOPCUA.Tables.Add(dtOPCUA);
         }
 
