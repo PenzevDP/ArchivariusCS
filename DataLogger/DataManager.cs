@@ -129,55 +129,7 @@ namespace DataManager
         }
     }
 
-    public class ConfigStatisticsEventArgsOPC : EventArgs
-    {
-        
-        private string tranName;
-        private ConnectionState odbcState;
-        private OPCUAState opcuaState;
-        private Statistics tranStat;
-
-        public ConfigStatisticsEventArgsOPC(Transaction tran)
-        {
-            NLogger.logger.Error("Void ConfigStatisticsEventArgsOPC has started for: " + tran.tranName);
-
-            tranName = tran.tranName;
-            opcuaState = tran.opcuaConn.State;
-            odbcState = tran.odbcConn.State;
-            tranStat = new Statistics(tran.stat);
-
-        }
-        public string TransactionName
-        {
-            get
-            {
-                return tranName;
-            }
-        }
-        public ConnectionState ODBCConnState
-        {
-            get
-            {
-                return odbcState;
-            }
-        }
-
-
-        public OPCUAState OPCUAConnState
-        {
-            get
-            {
-                return opcuaState;
-            }
-        }
-        public Statistics TransactionStatistics
-        {
-            get
-            {
-                return tranStat;
-            }
-        }
-    }
+    
     public class OPCUAEventArgs : EventArgs
     {
         private string desc;
@@ -238,7 +190,7 @@ namespace DataManager
 
     public delegate void ConfigStateEventHandler(object sender, ConfigStateEventArgs e);
     public delegate void StatisticsEventHandler(object sender, ConfigStatisticsEventArgs e);
-    public delegate void StatisticsEventHandlerOPC(object sender, ConfigStatisticsEventArgsOPC e);
+    
 
     public delegate void OPCUAEventHandler(object sender, OPCUAEventArgs e);
     public delegate void OPCUADataEventHandler(object sender, OPCUADataEventArgs e);
@@ -497,7 +449,7 @@ namespace DataManager
                 Transaction tran = new Transaction(Log);
 
                 tran.tranName = row["Transaction Name"].ToString();
-
+                tran.toOPCflag = false;
 
                 //--------OPCUA------
                 tran.uaNSNumber = row["ns#"] is int ? (int)row["ns#"] : 0;
@@ -587,6 +539,7 @@ namespace DataManager
                 Transaction tranOPC = new Transaction(Log);
 
                 tranOPC.tranName = row["Transaction Name"].ToString();
+                tranOPC.toOPCflag = true;
 
                 NLogger.logger.Error("Void TransactStatistics has called");
                 tranOPC.Statistics += TransactStatistics;
@@ -1792,7 +1745,7 @@ namespace DataManager
         
 
         public string tranName = "";
-
+        public bool toOPCflag;
         public bool active = false;
         public bool error = false;
 
@@ -1869,6 +1822,10 @@ namespace DataManager
             bgwTransact = new BackgroundWorker();
             bgwTransact.DoWork += MakeTransactions;
             bgwTransact.WorkerSupportsCancellation = true;
+
+            
+            
+
         }
         public void ConnectToODBC()
         {
@@ -1891,6 +1848,7 @@ namespace DataManager
 
         public void ConnectToOPCUA()
         {
+            
             disconnectopcua = false;
             if (opcuaConn.State != OPCUAState.Running)
             {
@@ -1974,61 +1932,75 @@ namespace DataManager
         }
         private void OPCUAConnected(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (!(e.Cancelled || disconnectopcua))
+
+            NLogger.logger.Error("Current name of tranzactions for OPC" + tranName);
+            if  (!(e.Cancelled || disconnectopcua))
             {
-                bool result = false;
-
-                uatagCount = opcuaConn.AddTrigger(uaNSNumber, uaDbName, uaCounterName, "item_ ns#" + uaNSNumber + " DB:" + uaDbName + " Tag:" + uaCounterName, 1);
-                
-                if (uatagCount == null)
+                if (!toOPCflag)
                 {
-                    if (!disconnectopcua)
+                    NLogger.logger.Error("Current name of tranzactions for trigg OPC" + tranName);
+                    bool result = false;
+
+                    uatagCount = opcuaConn.AddTrigger(uaNSNumber, uaDbName, uaCounterName, "item_ ns#" + uaNSNumber + " DB:" + uaDbName + " Tag:" + uaCounterName, 1);
+
+                    if (uatagCount == null)
                     {
-                        timercheckCount.Elapsed -= TickDataChanged;
-                        timercheckCount.Stop();
-                        opcuaConn.Disconnect();
-                        log.WriteEntry("Disconnect from server in !disconnectopcua Reason:ua tagcount=null");
-                        if (!bgwOPCUAConn.IsBusy) bgwOPCUAConn.RunWorkerAsync();
+                        if (!disconnectopcua)
+                        {
+                            timercheckCount.Elapsed -= TickDataChanged;
+                            timercheckCount.Stop();
+                            opcuaConn.Disconnect();
+                            log.WriteEntry("Disconnect from server in !disconnectopcua Reason:ua tagcount=null");
+                            if (!bgwOPCUAConn.IsBusy) bgwOPCUAConn.RunWorkerAsync();
+                        }
+                        return;
                     }
-                    return;
-                }
 
-                // Reading of the clipboard size
-                for (int i = 0; i < 10; i++)
-                {
-                    result = opcuaConn.ReadDIntValue(uaNSNumber, uaDbName, uaSizeName, out uasize);
-                    NLogger.logger.Error("clipboard is " + result.ToString());
-                    if (result)
+                    // Reading of the clipboard size
+                    for (int i = 0; i < 10; i++)
                     {
-                        break;
+                        result = opcuaConn.ReadDIntValue(uaNSNumber, uaDbName, uaSizeName, out uasize);
+                        NLogger.logger.Error("clipboard is " + result.ToString());
+                        if (result)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            Application.DoEvents();
+                            Thread.Sleep(1000);
+                        }
+                    }
+                    // Error of reading of the clipboard size
+                    if (!result)
+                    {
+                        return;
+                    }
+                    // Creation of records for the clipboard
+                    if (uasize > 0)
+                    {
+                        records = new List<Record>(uasize);
+                        for (int i = 0; i < uasize; i++)
+                        {
+                            records.Add(new Record());
+                        }
                     }
                     else
                     {
-                        Application.DoEvents();
-                        Thread.Sleep(1000);
+                        return;
                     }
-                }
-                // Error of reading of the clipboard size
-                if (!result)
-                {
-                    return;
-                }
-                // Creation of records for the clipboard
-                if (uasize > 0)
-                {
-                    records = new List<Record>(uasize);
-                    for (int i = 0; i < uasize; i++)
-                    {
-                        records.Add(new Record());
-                    }
+                    timercheckCount.Start();
+                    opcuaConn.IsSubscribed = true;
+                    NLogger.logger.Error("OPC is subscribed");
                 }
                 else
                 {
+                    opcuaConn.IsSubscribed = true;
+                    NLogger.logger.Error("OPC is subscribed");
                     return;
                 }
-                timercheckCount.Start();
-                opcuaConn.IsSubscribed = true;
-                NLogger.logger.Error("OPC is subscribed");
+                
+
             }
             else
             {
