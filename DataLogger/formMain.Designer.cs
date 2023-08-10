@@ -31,13 +31,13 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.menu = new System.Windows.Forms.MenuStrip();
             this.configurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,13 +90,13 @@
             this.exitTrayMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button2 = new System.Windows.Forms.Button();
             this.dataGridMonitor = new System.Windows.Forms.DataGridView();
-            this.transactionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.oPCDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.oDBCDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.passedDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.failedDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.passedDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.failedDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.passedDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totalDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.oDBCDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.oPCDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.transactionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menu.SuspendLayout();
             this.toolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsMonitor)).BeginInit();
@@ -515,6 +515,9 @@
             // 
             this.dataGridMonitor.AllowUserToAddRows = false;
             this.dataGridMonitor.AllowUserToDeleteRows = false;
+            this.dataGridMonitor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridMonitor.AutoGenerateColumns = false;
             this.dataGridMonitor.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -544,102 +547,17 @@
             dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridMonitor.DefaultCellStyle = dataGridViewCellStyle9;
-            this.dataGridMonitor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridMonitor.Location = new System.Drawing.Point(0, 51);
             this.dataGridMonitor.Name = "dataGridMonitor";
             this.dataGridMonitor.ReadOnly = true;
             this.dataGridMonitor.RowHeadersWidth = 51;
             this.dataGridMonitor.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridMonitor.Size = new System.Drawing.Size(557, 443);
-            this.dataGridMonitor.TabIndex = 8;
-            // 
-            // transactionDataGridViewTextBoxColumn
-            // 
-            this.transactionDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.transactionDataGridViewTextBoxColumn.DataPropertyName = "Transaction";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.transactionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
-            this.transactionDataGridViewTextBoxColumn.HeaderText = "DBTransaction";
-            this.transactionDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.transactionDataGridViewTextBoxColumn.Name = "transactionDataGridViewTextBoxColumn";
-            this.transactionDataGridViewTextBoxColumn.ReadOnly = true;
-            this.transactionDataGridViewTextBoxColumn.Width = 103;
-            // 
-            // oPCDataGridViewTextBoxColumn
-            // 
-            this.oPCDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.oPCDataGridViewTextBoxColumn.DataPropertyName = "OPC";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.oPCDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
-            this.oPCDataGridViewTextBoxColumn.HeaderText = "OPC";
-            this.oPCDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.oPCDataGridViewTextBoxColumn.Name = "oPCDataGridViewTextBoxColumn";
-            this.oPCDataGridViewTextBoxColumn.ReadOnly = true;
-            this.oPCDataGridViewTextBoxColumn.Width = 54;
-            // 
-            // oDBCDataGridViewTextBoxColumn
-            // 
-            this.oDBCDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.oDBCDataGridViewTextBoxColumn.DataPropertyName = "ODBC";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.oDBCDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle4;
-            this.oDBCDataGridViewTextBoxColumn.HeaderText = "ODBC";
-            this.oDBCDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.oDBCDataGridViewTextBoxColumn.Name = "oDBCDataGridViewTextBoxColumn";
-            this.oDBCDataGridViewTextBoxColumn.ReadOnly = true;
-            this.oDBCDataGridViewTextBoxColumn.Width = 62;
-            // 
-            // totalDataGridViewTextBoxColumn
-            // 
-            this.totalDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.totalDataGridViewTextBoxColumn.DataPropertyName = "Total";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Format = "N0";
-            dataGridViewCellStyle5.NullValue = null;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.totalDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
-            this.totalDataGridViewTextBoxColumn.HeaderText = "Total";
-            this.totalDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.totalDataGridViewTextBoxColumn.Name = "totalDataGridViewTextBoxColumn";
-            this.totalDataGridViewTextBoxColumn.ReadOnly = true;
-            this.totalDataGridViewTextBoxColumn.Width = 56;
-            // 
-            // passedDataGridViewTextBoxColumn
-            // 
-            this.passedDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.passedDataGridViewTextBoxColumn.DataPropertyName = "Passed";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "N0";
-            dataGridViewCellStyle6.NullValue = null;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.passedDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
-            this.passedDataGridViewTextBoxColumn.HeaderText = "Passed";
-            this.passedDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.passedDataGridViewTextBoxColumn.Name = "passedDataGridViewTextBoxColumn";
-            this.passedDataGridViewTextBoxColumn.ReadOnly = true;
-            this.passedDataGridViewTextBoxColumn.Width = 67;
-            // 
-            // failedDataGridViewTextBoxColumn
-            // 
-            this.failedDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.failedDataGridViewTextBoxColumn.DataPropertyName = "Failed";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "N0";
-            dataGridViewCellStyle7.NullValue = null;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.failedDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
-            this.failedDataGridViewTextBoxColumn.HeaderText = "Failed";
-            this.failedDataGridViewTextBoxColumn.MinimumWidth = 6;
-            this.failedDataGridViewTextBoxColumn.Name = "failedDataGridViewTextBoxColumn";
-            this.failedDataGridViewTextBoxColumn.ReadOnly = true;
-            this.failedDataGridViewTextBoxColumn.Width = 60;
+            this.dataGridMonitor.TabIndex = 7;
+            this.dataGridMonitor.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridMonitor_CellContentClick_2);
             // 
             // passedDataGridViewTextBoxColumn1
             // 
-            this.passedDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.passedDataGridViewTextBoxColumn1.DataPropertyName = "% Passed";
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             dataGridViewCellStyle8.Format = "N2";
@@ -650,7 +568,78 @@
             this.passedDataGridViewTextBoxColumn1.MinimumWidth = 6;
             this.passedDataGridViewTextBoxColumn1.Name = "passedDataGridViewTextBoxColumn1";
             this.passedDataGridViewTextBoxColumn1.ReadOnly = true;
-            this.passedDataGridViewTextBoxColumn1.Width = 78;
+            // 
+            // failedDataGridViewTextBoxColumn
+            // 
+            this.failedDataGridViewTextBoxColumn.DataPropertyName = "Failed";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle7.Format = "N0";
+            dataGridViewCellStyle7.NullValue = null;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.failedDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle7;
+            this.failedDataGridViewTextBoxColumn.HeaderText = "Failed";
+            this.failedDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.failedDataGridViewTextBoxColumn.Name = "failedDataGridViewTextBoxColumn";
+            this.failedDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // passedDataGridViewTextBoxColumn
+            // 
+            this.passedDataGridViewTextBoxColumn.DataPropertyName = "Passed";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Format = "N0";
+            dataGridViewCellStyle6.NullValue = null;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.passedDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle6;
+            this.passedDataGridViewTextBoxColumn.HeaderText = "Passed";
+            this.passedDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.passedDataGridViewTextBoxColumn.Name = "passedDataGridViewTextBoxColumn";
+            this.passedDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // totalDataGridViewTextBoxColumn
+            // 
+            this.totalDataGridViewTextBoxColumn.DataPropertyName = "Total";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle5.Format = "N0";
+            dataGridViewCellStyle5.NullValue = null;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.totalDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle5;
+            this.totalDataGridViewTextBoxColumn.HeaderText = "Total";
+            this.totalDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.totalDataGridViewTextBoxColumn.Name = "totalDataGridViewTextBoxColumn";
+            this.totalDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // oDBCDataGridViewTextBoxColumn
+            // 
+            this.oDBCDataGridViewTextBoxColumn.DataPropertyName = "ODBC";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.oDBCDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle4;
+            this.oDBCDataGridViewTextBoxColumn.HeaderText = "ODBC";
+            this.oDBCDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.oDBCDataGridViewTextBoxColumn.Name = "oDBCDataGridViewTextBoxColumn";
+            this.oDBCDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // oPCDataGridViewTextBoxColumn
+            // 
+            this.oPCDataGridViewTextBoxColumn.DataPropertyName = "OPC";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.oPCDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
+            this.oPCDataGridViewTextBoxColumn.HeaderText = "OPC";
+            this.oPCDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.oPCDataGridViewTextBoxColumn.Name = "oPCDataGridViewTextBoxColumn";
+            this.oPCDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // transactionDataGridViewTextBoxColumn
+            // 
+            this.transactionDataGridViewTextBoxColumn.DataPropertyName = "Transaction";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.transactionDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            this.transactionDataGridViewTextBoxColumn.HeaderText = "DBTransaction";
+            this.transactionDataGridViewTextBoxColumn.MinimumWidth = 6;
+            this.transactionDataGridViewTextBoxColumn.Name = "transactionDataGridViewTextBoxColumn";
+            this.transactionDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // formMain
             // 

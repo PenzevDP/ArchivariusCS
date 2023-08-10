@@ -437,6 +437,11 @@ namespace Archivarius
 
         }
 
+        private void dataGridMonitor_CellContentClick_2(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
         //---OPCUA----
     }
 }

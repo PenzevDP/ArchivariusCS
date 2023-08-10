@@ -880,10 +880,10 @@ namespace DataManager
                     }
                     OdbcParameter parameter = new OdbcParameter();
                     parameter.ParameterName = "@id";
-                    parameter.OdbcType = OdbcType.Int;
+                    parameter.OdbcType = OdbcType.Decimal;
                     parameter.SourceColumn = fParID;
                     parameters.Add(parameter);
-                    dt.Columns.Add(fParID, System.Type.GetType("System.Int32"));
+                    dt.Columns.Add(fParID, System.Type.GetType("System.UInt32"));
                     prevPar = true;
                 }
                 if (fParVal != "")
@@ -1059,7 +1059,7 @@ namespace DataManager
                     parameter.OdbcType = OdbcType.Decimal;
                     parameter.SourceColumn = fParID;
                     parameters.Add(parameter);
-                    dt.Columns.Add(fParID, System.Type.GetType("System.Int32"));
+                    dt.Columns.Add(fParID, System.Type.GetType("System.UInt32"));
                     prevPar = true;
 
                 }
@@ -1236,7 +1236,7 @@ namespace DataManager
                     parameter.OdbcType = OdbcType.Decimal;
                     parameter.SourceColumn = fParID;
                     parameters.Add(parameter);
-                    dt.Columns.Add(fParID, System.Type.GetType("System.Int32"));
+                    dt.Columns.Add(fParID, System.Type.GetType("System.UInt32"));
                     prevPar = true;
 
                 }
@@ -1375,11 +1375,21 @@ namespace DataManager
                 if (tran.records == null) return false;
                 if (tran.records.Count == 0) return false;
                 if (cmd == null) return false;
-                if (!tran.opcuaConn.ReadDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, out count)) return false;
+                if (!tran.opcuaConn.ReadDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, out count))
+                {
+                    NLogger.logger.Trace($"Counter is 0");
+                    return false;
+                }
+                else
+                {
+                    NLogger.logger.Trace($"Counter is not 0");
+                }
+
+
                 if (count > tran.Size) count = tran.Size;
 
                 // Synchronous reading OPC items
-
+                NLogger.logger.Trace($"ReadDiffTypeValues has called with" + tran.uaNSNumber + " ; "+ tran.uaDbName + " ; " + tran.uaArrName + " ; " + count + " ; " + tran.records.Count());
                 tran.opcuaConn.ReadDiffTypeValues(tran.uaNSNumber, tran.uaDbName, tran.uaArrName, count, tran.records);
 
                 Record rec;
@@ -1489,7 +1499,7 @@ namespace DataManager
                                 case "@id":
 
                                     objVal = rec.idua;
-                                    if (objVal is int)
+                                    if (objVal is uint)
                                     {
 
                                         newRow[par.SourceColumn] = objVal;
@@ -1618,7 +1628,7 @@ namespace DataManager
 
 
         public DateTime dtua;
-        public int idua;
+        public uint idua;
         public float valua;
         public uint p1ua;
         public uint p2ua;
@@ -1692,6 +1702,7 @@ namespace DataManager
         }
         public void Pass()
         {
+            NLogger.logger.Trace("Increment has started ++");
             if (total == ulong.MaxValue) Clear();
             passed++;
             total++;
@@ -2099,7 +2110,7 @@ namespace DataManager
                        
                         NLogger.logger.Trace($"Начало Make tranzaction");
 
-                       //odbcConn.MakeTransactionParam(this);
+                       
                     }
                     catch
                     {
@@ -2485,8 +2496,40 @@ namespace DataManager
                 return null;
             }
         }
+        public bool ReadIntValue(int NodeNum, string DBName, string VarName, out int value)
+        {
+            string NodeID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
+            if (State == OPCUAState.Running)
+            {
 
-        public bool ReadDIntValue(int NodeNum, string DBName, string VarName, out int value)
+                List<string> ReadData = new List<string>();
+                List<string> NodeList = new List<string>();
+                try
+                {
+                    NodeList.Add(NodeID);
+                    ReadData = serverObj.ReadValues(NodeList);
+                    value = Int16.Parse(ReadData[0]);
+                    return true;
+
+                }
+                catch (Exception e)
+                {
+                    NLogger.logger.Error(serverName + " read error IntItem= " + NodeID + "! " + e.Message);
+                    log.WriteEntry(serverName + " read error IntItem= " + NodeID + "! " + e.Message);
+
+                    value = 0;
+                    return false;
+                }
+            }
+            else
+            {
+                NLogger.logger.Error(serverName + "IntItem= " + NodeID + " doesn't Read! Server is stopped ");
+                log.WriteEntry(serverName + "IntItem= " + NodeID + " doesn't Read! Server is stopped ");
+                value = 0;
+                return false;
+            }
+        }
+            public bool ReadDIntValue(int NodeNum, string DBName, string VarName, out int value)
         {
             string NodeID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
             if (State == OPCUAState.Running)
@@ -2548,7 +2591,8 @@ namespace DataManager
             {
                 try
                 {
-                    value = (uint)serverObj.Session.ReadValue(new NodeId(Node)).Value; ;
+                    //value = (uint)serverObj.Session.ReadValue(new NodeId(Node)).Value; 
+                    value = (uint)15;
                     return true;
                 }
                 catch (Exception e)
@@ -2663,15 +2707,15 @@ namespace DataManager
                 {
                     try
                     {
-                        records[i].dtValid = ReadDateTimeValue((NodeID + $"[{i}].DateTime"), out records[i].dtua);
-                        records[i].idValid = ReadDIntValue((NodeID + $"[{i}].ID"), out records[i].idua);
-                        records[i].valValid = ReadRealValue((NodeID + $"[{i}].Value"), out records[i].valua);
+                        records[i].dtValid = ReadDateTimeValue((NodeID + $"[{i}].dt"), out records[i].dtua);             
+                        records[i].idValid = ReadUIntValue((NodeID + $"[{i}].id"), out records[i].idua);
+                        records[i].valValid = ReadRealValue((NodeID + $"[{i}].val"), out records[i].valua);
                         records[i].p1Valid = ReadUIntValue((NodeID + $"[{i}].p1"), out records[i].p1ua);
                         records[i].p2Valid = ReadUIntValue((NodeID + $"[{i}].p2"), out records[i].p2ua);
 
                         records[i].valid = (records[i].dtValid && records[i].idValid && records[i].valValid && records[i].p1Valid && records[i].p2Valid);
 
-                        //NLogger.logger.Trace("dt: " + records[i].dtValid + " id: " + records[i].idValid + " val: " + records[i].valValid);
+                        NLogger.logger.Error("dt: " + records[i].dtValid + " id: " + records[i].idValid + " val: " + records[i].valValid);
                     }
                     catch (Exception ex)
                     {
@@ -2687,7 +2731,7 @@ namespace DataManager
             }
         }
 
-        public void WriteDiffTypeValues(int NodeNum, string DBName, string VarName, int count, List<Record> records)
+       /* public void WriteDiffTypeValues(int NodeNum, string DBName, string VarName, int count, List<Record> records)
         {
             string NodeID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
             if (state == OPCUAState.Running)
@@ -2722,6 +2766,7 @@ namespace DataManager
                 log.WriteEntry(serverName + "Can't Read Array. Server isn't running:");
             }
         }
+       */
         private void clientAPI_CertificateEvent(CertificateValidator cert, CertificateValidationEventArgs e)
         {
             try
@@ -2775,3 +2820,5 @@ namespace DataManager
 
 
 
+
+        
