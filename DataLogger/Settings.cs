@@ -361,10 +361,21 @@ namespace Settings
             dt.Columns.Add(dc);
             uniqueColumns[0] = dc;
 
+            dcOPCUA = new DataColumn("ns#", System.Type.GetType("System.Int32"));
+            dcOPCUA.AllowDBNull = false;
+            dtOPCUA.Columns.Add(dcOPCUA);
+            uniqueColumnsOPCUA[0] = dcOPCUA;
+
             dc = new DataColumn("DBUA Name", System.Type.GetType("System.String"));
             dc.AllowDBNull = false;
             dt.Columns.Add(dc);
             uniqueColumns[1] = dc;
+
+            dcOPCUA = new DataColumn("DBUA Name", System.Type.GetType("System.String"));
+            dcOPCUA.AllowDBNull = false;
+            dtOPCUA.Columns.Add(dcOPCUA);
+            uniqueColumnsOPCUA[1] = dcOPCUA;
+
 
             dc = new DataColumn("SizeUA Name", System.Type.GetType("System.String"));
             dc.AllowDBNull = false;
@@ -377,7 +388,11 @@ namespace Settings
             dc = new DataColumn("ArrayUA Name", System.Type.GetType("System.String"));
             dc.AllowDBNull = false;
             dt.Columns.Add(dc);
-                       
+
+            dcOPCUA = new DataColumn("ArrayUA Name", System.Type.GetType("System.String"));
+            dcOPCUA.AllowDBNull = false;
+            dtOPCUA.Columns.Add(dcOPCUA);
+
             //--OPCUA----
 
             dc = new DataColumn("Table Name", System.Type.GetType("System.String"));
@@ -411,45 +426,7 @@ namespace Settings
             dcOPCUA.AllowDBNull = false;
             dtOPCUA.Columns.Add(dcOPCUA);
 
-            dcOPCUA = new DataColumn("Tag Name", System.Type.GetType("System.String"));
-            dtOPCUA.Columns.Add(dcOPCUA);
-
-            dcOPCUA = new DataColumn("Tag ID", System.Type.GetType("System.String"));
-            dtOPCUA.Columns.Add(dcOPCUA);
-
-            dcOPCUA = new DataColumn("Time mode", System.Type.GetType("System.String"));
-            dtOPCUA.Columns.Add(dcOPCUA);
-
-            dcOPCUA = new DataColumn("Agregation mode", System.Type.GetType("System.String"));
-            dtOPCUA.Columns.Add(dcOPCUA);
-
-            dcOPCUA = new DataColumn("Is act", System.Type.GetType("System.String"));
-            dtOPCUA.Columns.Add(dcOPCUA);
-
-            dcOPCUA = new DataColumn("Source lengh", System.Type.GetType("System.String"));
-            dtOPCUA.Columns.Add(dcOPCUA);
-
-            dcOPCUA = new DataColumn("Source DB#", System.Type.GetType("System.Int32"));          
-            dtOPCUA.Columns.Add(dcOPCUA);
-
-            dcOPCUA = new DataColumn("Source offset LSB", System.Type.GetType("System.String"));
-            dtOPCUA.Columns.Add(dcOPCUA);
-
-            dcOPCUA = new DataColumn("Source offset MSB", System.Type.GetType("System.String"));
-            dtOPCUA.Columns.Add(dcOPCUA);
-
-            dcOPCUA = new DataColumn("Source data type", System.Type.GetType("System.String"));
-            dtOPCUA.Columns.Add(dcOPCUA);
-
-            dcOPCUA = new DataColumn("Source memory area", System.Type.GetType("System.String"));
-            dtOPCUA.Columns.Add(dcOPCUA);
-
-            dcOPCUA = new DataColumn("Any ID", System.Type.GetType("System.String"));
-            dtOPCUA.Columns.Add(dcOPCUA);
-
-            dcOPCUA = new DataColumn("PLC Name", System.Type.GetType("System.String"));
-           
-            dtOPCUA.Columns.Add(dcOPCUA);
+            
             
 
             

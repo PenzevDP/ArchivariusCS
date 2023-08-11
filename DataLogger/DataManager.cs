@@ -27,6 +27,9 @@ using System.Data.SqlClient;
 using NLog.Fluent;
 using Archivarius;
 using System.Drawing;
+using System.Runtime.ConstrainedExecution;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+using System.Xml.Linq;
 
 namespace DataManager
 {
@@ -323,6 +326,7 @@ namespace DataManager
                         NLogger.logger.Error("If not yet stopping, void CreateTransactOPCUA() has called from OPCUAStateChanged");
                         CreateTransactOPCUA();
 
+
                         NLogger.logger.Error("If not yet stopping, void CreateTransact() has called from OPCUAStateChanged");
                         CreateTransact();
 
@@ -364,7 +368,7 @@ namespace DataManager
                 //if (Sets.Primary_ODBC_DSN != "")
                 if (Sets.Primary_ODBC_DSN != "" && Sets.Primary_OPCUA_EndpointURL != "" && Sets.Primary_OPCUA_EndpointSecurityPolicyUri != "")
                 {
-                    if (Sets.TransactionBase.Tables["TransactionTable"].Rows.Count > 0) return true;
+                    if (Sets.TransactionBase.Tables["TransactionTable"].Rows.Count > 0 || Sets.TransactionBaseOPCUA.Tables["TransactionTable"].Rows.Count > 0) return true;
                 }
                 return false;
             }
@@ -499,19 +503,7 @@ namespace DataManager
         private static void CreateTransactOPCUA()
         {
             string tableName;
-            string ftagName;
-            string ftagID;
-            string ftimeMode;
-            string fagrMode;
-            string fisAct;
-            string fsourceLength;
-            string fsourceDBn;
-            string fsourceOffsetLSB;
-            string fsourceOffsetMSB;
-            string fsourceDataType;
-            string fsourceMemArea;
-            string fsourceAnyID;
-            string fPLCName;
+           
             NLogger.logger.Error("Void CreateTransactOPCUA has started");
 
             NLogger.logger.Error("Method transactions.Clear() has called");
@@ -521,24 +513,16 @@ namespace DataManager
             {
                 
                 tableName = row["Table Name"].ToString();
-                ftagName = row["Tag Name"].ToString();
-                ftagID = row["Tag ID"].ToString();
-                ftimeMode = row["Time mode"].ToString();
-                fagrMode = row["Agregation mode"].ToString();
-                fisAct = row["Is act"].ToString();
-                fsourceLength = row["Source lengh"].ToString();
-                fsourceDBn = row["Source DB#"].ToString();
-                fsourceOffsetLSB = row["Source offset LSB"].ToString();
-                fsourceOffsetMSB = row["Source offset MSB"].ToString();
-                fsourceDataType = row["Source data type"].ToString();
-                fsourceMemArea = row["Source memory area"].ToString();
-                fsourceAnyID = row["Any ID"].ToString();
-                fPLCName = row["PLC Name"].ToString();
+               
 
                 
                 Transaction tranOPC = new Transaction(Log);
 
                 tranOPC.tranName = row["Transaction Name"].ToString();
+
+                tranOPC.uaNSNumber = row["ns#"] is int ? (int)row["ns#"] : 0;
+                tranOPC.uaDbName = row["DBUA Name"].ToString();
+                tranOPC.uaArrName = row["ArrayUA Name"].ToString();
                 tranOPC.toOPCflag = true;
 
                 NLogger.logger.Error("Void TransactStatistics has called");
@@ -555,7 +539,7 @@ namespace DataManager
                 NLogger.logger.Error("Void ConnectToOPCUA(); has called from void CreateTransact() for transaction: " + tranOPC.tranName); //+
                 tranOPC.ConnectToOPCUA();
 
-
+               
                 NLogger.logger.Error("Method transactions.Add(tranOPC) has called");
                 transactions.Add(tranOPC);
                 NLogger.logger.Error("Current counter of tranzactions" + transactions.Count.ToString());
@@ -570,6 +554,7 @@ namespace DataManager
                 {
                     NLogger.logger.Error("StatisticsOPC = null from void CreateTransactOPCUA");
                 }
+               
             }
 
         }
@@ -1621,7 +1606,69 @@ namespace DataManager
             }
         }
 
-        
+        public bool MakeTransactionDB(Transaction tran)
+        {
+            NLogger.logger.Error("Void MakeTransactionDB has started for: " + tran.tranName);
+            NLogger.logger.Error("Void MakeTransactionDB has started conn.state " + conn.State.ToString() + "; tran ODBC state is: " + tran.odbcConn.State);
+            if (conn.State == ConnectionState.Open && tran.odbcConn.State == ConnectionState.Open)
+            {
+                object objVal;
+
+
+                DataSet ds = new DataSet("FromDB");
+                OdbcCommand command = new OdbcCommand("select * from settings_plc_1", conn);
+                NLogger.logger.Error("Command for tran db has generated: " + command.CommandText);
+                OdbcDataAdapter da = new OdbcDataAdapter(command.CommandText, conn);
+
+
+                //string dtNow = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.ff");
+                try
+                {
+                    da.Fill(ds);
+
+                }
+                catch (Exception ex)
+                {
+                    NLogger.logger.Error("Make TransactionDB exeption: " + ex.Message);
+                }
+
+                if (ds.Tables[0] != null)
+                {              
+                    int count = ds.Tables[0].Rows.Count;
+                    DataRowCollection rowsOPC = ds.Tables[0].Rows;
+                    foreach (DataColumn col in ds.Tables[0].Columns)
+                    {
+
+                        for (int i = 0; i < count; i++)
+                        {
+                            if (rowsOPC[i][col] is int)
+                            {
+                                string NodeID = "ns=" + tran.uaNSNumber.ToString() + ";s=" + tran.uaDbName + "." + tran.uaArrName + $"[{i}]." + col.ToString() + "";
+                                NLogger.logger.Debug(NodeID);
+                                tran.opcuaConn.WriteDIntValue(NodeID, (int)rowsOPC[i][col]);
+                            }
+                            else
+                            {
+                                string NodeID = "ns=" + tran.uaNSNumber.ToString() + ";s=" + tran.uaDbName + "." + tran.uaArrName + $"[{i}]." + col.ToString() + "";
+                                NLogger.logger.Debug(NodeID);
+                                tran.opcuaConn.WriteStrValue(NodeID, (string)rowsOPC[i][col]);
+                            }
+                        }
+                    }
+                
+                }
+
+            }
+            else
+            {
+                NLogger.logger.Error("MakeTransactionDB didn`t proceed because of conn.State" + conn.State + "odbcConn.State" + tran.odbcConn.State);
+                return false;
+            }
+            return true;
+
+        }
+
+
     }
     public class Record
     {
@@ -1644,39 +1691,7 @@ namespace DataManager
     }
 
 
-    public class Settings // from db to OPCUA
-    {
-
-
-        public string   tagName;
-        public int      tagid;
-        public int      timeMode;
-        public int      agrMode;
-        public bool     isAct;
-        public int      anyLength;
-        public int      anyDB;
-        public int      anyOffsetLSB;
-        public int      anyID;
-        public int      anyDataSource;
-        public int      anyMemoryArea;
-        public int      anyOffsetMSB;
-
-        //-----OPCUA-----
-
-        public bool valid;
-        public bool tagNameValid;
-        public bool tagidValid;
-        public bool timeModeValid;
-        public bool agrModeValid;
-        public bool isActValid;
-        public bool anyLengthValid;
-        public bool anyDBValid;
-        public bool anyOffsetLSBValid;
-        public bool anyIDValid;
-        public bool anyDataSourceValid;
-        public bool anyMemoryAreaValid;
-        public bool anyOffsetMSBValid;
-    }
+  
 
     public class Statistics
     {
@@ -1776,8 +1791,7 @@ namespace DataManager
         System.Timers.Timer timercheckCount = null;
 
         public event StateChangeEventHandler ODBCConnStateChange;
-        public event StatisticsEventHandler Statistics;
-       // public event StatisticsEventHandlerOPC StatisticsOPC;
+        public event StatisticsEventHandler Statistics;   
         public event OPCUAStateEventHandler OPCUAconnStateChange;
 
         public bool IsBusy
@@ -2006,8 +2020,7 @@ namespace DataManager
                 }
                 else
                 {
-                    opcuaConn.IsSubscribed = true;
-                    NLogger.logger.Error("OPC is subscribed");
+                    odbcConn.MakeTransactionDB(this);
                     return;
                 }
                 
@@ -2077,6 +2090,19 @@ namespace DataManager
         }
         private void ODBCConnected(object sender, RunWorkerCompletedEventArgs e)
         {
+            if (!e.Cancelled)
+            {
+                if (toOPCflag)
+                {
+                    NLogger.logger.Error("Current name of tranzactions for trigg OPC" + tranName);
+                    bool result = false;
+                    
+                    return;
+
+                }
+            }
+
+
             if (e.Cancelled)
             {
                 try
@@ -2107,10 +2133,17 @@ namespace DataManager
                     {
                         NLogger.logger.Error("MakeTranzaction Ok");
                         resultOK = odbcConn.MakeTransactionUA(this);
-                       
-                        NLogger.logger.Trace($"Начало Make tranzaction");
-
-                       
+                        if (this.toOPCflag)
+                            {
+                            NLogger.logger.Error("Calling DB tranzaction for " + this.tranName);
+                            
+                            }
+                        else
+                        {
+                            NLogger.logger.Error("Not Calling DB tranzaction for " + this.tranName);
+                        }
+                            
+                        NLogger.logger.Trace($"Начало Make tranzaction");                     
                     }
                     catch
                     {
@@ -2529,7 +2562,7 @@ namespace DataManager
                 return false;
             }
         }
-            public bool ReadDIntValue(int NodeNum, string DBName, string VarName, out int value)
+        public bool ReadDIntValue(int NodeNum, string DBName, string VarName, out int value)
         {
             string NodeID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
             if (State == OPCUAState.Running)
@@ -2666,7 +2699,9 @@ namespace DataManager
         }
         public bool WriteDIntValue(int NodeNum, string DBName, string VarName, in int value)
         {
+            NLogger.logger.Error("NodeNum: " + NodeNum.ToString() + " DBName: " + DBName+ "VarName: " + VarName + "value: " + value.ToString());
             string NodeID = "ns=" + NodeNum + ";s=" + DBName + "." + VarName + "";
+            NLogger.logger.Fatal(NodeID);
             if (state == OPCUAState.Running)
             {
 
@@ -2682,6 +2717,7 @@ namespace DataManager
                 }
                 catch (Exception e)
                 {
+                    NLogger.logger.Error(serverName + " Write error DIntItem= " + NodeID + "! " + e.Message);
                     log.WriteEntry(serverName + " Write error DIntItem= " + NodeID + "! " + e.Message);
                     return false;
 
@@ -2690,10 +2726,76 @@ namespace DataManager
             }
             else
             {
+                NLogger.logger.Error(serverName + "DIntItem= " + NodeID + " doesn't Write! Server is stopped");
                 log.WriteEntry(serverName + "DIntItem= " + NodeID + " doesn't Write! Server is stopped");
                 return false;
             }
         }
+        public bool WriteDIntValue(string Node, in int value)
+        {
+            NLogger.logger.Fatal("Вызов записи в ОПС: "+Node);
+            if (state == OPCUAState.Running)
+            {
+
+                List<string> NodeList = new List<string>();
+                List<string> values = new List<string>();
+
+                try
+                {
+                    values.Add(value.ToString());
+                    NodeList.Add(Node);
+                    serverObj.WriteValues(values, NodeList);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    NLogger.logger.Error(serverName + " Write error DIntItem= " + Node+ "! " + e.Message);
+                    log.WriteEntry(serverName + " Write error DIntItem= " + Node + "! " + e.Message);
+                    return false;
+
+                }
+
+            }
+            else
+            {
+                NLogger.logger.Error(serverName + "DIntItem= " + Node + " doesn't Write! Server is stopped");
+                log.WriteEntry(serverName + "DIntItem= " + Node + " doesn't Write! Server is stopped");
+                return false;
+            }
+        }
+        public bool WriteStrValue(string Node, in string value)
+        {
+            NLogger.logger.Fatal("Вызов записи в ОПС: " + Node);
+            if (state == OPCUAState.Running)
+            {
+
+                List<string> NodeList = new List<string>();
+                List<string> values = new List<string>();
+
+                try
+                {
+                    values.Add(value.ToString());
+                    NodeList.Add(Node);
+                    serverObj.WriteValues(values, NodeList);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    NLogger.logger.Error(serverName + " Write error StrItem= " + Node + "! " + e.Message);
+                    log.WriteEntry(serverName + " Write error StrItem= " + Node + "! " + e.Message);
+                    return false;
+
+                }
+
+            }
+            else
+            {
+                NLogger.logger.Error(serverName + "StrItem= " + Node + " doesn't Write! Server is stopped");
+                log.WriteEntry(serverName + "StrItem= " + Node + " doesn't Write! Server is stopped");
+                return false;
+            }
+        }
+
 
         public void ReadDiffTypeValues(int NodeNum, string DBName, string VarName, int count, List<Record> records)
         {
@@ -2811,6 +2913,7 @@ namespace DataManager
         }
     }
 }
+
 
 
     

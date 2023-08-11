@@ -156,13 +156,7 @@ namespace Archivarius
             }
         }
 
-        private void testSQLOracle()
-        {
-            NLogger.logger.Trace("Service. formTestOracle has called");
-            formTestOracle form = new formTestOracle();
-            form.ShowDialog(this);
-            
-        }
+       
 
         //----OPCUA---
         private void defineOPCUA()
@@ -422,10 +416,7 @@ namespace Archivarius
             defineOPCUA();
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            testSQLOracle();
-        }
+       
 
         private void dataGridMonitor_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {

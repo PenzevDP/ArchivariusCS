@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formDefineTran));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            Siemens.UAClientHelper.UAClientHelperAPI uaClientHelperAPI1 = new Siemens.UAClientHelper.UAClientHelperAPI();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnApply = new System.Windows.Forms.Button();
             this.bindingTran = new System.Windows.Forms.BindingSource(this.components);
@@ -65,6 +66,12 @@
             this.navigatorMoveNextItemOPC = new System.Windows.Forms.ToolStripButton();
             this.navigatorMoveLastItemOPC = new System.Windows.Forms.ToolStripButton();
             this.navigatorSeparator2OPC = new System.Windows.Forms.ToolStripSeparator();
+            this.label4 = new System.Windows.Forms.Label();
+            this.browseControl = new Siemens.OpcUA.Client.BrowseControl();
+            this.attributeListControl = new Siemens.OpcUA.Client.AttributeListControl();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.bindingTran)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingTranOPC)).BeginInit();
             this.Tab.SuspendLayout();
@@ -76,6 +83,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridtrnOPC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.navigatorTranOPC)).BeginInit();
             this.navigatorTranOPC.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -108,10 +116,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Tab.Controls.Add(this.DB_transaction);
             this.Tab.Controls.Add(this.OPCUA_transaction);
-            this.Tab.Location = new System.Drawing.Point(0, 0);
+            this.Tab.Location = new System.Drawing.Point(0, -1);
             this.Tab.Name = "Tab";
             this.Tab.SelectedIndex = 0;
-            this.Tab.Size = new System.Drawing.Size(728, 399);
+            this.Tab.Size = new System.Drawing.Size(728, 400);
             this.Tab.TabIndex = 5;
             // 
             // DB_transaction
@@ -121,7 +129,7 @@
             this.DB_transaction.Location = new System.Drawing.Point(4, 22);
             this.DB_transaction.Name = "DB_transaction";
             this.DB_transaction.Padding = new System.Windows.Forms.Padding(3);
-            this.DB_transaction.Size = new System.Drawing.Size(720, 373);
+            this.DB_transaction.Size = new System.Drawing.Size(720, 374);
             this.DB_transaction.TabIndex = 0;
             this.DB_transaction.Text = "DB_transaction";
             this.DB_transaction.UseVisualStyleBackColor = true;
@@ -257,10 +265,10 @@
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridTrn.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridTrn.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridTrn.Location = new System.Drawing.Point(0, 27);
+            this.dataGridTrn.Location = new System.Drawing.Point(0, 33);
             this.dataGridTrn.Name = "dataGridTrn";
             this.dataGridTrn.RowHeadersWidth = 51;
-            this.dataGridTrn.Size = new System.Drawing.Size(726, 345);
+            this.dataGridTrn.Size = new System.Drawing.Size(726, 340);
             this.dataGridTrn.TabIndex = 7;
             this.dataGridTrn.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridTrn_CellContentClick);
             // 
@@ -271,7 +279,7 @@
             this.OPCUA_transaction.Location = new System.Drawing.Point(4, 22);
             this.OPCUA_transaction.Name = "OPCUA_transaction";
             this.OPCUA_transaction.Padding = new System.Windows.Forms.Padding(3);
-            this.OPCUA_transaction.Size = new System.Drawing.Size(720, 373);
+            this.OPCUA_transaction.Size = new System.Drawing.Size(720, 374);
             this.OPCUA_transaction.TabIndex = 1;
             this.OPCUA_transaction.Text = "OPCUA_transaction";
             this.OPCUA_transaction.UseVisualStyleBackColor = true;
@@ -292,12 +300,13 @@
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridtrnOPC.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridtrnOPC.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridtrnOPC.Location = new System.Drawing.Point(3, 33);
+            this.dataGridtrnOPC.Location = new System.Drawing.Point(-4, 33);
             this.dataGridtrnOPC.Name = "dataGridtrnOPC";
             this.dataGridtrnOPC.RowHeadersWidth = 51;
-            this.dataGridtrnOPC.Size = new System.Drawing.Size(714, 337);
+            this.dataGridtrnOPC.Size = new System.Drawing.Size(721, 338);
             this.dataGridtrnOPC.TabIndex = 9;
-            // 
+            this.dataGridtrnOPC.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridtrnOPC_CellBeginEdit);
+           // 
             // navigatorTranOPC
             // 
             this.navigatorTranOPC.AddNewItem = this.navigatorAddNewItemOPC;
@@ -413,6 +422,73 @@
             this.navigatorSeparator2OPC.Name = "navigatorSeparator2OPC";
             this.navigatorSeparator2OPC.Size = new System.Drawing.Size(6, 27);
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 16);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(38, 13);
+            this.label4.TabIndex = 30;
+            this.label4.Text = "Nodes";
+            // 
+            // browseControl
+            // 
+            this.browseControl.Enabled = false;
+            this.browseControl.Location = new System.Drawing.Point(8, 33);
+            this.browseControl.Margin = new System.Windows.Forms.Padding(4);
+            this.browseControl.Name = "browseControl";
+            this.browseControl.RebrowseOnNodeExpande = false;
+            this.browseControl.Server = null;
+            this.browseControl.Size = new System.Drawing.Size(274, 167);
+            this.browseControl.TabIndex = 1;
+            // 
+            // attributeListControl
+            // 
+            this.attributeListControl.Enabled = false;
+            this.attributeListControl.Location = new System.Drawing.Point(287, 11);
+            this.attributeListControl.Margin = new System.Windows.Forms.Padding(4);
+            this.attributeListControl.Name = "attributeListControl";
+            this.attributeListControl.Server = uaClientHelperAPI1;
+            this.attributeListControl.Size = new System.Drawing.Size(280, 190);
+            this.attributeListControl.TabIndex = 0;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.button2);
+            this.groupBox3.Controls.Add(this.button1);
+            this.groupBox3.Controls.Add(this.label4);
+            this.groupBox3.Controls.Add(this.browseControl);
+            this.groupBox3.Controls.Add(this.attributeListControl);
+            this.groupBox3.Location = new System.Drawing.Point(78, 99);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox3.Size = new System.Drawing.Size(572, 231);
+            this.groupBox3.TabIndex = 11;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Endpoint Attributes";
+            this.groupBox3.Visible = false;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(413, 203);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(74, 28);
+            this.button1.TabIndex = 31;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(493, 203);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(74, 28);
+            this.button2.TabIndex = 32;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // formDefineTran
             // 
             this.AcceptButton = this.btnApply;
@@ -420,6 +496,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(728, 434);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.Tab);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnApply);
@@ -444,6 +521,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.navigatorTranOPC)).EndInit();
             this.navigatorTranOPC.ResumeLayout(false);
             this.navigatorTranOPC.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -483,5 +562,11 @@
         private System.Windows.Forms.ToolStripSeparator navigatorSeparator2OPC;
         private System.Windows.Forms.ToolStripButton navigatorAddNewItemOPC;
         private System.Windows.Forms.ToolStripButton navigatorDeleteItemOPC;
+        private System.Windows.Forms.Label label4;
+        private Siemens.OpcUA.Client.BrowseControl browseControl;
+        private Siemens.OpcUA.Client.AttributeListControl attributeListControl;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button1;
     }
 }
