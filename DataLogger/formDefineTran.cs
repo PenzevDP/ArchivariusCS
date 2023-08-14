@@ -125,6 +125,10 @@ namespace Archivarius
             }
 
         }
+        private void browseControl_SelectionChanged(TreeNode selectedNode)
+        {
+            attributeListControl.ReadAttributes(selectedNode);
+        }
 
         private void ConfigStateChange(object sender, ConfigStateEventArgs e)
         {

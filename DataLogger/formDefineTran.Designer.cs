@@ -441,6 +441,8 @@
             this.browseControl.Server = null;
             this.browseControl.Size = new System.Drawing.Size(274, 167);
             this.browseControl.TabIndex = 1;
+            this.browseControl.SelectionChanged += new Siemens.OpcUA.Client.BrowseControl.SelectionChangedEventHandler(this.browseControl_SelectionChanged);
+
             // 
             // attributeListControl
             // 
@@ -568,5 +570,6 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
+
     }
 }
