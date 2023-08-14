@@ -32,6 +32,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formDefineTran));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             Siemens.UAClientHelper.UAClientHelperAPI uaClientHelperAPI1 = new Siemens.UAClientHelper.UAClientHelperAPI();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnApply = new System.Windows.Forms.Button();
@@ -67,11 +71,12 @@
             this.navigatorMoveLastItemOPC = new System.Windows.Forms.ToolStripButton();
             this.navigatorSeparator2OPC = new System.Windows.Forms.ToolStripSeparator();
             this.label4 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.textNode = new System.Windows.Forms.TextBox();
+            this.clsTrn = new System.Windows.Forms.Button();
+            this.aplTrn = new System.Windows.Forms.Button();
             this.browseControl = new Siemens.OpcUA.Client.BrowseControl();
             this.attributeListControl = new Siemens.OpcUA.Client.AttributeListControl();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.bindingTran)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingTranOPC)).BeginInit();
             this.Tab.SuspendLayout();
@@ -187,6 +192,7 @@
             this.navigatorDeleteItem.RightToLeftAutoMirrorImage = true;
             this.navigatorDeleteItem.Size = new System.Drawing.Size(24, 24);
             this.navigatorDeleteItem.Text = "Delete";
+            this.navigatorDeleteItem.Click += new System.EventHandler(this.navigatorDeleteItem_Click);
             // 
             // navigatorMoveFirstItem
             // 
@@ -206,6 +212,7 @@
             this.navigatorMovePreviousItem.RightToLeftAutoMirrorImage = true;
             this.navigatorMovePreviousItem.Size = new System.Drawing.Size(24, 24);
             this.navigatorMovePreviousItem.Text = "Move previous";
+            this.navigatorMovePreviousItem.Click += new System.EventHandler(this.navigatorMovePreviousItem_Click);
             // 
             // navigatorSeparator
             // 
@@ -235,6 +242,7 @@
             this.navigatorMoveNextItem.RightToLeftAutoMirrorImage = true;
             this.navigatorMoveNextItem.Size = new System.Drawing.Size(24, 24);
             this.navigatorMoveNextItem.Text = "Move next";
+            this.navigatorMoveNextItem.Click += new System.EventHandler(this.navigatorMoveNextItem_Click);
             // 
             // navigatorMoveLastItem
             // 
@@ -244,6 +252,7 @@
             this.navigatorMoveLastItem.RightToLeftAutoMirrorImage = true;
             this.navigatorMoveLastItem.Size = new System.Drawing.Size(24, 24);
             this.navigatorMoveLastItem.Text = "Move last";
+            this.navigatorMoveLastItem.Click += new System.EventHandler(this.navigatorMoveLastItem_Click);
             // 
             // navigatorSeparator2
             // 
@@ -252,6 +261,7 @@
             // 
             // dataGridTrn
             // 
+            this.dataGridTrn.AllowUserToAddRows = false;
             this.dataGridTrn.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -265,12 +275,32 @@
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridTrn.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridTrn.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridTrn.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridTrn.Location = new System.Drawing.Point(0, 33);
             this.dataGridTrn.Name = "dataGridTrn";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridTrn.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridTrn.RowHeadersWidth = 51;
             this.dataGridTrn.Size = new System.Drawing.Size(726, 340);
             this.dataGridTrn.TabIndex = 7;
-            this.dataGridTrn.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridTrn_CellContentClick);
+            this.dataGridTrn.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridTrn_CellBeginEdit);
+            this.dataGridTrn.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridTrn_CellClick);
+            this.dataGridTrn.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridTrn_CellEndEdit);
+            this.dataGridTrn.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridTrn_DataError);
+            this.dataGridTrn.SelectionChanged += new System.EventHandler(this.dataGridTrn_SelectionChanged);
             // 
             // OPCUA_transaction
             // 
@@ -291,22 +321,42 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridtrnOPC.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridtrnOPC.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridtrnOPC.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridtrnOPC.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridtrnOPC.DefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridtrnOPC.Location = new System.Drawing.Point(-4, 33);
             this.dataGridtrnOPC.Name = "dataGridtrnOPC";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridtrnOPC.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridtrnOPC.RowHeadersWidth = 51;
             this.dataGridtrnOPC.Size = new System.Drawing.Size(721, 338);
             this.dataGridtrnOPC.TabIndex = 9;
             this.dataGridtrnOPC.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataGridtrnOPC_CellBeginEdit);
-           // 
+            this.dataGridtrnOPC.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridTrnOPC_CellClick);
+            this.dataGridtrnOPC.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridTrnOPC_CellEndEdit);
+            this.dataGridtrnOPC.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridTrnOPC_DataError);
+            this.dataGridtrnOPC.SelectionChanged += new System.EventHandler(this.dataGridTrnOPC_SelectionChanged);
+            // 
             // navigatorTranOPC
             // 
             this.navigatorTranOPC.AddNewItem = this.navigatorAddNewItemOPC;
@@ -332,7 +382,7 @@
             this.navigatorTranOPC.MoveNextItem = this.navigatorMoveNextItemOPC;
             this.navigatorTranOPC.MovePreviousItem = this.navigatorMovePreviousItemOPC;
             this.navigatorTranOPC.Name = "navigatorTranOPC";
-            this.navigatorTranOPC.PositionItem = null;
+            this.navigatorTranOPC.PositionItem = this.navigatorPositionItemOPC;
             this.navigatorTranOPC.Size = new System.Drawing.Size(269, 27);
             this.navigatorTranOPC.TabIndex = 8;
             // 
@@ -344,6 +394,7 @@
             this.navigatorAddNewItemOPC.RightToLeftAutoMirrorImage = true;
             this.navigatorAddNewItemOPC.Size = new System.Drawing.Size(24, 24);
             this.navigatorAddNewItemOPC.Text = "Add new";
+            this.navigatorAddNewItemOPC.Click += new System.EventHandler(this.navigatorAddNewItemOPC_Click);
             // 
             // navigatorCountItemOPC
             // 
@@ -425,39 +476,17 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 16);
+            this.label4.Location = new System.Drawing.Point(6, 41);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(38, 13);
             this.label4.TabIndex = 30;
             this.label4.Text = "Nodes";
             // 
-            // browseControl
-            // 
-            this.browseControl.Enabled = false;
-            this.browseControl.Location = new System.Drawing.Point(8, 33);
-            this.browseControl.Margin = new System.Windows.Forms.Padding(4);
-            this.browseControl.Name = "browseControl";
-            this.browseControl.RebrowseOnNodeExpande = false;
-            this.browseControl.Server = null;
-            this.browseControl.Size = new System.Drawing.Size(274, 167);
-            this.browseControl.TabIndex = 1;
-            this.browseControl.SelectionChanged += new Siemens.OpcUA.Client.BrowseControl.SelectionChangedEventHandler(this.browseControl_SelectionChanged);
-
-            // 
-            // attributeListControl
-            // 
-            this.attributeListControl.Enabled = false;
-            this.attributeListControl.Location = new System.Drawing.Point(287, 11);
-            this.attributeListControl.Margin = new System.Windows.Forms.Padding(4);
-            this.attributeListControl.Name = "attributeListControl";
-            this.attributeListControl.Server = uaClientHelperAPI1;
-            this.attributeListControl.Size = new System.Drawing.Size(280, 190);
-            this.attributeListControl.TabIndex = 0;
-            // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.button2);
-            this.groupBox3.Controls.Add(this.button1);
+            this.groupBox3.Controls.Add(this.textNode);
+            this.groupBox3.Controls.Add(this.clsTrn);
+            this.groupBox3.Controls.Add(this.aplTrn);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.browseControl);
             this.groupBox3.Controls.Add(this.attributeListControl);
@@ -471,25 +500,55 @@
             this.groupBox3.Text = "Endpoint Attributes";
             this.groupBox3.Visible = false;
             // 
-            // button1
+            // textNode
             // 
-            this.button1.Location = new System.Drawing.Point(413, 203);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(74, 28);
-            this.button1.TabIndex = 31;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.textNode.Location = new System.Drawing.Point(9, 18);
+            this.textNode.Name = "textNode";
+            this.textNode.Size = new System.Drawing.Size(273, 20);
+            this.textNode.TabIndex = 33;
             // 
-            // button2
+            // clsTrn
             // 
-            this.button2.Location = new System.Drawing.Point(493, 203);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(74, 28);
-            this.button2.TabIndex = 32;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.clsTrn.Location = new System.Drawing.Point(493, 203);
+            this.clsTrn.Name = "clsTrn";
+            this.clsTrn.Size = new System.Drawing.Size(74, 28);
+            this.clsTrn.TabIndex = 32;
+            this.clsTrn.Text = "Cancel";
+            this.clsTrn.UseVisualStyleBackColor = true;
+            this.clsTrn.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // aplTrn
+            // 
+            this.aplTrn.Location = new System.Drawing.Point(413, 203);
+            this.aplTrn.Name = "aplTrn";
+            this.aplTrn.Size = new System.Drawing.Size(74, 28);
+            this.aplTrn.TabIndex = 31;
+            this.aplTrn.Text = "Ok";
+            this.aplTrn.UseVisualStyleBackColor = true;
+            this.aplTrn.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // browseControl
+            // 
+            this.browseControl.Enabled = false;
+            this.browseControl.Location = new System.Drawing.Point(8, 55);
+            this.browseControl.Margin = new System.Windows.Forms.Padding(4);
+            this.browseControl.Name = "browseControl";
+            this.browseControl.RebrowseOnNodeExpande = false;
+            this.browseControl.Server = null;
+            this.browseControl.Size = new System.Drawing.Size(274, 145);
+            this.browseControl.TabIndex = 1;
+            this.browseControl.SelectionChanged += new Siemens.OpcUA.Client.BrowseControl.SelectionChangedEventHandler(this.browseControl_SelectionChanged);
+            this.browseControl.Load += new System.EventHandler(this.browseControl_Load);
+            // 
+            // attributeListControl
+            // 
+            this.attributeListControl.Enabled = false;
+            this.attributeListControl.Location = new System.Drawing.Point(287, 11);
+            this.attributeListControl.Margin = new System.Windows.Forms.Padding(4);
+            this.attributeListControl.Name = "attributeListControl";
+            this.attributeListControl.Server = uaClientHelperAPI1;
+            this.attributeListControl.Size = new System.Drawing.Size(280, 190);
+            this.attributeListControl.TabIndex = 0;
             // 
             // formDefineTran
             // 
@@ -567,9 +626,9 @@
         private System.Windows.Forms.Label label4;
         private Siemens.OpcUA.Client.BrowseControl browseControl;
         private Siemens.OpcUA.Client.AttributeListControl attributeListControl;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
-
+        private System.Windows.Forms.Button clsTrn;
+        private System.Windows.Forms.Button aplTrn;
+        private System.Windows.Forms.TextBox textNode;
+        public System.Windows.Forms.GroupBox groupBox3;
     }
 }

@@ -345,85 +345,104 @@ namespace Settings
             dtOPCUA = new DataTable("TransactionTable");
 
             dc = new DataColumn("Transaction Name", System.Type.GetType("System.String"));
-            dc.AllowDBNull = false;
+            dc.AllowDBNull = true;
             dc.Unique = true;
             dt.Columns.Add(dc);
 
             dcOPCUA = new DataColumn("Transaction Name", System.Type.GetType("System.String"));
-            dcOPCUA.AllowDBNull = false;
+            dcOPCUA.AllowDBNull = true;
             dcOPCUA.Unique = true;
             dtOPCUA.Columns.Add(dcOPCUA);
 
 
             //---OPCUA---
             dc = new DataColumn("ns#", System.Type.GetType("System.Int32"));
-            dc.AllowDBNull = false;
+            dc.AllowDBNull = true;
+            dc.DefaultValue = "6";
             dt.Columns.Add(dc);
             uniqueColumns[0] = dc;
 
             dcOPCUA = new DataColumn("ns#", System.Type.GetType("System.Int32"));
-            dcOPCUA.AllowDBNull = false;
+            dcOPCUA.AllowDBNull = true;
+            dcOPCUA.DefaultValue = "6";
             dtOPCUA.Columns.Add(dcOPCUA);
             uniqueColumnsOPCUA[0] = dcOPCUA;
 
             dc = new DataColumn("DBUA Name", System.Type.GetType("System.String"));
-            dc.AllowDBNull = false;
+            dc.AllowDBNull = true;
+            dc.DefaultValue = "ET200Spstation1.PLC1.Buffer";
             dt.Columns.Add(dc);
             uniqueColumns[1] = dc;
 
             dcOPCUA = new DataColumn("DBUA Name", System.Type.GetType("System.String"));
-            dcOPCUA.AllowDBNull = false;
+            dcOPCUA.AllowDBNull = true;
+            dcOPCUA.DefaultValue = "ET200Spstation1.PLC1.Settings";
             dtOPCUA.Columns.Add(dcOPCUA);
             uniqueColumnsOPCUA[1] = dcOPCUA;
 
 
+            dc = new DataColumn("ArrayUA Name", System.Type.GetType("System.String"));
+            dc.AllowDBNull = true;
+            dc.DefaultValue = "Records";
+            dt.Columns.Add(dc);
+
             dc = new DataColumn("SizeUA Name", System.Type.GetType("System.String"));
-            dc.AllowDBNull = false;
+            dc.AllowDBNull = true;
+            dc.DefaultValue = "Size";
             dt.Columns.Add(dc);
 
             dc = new DataColumn("CounterUA Name", System.Type.GetType("System.String"));
-            dc.AllowDBNull = false;
+            dc.AllowDBNull = true;
+            dc.DefaultValue = "Count";
             dt.Columns.Add(dc);
 
-            dc = new DataColumn("ArrayUA Name", System.Type.GetType("System.String"));
-            dc.AllowDBNull = false;
-            dt.Columns.Add(dc);
+            
 
             dcOPCUA = new DataColumn("ArrayUA Name", System.Type.GetType("System.String"));
-            dcOPCUA.AllowDBNull = false;
+            dcOPCUA.AllowDBNull = true;
+            dcOPCUA.DefaultValue = "Settings";
             dtOPCUA.Columns.Add(dcOPCUA);
 
             //--OPCUA----
 
             dc = new DataColumn("Table Name", System.Type.GetType("System.String"));
-            dc.AllowDBNull = false;
+            dc.AllowDBNull = true;
+            dc.DefaultValue = "Logger";
             dt.Columns.Add(dc);
 
                        
             dc = new DataColumn("Transaction DT", System.Type.GetType("System.String"));
+            dc.DefaultValue = "tdt";
             dt.Columns.Add(dc);
+            
 
             dc = new DataColumn("Controller DT", System.Type.GetType("System.String"));
+            dc.DefaultValue = "dt";
             dt.Columns.Add(dc);
 
             dc = new DataColumn("Parameter ID", System.Type.GetType("System.String"));
+            dc.DefaultValue = "id";
             dt.Columns.Add(dc);
 
             dc = new DataColumn("Parameter Value", System.Type.GetType("System.String"));
-            dc.AllowDBNull = false;
+            dc.DefaultValue = "val";
+            dc.AllowDBNull = true;
             dt.Columns.Add(dc);
             
             dc = new DataColumn("P1", System.Type.GetType("System.String"));
+            dc.DefaultValue = "p1";
             dt.Columns.Add(dc);
 
             dc = new DataColumn("P2", System.Type.GetType("System.String"));
+            dc.DefaultValue = "p2";
             dt.Columns.Add(dc);
 
 
 
             //---toOPCUA transaction---
             dcOPCUA = new DataColumn("Table Name", System.Type.GetType("System.String"));
-            dcOPCUA.AllowDBNull = false;
+            dcOPCUA.DefaultValue = "LoggerSet";
+            dcOPCUA.AllowDBNull = true;
             dtOPCUA.Columns.Add(dcOPCUA);
 
             
