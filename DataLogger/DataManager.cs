@@ -1583,6 +1583,7 @@ namespace DataManager
                     try
                     {
                         transaction.Commit();
+
                         cmd.Transaction = null;
                         NLogger.logger.Trace($"Trying to Zeroing Counter in Commit transactions");
                         //log.WriteEntry("Trying to Zeroing Counter in Committransactions");
