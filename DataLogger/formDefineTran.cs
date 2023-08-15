@@ -593,8 +593,8 @@ namespace Archivarius
                     NLogger.logger.Fatal("Это трагедия"+ paramsIsNull.ToString());
                 }
 
-                int val;
-                bool isInt = int.TryParse(rw.Cells[1].Value.ToString(), out val);
+                Int16 val;
+                bool isInt = Int16.TryParse(rw.Cells[1].Value.ToString(), out val);
                 
                 if (!isInt  || (isInt & val < 0))
                 {

@@ -30,6 +30,8 @@ using System.Drawing;
 using System.Runtime.ConstrainedExecution;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using System.Xml.Linq;
+using TableDependency.SqlClient.Base.Exceptions;
+using System.Globalization;
 
 namespace DataManager
 {
@@ -810,13 +812,13 @@ namespace DataManager
                         fullTableName.Append("[" + tableName + "]");
                     }
                 }
-               
+
                 dt = new DataTable(fullTableName.ToString());
                 StringBuilder sqlIns = new StringBuilder("Insert into " + fullTableName.ToString() + " (");
                 StringBuilder sqlVal = new StringBuilder(" Values (");
                 List<OdbcParameter> parameters = new List<OdbcParameter>();
                 bool prevPar = false;
-                
+
                 if (fTranDT != "")
                 {
                     sqlIns.Append(fTranDT);
@@ -828,7 +830,7 @@ namespace DataManager
                     parameters.Add(parameter);
                     dt.Columns.Add(fTranDT, System.Type.GetType("System.DateTime"));
                     prevPar = true;
-                    
+
                 }
                 if (fCtrlDT != "")
                 {
@@ -846,10 +848,10 @@ namespace DataManager
                     parameter.ParameterName = "@dt";
                     parameter.OdbcType = OdbcType.DateTime;
                     parameter.SourceColumn = fCtrlDT;
-                    parameters.Add(parameter);                
-                    dt.Columns.Add(fCtrlDT, System.Type.GetType("System.DateTime"));                   
+                    parameters.Add(parameter);
+                    dt.Columns.Add(fCtrlDT, System.Type.GetType("System.DateTime"));
                     prevPar = true;
-                    
+
                 }
                 if (fParID != "")
                 {
@@ -935,10 +937,10 @@ namespace DataManager
 
                 sqlIns.Append(")");
                 sqlVal.Append(")");
-                
+
                 if (parameters.Count > 0)
                 {
-                    
+
                     cmd = new OdbcCommand(sqlIns.ToString() + sqlVal.ToString(), conn);
                     NLogger.logger.Trace("Void GenerateCommand() команда для MS SQL сформирована: " + cmd.CommandText);
                     foreach (OdbcParameter par in parameters) cmd.Parameters.Add(par);
@@ -947,7 +949,7 @@ namespace DataManager
                 else
                 {
                     cmd = null;
-                    
+
                     return false;
 
                 }
@@ -1374,7 +1376,7 @@ namespace DataManager
                 if (count > tran.Size) count = tran.Size;
 
                 // Synchronous reading OPC items
-                NLogger.logger.Trace($"ReadDiffTypeValues has called with" + tran.uaNSNumber + " ; "+ tran.uaDbName + " ; " + tran.uaArrName + " ; " + count + " ; " + tran.records.Count());
+                NLogger.logger.Trace($"ReadDiffTypeValues has called with" + tran.uaNSNumber + " ; " + tran.uaDbName + " ; " + tran.uaArrName + " ; " + count + " ; " + tran.records.Count());
                 tran.opcuaConn.ReadDiffTypeValues(tran.uaNSNumber, tran.uaDbName, tran.uaArrName, count, tran.records);
 
                 Record rec;
@@ -1439,11 +1441,13 @@ namespace DataManager
                 {
                     // A transaction is currently active. 
                     // Parallel transactions are not supported
+                    NLogger.logger.Trace("DB returns error:" + e.Message);
                     log.WriteEntry(e.Message);
                     return false;
                 }
 
                 DataTable newRecords = dt.Copy();
+                
                 DataRow newRow;
 
 
@@ -1553,19 +1557,77 @@ namespace DataManager
                     }
                 }
 
-                if (newRecords.Rows.Count > 0)
+                DataTable BadRecords = newRecords.Copy();
+                int counter = newRecords.Rows.Count;
+                if (counter > 0)
                 {
-
-                    try
+                    for (int i = counter - 1; i >= -1; i--)
                     {
-                        da.Update(newRecords);
-                    }
-                    catch (Exception e)
-                    {
-                        log.WriteEntry(e.Message);
                         try
                         {
+                            int trn = da.Update(newRecords);
+                            NLogger.logger.Trace("DB rows inserted: " + trn);
+                            NLogger.logger.Trace("Counter is " + counter);
+                            if (trn == counter) { break; }
 
+                        }
+                        catch (Exception e)
+                        {
+                            NLogger.logger.Trace("DB throws exeption: " + i + "   " + e.Message);
+                           if (newRecords.Rows.Count == 1 & i!=0)
+                           {
+                                string path = "BadRecords.csv";
+                               string trnstring;
+
+                                if (!File.Exists(path))
+                                {
+                                    var columnNames = newRecords.Columns.Cast<DataColumn>().Select(column => column.ColumnName).ToArray();
+                                    trnstring = string.Join(",", columnNames);
+                                    File.AppendAllText(path, trnstring+ Environment.NewLine);
+                                    foreach (DataRow row in newRecords.Rows)
+                                    {
+                                        var fields = row.ItemArray.Select(field => field.ToString()).ToArray();
+                                        trnstring = string.Join(",", fields);
+                                    }
+                                    File.AppendAllText(path, trnstring+ Environment.NewLine);
+                                    NLogger.logger.Trace("Запись плохой транзакции завершена в первый раз  -  " + trnstring);
+                                }
+                                else
+                                {
+                                    foreach (DataRow row in newRecords.Rows)
+                                    {
+                                        var fields = row.ItemArray.Select(field => field.ToString()).ToArray();
+                                        trnstring = string.Join(",", fields);
+                                        File.AppendAllText(path, trnstring+ Environment.NewLine);
+                                        NLogger.logger.Trace("Запись плохой транзакции завершена  -  " + trnstring);
+                                    }
+                                   
+                                    
+                                }
+                               
+                               
+                               
+
+                            }
+                        }
+
+                        if (i >= 0)
+                        {
+                            
+                            newRecords.Clear();
+                            newRecords = BadRecords.Clone();
+                            //DataRow newbadRow;
+
+                            NLogger.logger.Trace("Try to add bad row: " + i);
+
+                            newRecords.ImportRow(BadRecords.Rows[i]);
+
+                            NLogger.logger.Trace("Final rows ammount: " + newRecords.Rows.Count);
+
+                        }
+                        /*
+                        try
+                        {
                             // Attempt to roll back the transaction.
                             transaction.Rollback();
                             cmd.Transaction = null;
@@ -1576,35 +1638,44 @@ namespace DataManager
                             log.WriteEntry(ex.Message);
                             cmd.Transaction = null;
                             return false;
-                        }
+
+                        */
+                        NLogger.logger.Trace("Current cucle inc " + i);
                     }
 
-                    // Commit the transaction.
-                    try
-                    {
-                        transaction.Commit();
-                        cmd.Transaction = null;
-                        NLogger.logger.Trace($"Trying to Zeroing Counter in Commit transactions");
-                        //log.WriteEntry("Trying to Zeroing Counter in Committransactions");
-                        tran.opcuaConn.WriteDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, 0);
-                    }
-                    catch (Exception ex)
-                    {
+                
 
-                        log.WriteEntry(Application.ProductName + ". Error in committing or zeroing counter after transaction: " + ex.Message);
-                    }
-                    return true;
-                }
-                else
+
+
+                // Commit the transaction.
+                try
                 {
-                    return false;
+                    transaction.Commit();
+                    cmd.Transaction = null;
+                    NLogger.logger.Trace($"Trying to Zeroing Counter in Commit transactions");
+                    //log.WriteEntry("Trying to Zeroing Counter in Committransactions");
+                    tran.opcuaConn.WriteDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, 0);
                 }
-            }
+                catch (Exception ex)
+                {
+
+                    log.WriteEntry(Application.ProductName + ". Error in committing or zeroing counter after transaction: " + ex.Message);
+                }
+                return true;
+                 }
+            
             else
             {
                 return false;
             }
         }
+            else
+            {
+                return false;
+            }
+        }
+        
+
 
         public bool MakeTransactionDB(Transaction tran)
         {
@@ -2620,12 +2691,13 @@ namespace DataManager
         }
         public bool ReadUIntValue(string Node, out uint value)
         {
+            Type t = typeof(UInt16);
             if (state == OPCUAState.Running)
             {
                 try
                 {
-                    //value = (uint)serverObj.Session.ReadValue(new NodeId(Node)).Value; 
-                    value = (uint)15;
+                    value = (UInt16)serverObj.Session.ReadValue(new NodeId(Node),t); 
+                    
                     return true;
                 }
                 catch (Exception e)
