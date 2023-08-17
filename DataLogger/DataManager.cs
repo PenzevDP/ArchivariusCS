@@ -1364,12 +1364,12 @@ namespace DataManager
                 if (cmd == null) return false;
                 if (!tran.opcuaConn.ReadDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, out count))
                 {
-                    NLogger.logger.Trace($"Counter is 0");
+                    NLogger.logger.Trace($"Counter read error 0");
                     return false;
                 }
                 else
                 {
-                    NLogger.logger.Trace($"Counter is not 0");
+                    NLogger.logger.Trace($"Counter is readed and it is :" + count.ToString());
                 }
 
 
@@ -1402,7 +1402,7 @@ namespace DataManager
                 if (count <= 0)
                 {
                     isValid = true;
-                    return true;
+                   return true;
                 }
                 //--------------------
                 // Not valid transactions
@@ -1556,7 +1556,7 @@ namespace DataManager
                         newRecords.Rows.Add(newRow);
                     }
                 }
-
+                bool trnfail = false;
                 DataTable BadRecords = newRecords.Copy();
                 int counter = newRecords.Rows.Count;
                 if (counter > 0)
@@ -1568,16 +1568,38 @@ namespace DataManager
                             int trn = da.Update(newRecords);
                             NLogger.logger.Trace("DB rows inserted: " + trn);
                             NLogger.logger.Trace("Counter is " + counter);
-                            if (trn == counter) { break; }
+                            try
+                            {
+                                transaction.Commit();                               
+                                NLogger.logger.Trace($"Trying to Zeroing Counter in Commit transactions");                              
+                                tran.opcuaConn.WriteDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, 0);
+                                return true;
+                            }
+                            catch (Exception ex)
+                            {
+
+                                log.WriteEntry(Application.ProductName + ". Error in committing or zeroing counter after transaction: " + ex.Message);
+                            }
+                            if (trn == counter)                          
+                            {
+                                trnfail = false;
+                                break;                           
+                            }
 
                         }
                         catch (Exception e)
                         {
+                            trnfail = true;
                             NLogger.logger.Trace("DB throws exeption: " + i + "   " + e.Message);
-                           if (newRecords.Rows.Count == 1 & i!=0)
-                           {
-                                string path = "BadRecords.csv";
-                               string trnstring;
+                            transaction.Rollback();
+
+                            tran.opcuaConn.WriteDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, 0);
+                            NLogger.logger.Trace("Final COUNT is set to 0");
+
+                            if (newRecords.Rows.Count == 1 & i != 0)                             
+                            {
+                                string path = "BadRecords_"+ tran.tranName + ".csv";
+                                string trnstring;
 
                                 if (!File.Exists(path))
                                 {
@@ -1600,46 +1622,23 @@ namespace DataManager
                                         trnstring = string.Join(",", fields);
                                         File.AppendAllText(path, trnstring+ Environment.NewLine);
                                         NLogger.logger.Trace("Запись плохой транзакции завершена  -  " + trnstring);
-                                    }
-                                   
-                                    
-                                }
-                               
-                               
-                               
-
+                                    }                                                                    
+                                }                                                                                           
                             }
                         }
-
-                        if (i >= 0)
-                        {
-                            
+                        if (i >= 0 & trnfail)
+                        {                          
                             newRecords.Clear();
                             newRecords = BadRecords.Clone();
-                            //DataRow newbadRow;
-
                             NLogger.logger.Trace("Try to add bad row: " + i);
-
                             newRecords.ImportRow(BadRecords.Rows[i]);
-
                             NLogger.logger.Trace("Final rows ammount: " + newRecords.Rows.Count);
-
                         }
-                        /*
-                        try
+                       if (i == -1) 
                         {
-                            // Attempt to roll back the transaction.
-                            transaction.Rollback();
-                            cmd.Transaction = null;
-                            return false;
+                            
+                            return false; 
                         }
-                        catch (Exception ex)
-                        {
-                            log.WriteEntry(ex.Message);
-                            cmd.Transaction = null;
-                            return false;
-
-                        */
                         NLogger.logger.Trace("Current cucle inc " + i);
                     }
 
@@ -1647,22 +1646,22 @@ namespace DataManager
 
 
 
-                // Commit the transaction.
-                try
-                {
-                    transaction.Commit();
-                    cmd.Transaction = null;
-                    NLogger.logger.Trace($"Trying to Zeroing Counter in Commit transactions");
-                    //log.WriteEntry("Trying to Zeroing Counter in Committransactions");
-                    tran.opcuaConn.WriteDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, 0);
-                }
-                catch (Exception ex)
-                {
+                    // Commit the transaction.
+                    try
+                    {
+                        transaction.Commit();
+                        cmd.Transaction = null;
+                        NLogger.logger.Trace($"Trying to Zeroing Counter in Commit transactions");
+                        //log.WriteEntry("Trying to Zeroing Counter in Committransactions");
+                        tran.opcuaConn.WriteDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, 0);
+                    }
+                    catch (Exception ex)
+                    {
 
-                    log.WriteEntry(Application.ProductName + ". Error in committing or zeroing counter after transaction: " + ex.Message);
+                        log.WriteEntry(Application.ProductName + ". Error in committing or zeroing counter after transaction: " + ex.Message);
+                    }
+                    return false; 
                 }
-                return true;
-                 }
             
             else
             {
@@ -2204,16 +2203,7 @@ namespace DataManager
                     {
                         NLogger.logger.Error("MakeTranzaction Ok");
                         resultOK = odbcConn.MakeTransactionUA(this);
-                        if (this.toOPCflag)
-                            {
-                            NLogger.logger.Error("Calling DB tranzaction for " + this.tranName);
-                            
-                            }
-                        else
-                        {
-                            NLogger.logger.Error("Not Calling DB tranzaction for " + this.tranName);
-                        }
-                            
+                                            
                         NLogger.logger.Trace($"Начало Make tranzaction");                     
                     }
                     catch
@@ -2231,6 +2221,7 @@ namespace DataManager
                     }
                     else
                     {
+                        active = false;
                         error = true;
                         stat.Fail();
                     }
@@ -2260,7 +2251,7 @@ namespace DataManager
         {
            
             int count = e.Value is int ? (int)e.Value : 0;
-            //if (count > 0)
+            NLogger.logger.Error("OPC DATA CHANGED" + count.ToString());
             if (count > 0 && !active && (!bgwTransact.IsBusy))
             {
                 active = true;
