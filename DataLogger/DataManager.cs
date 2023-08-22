@@ -441,7 +441,7 @@ namespace DataManager
             
             foreach (DataRow row in Sets.TransactionBase.Tables["TransactionTable"].Rows)
             {
-
+                
                 tableName = row["Table Name"].ToString();
                 fTranDT = row["Transaction DT"].ToString();
                 fCtrlDT = row["Controller DT"].ToString();
@@ -451,18 +451,21 @@ namespace DataManager
                 fParp1 = row["P1"].ToString();
                 fParp2 = row["P2"].ToString();
 
-
+               
                 Transaction tran = new Transaction(Log);
-
+                NLogger.logger.Error("Void CreateTransact has started for 1 " + tran.TimeRetTran.ToString());
                 tran.tranName = row["Transaction Name"].ToString();
                 tran.toOPCflag = false;
-
+                tran.TimeRetTran = (row["TimeRet"] is int ? (int)row["TimeRet"] : 0) * 60000;
+                //tran.timerRetTran.Interval = tran.TimeRetTran * 60000;
+                NLogger.logger.Error("Void CreateTransact has started for 2 " + tran.timerRetTran.Interval.ToString());
                 //--------OPCUA------
                 tran.uaNSNumber = row["ns#"] is int ? (int)row["ns#"] : 0;
                 tran.uaDbName = row["DBUA Name"].ToString();
                 tran.uaSizeName = row["SizeUA Name"].ToString();
                 tran.uaCounterName = row["CounterUA Name"].ToString();
                 tran.uaArrName = row["ArrayUA Name"].ToString();
+
                 //------------------------
                 NLogger.logger.Error("Void GenerateCommand() has called from void CreateTransact()");
                 tran.odbcConn.GenerateCommand(tableName, fTranDT, fCtrlDT, fParID, fParVal, fParp2, fParp1);//+
@@ -1591,7 +1594,7 @@ namespace DataManager
                         {
                             trnfail = true;
                             NLogger.logger.Trace("DB throws exeption: " + i + "   " + e.Message);
-                            transaction.Rollback();
+                            //transaction.Rollback();
 
                             tran.opcuaConn.WriteDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, 0);
                             NLogger.logger.Trace("Final COUNT is set to 0");
@@ -1625,6 +1628,15 @@ namespace DataManager
                                     }                                                                    
                                 }                                                                                           
                             }
+                            try
+                            {
+                                transaction.Rollback();
+                            }
+                            catch (Exception e2)
+                            {
+                                NLogger.logger.Trace("Rollback throws exeption: " + i + "   " + e2.Message);
+                            }
+
                         }
                         if (i >= 0 & trnfail)
                         {                          
@@ -1673,7 +1685,132 @@ namespace DataManager
                 return false;
             }
         }
-        
+        public bool RetrieveTransactionDB(Transaction tran)
+        {
+            string tranName = tran.tranName;
+            NLogger.logger.Error("Восстановление вызвано для транзакции: " + tranName);
+
+            string path = "BadRecords_" + tran.tranName + ".csv";
+            char delimeter = ',';
+
+            DataTable retRecords = dt.Clone();
+            DataRow rw;
+
+            if (File.Exists(path))
+            {
+                
+                String[] allLines = System.IO.File.ReadAllLines(path);
+                File.WriteAllText(path, allLines[0] + Environment.NewLine);
+                String[] ArgHeaders = allLines[0].Split(delimeter);
+                String[] Arg;
+                NLogger.logger.Error("Значение счетчика : " + allLines.Count().ToString());
+                for (int i = 0; i < allLines.Count(); i++)
+                {
+                    NLogger.logger.Error("Значение : " + i);
+                    retRecords.Clear();
+                    Arg = allLines[i].Split(delimeter);
+                    rw = retRecords.NewRow();
+                    if (i > 0)
+                    {
+                        for (int j = 0; j < Arg.Count(); j++)
+                        {
+                            rw[ArgHeaders[j]] = Arg[j];
+                            rw["tdt"] = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.ff");
+                            NLogger.logger.Error("Значение транзакции: " + i + " параметра " + j + " :" + Arg[j].ToString());
+                            NLogger.logger.Error("Значение : " + ArgHeaders[0].ToString() + rw["tdt"]);
+                        }
+                        retRecords.Rows.Add(rw);
+
+                        
+
+                        OdbcDataAdapter da = new OdbcDataAdapter();
+                        OdbcTransaction transaction;
+                        string dtNow = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss.ff");
+
+                        try
+                        {
+
+
+                            transaction = conn.BeginTransaction();
+                            cmd.Transaction = transaction;
+                            da.InsertCommand = cmd;
+
+
+                        }
+                        catch (Exception e)
+                        {
+                            // A transaction is currently active. 
+                            // Parallel transactions are not supported
+                            NLogger.logger.Trace("DB returns error:" + e.Message);
+                            log.WriteEntry(e.Message);
+                            return false;
+                        }
+                        try
+                        {
+                                int trn = da.Update(retRecords);
+                                string pathRet = "RetRecords_" + tran.tranName + ".csv";
+                                string trnstring;
+
+                            if (!File.Exists(pathRet))
+                            {
+                                var columnNames = retRecords.Columns.Cast<DataColumn>().Select(column => column.ColumnName).ToArray();
+                                trnstring = string.Join(",", columnNames);
+                                File.AppendAllText(pathRet, trnstring + Environment.NewLine);
+                                foreach (DataRow row in retRecords.Rows)
+                                {
+                                    var fields = row.ItemArray.Select(field => field.ToString()).ToArray();
+                                    trnstring = string.Join(",", fields);
+                                }
+                                File.AppendAllText(pathRet, trnstring + Environment.NewLine);
+                                NLogger.logger.Trace("Запись уже хорошей транзакции завершена в первый раз  -  " + trnstring);
+                            }
+                            else
+                            {
+                                foreach (DataRow row in retRecords.Rows)
+                                {
+                                    var fields = row.ItemArray.Select(field => field.ToString()).ToArray();
+                                    trnstring = string.Join(",", fields);
+                                    File.AppendAllText(pathRet, trnstring + Environment.NewLine);
+                                    NLogger.logger.Trace("Запись уже нормальной транзакции завершена  -  " + trnstring);
+                                }
+                            }
+                            NLogger.logger.Trace("DB rows inserted: " + trn);
+                            try
+                            {
+                                transaction.Commit();
+                                NLogger.logger.Trace($"Trying to Zeroing Counter in Commit transactions");
+                                tran.opcuaConn.WriteDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, 0);
+                                
+                            }
+                            catch (Exception ex)
+                            {
+                                
+                                log.WriteEntry(Application.ProductName + ". Error in committing or zeroing counter after transaction: " + ex.Message);
+                                
+                               
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            string trnstring;
+                            foreach (DataRow row in retRecords.Rows)
+                            {
+                                var fields = row.ItemArray.Select(field => field.ToString()).ToArray();
+                                trnstring = string.Join(",", fields);
+                                File.AppendAllText(path, trnstring + Environment.NewLine);
+                            }
+
+                            NLogger.logger.Trace("Запись плохой транзакции из восстановления завершена ");
+                            NLogger.logger.Trace("DB throws exeption: " + i + "   " + e.Message);
+                            transaction.Rollback();
+                            NLogger.logger.Error("Колво транзакции: " + retRecords.Rows.Count.ToString());
+                        }
+                    }
+                }  
+           
+            }
+                return false;
+        }
 
 
         public bool MakeTransactionDB(Transaction tran)
@@ -1835,6 +1972,8 @@ namespace DataManager
         private SingleEventLog log;
         private BackgroundWorker bgwODBCConn;
         private BackgroundWorker bgwTransact;
+        private BackgroundWorker bgwReturnTransact;
+
 
         public Statistics stat;
         public ODBCConnector odbcConn;
@@ -1842,6 +1981,7 @@ namespace DataManager
 
         public string tranName = "";
         public bool toOPCflag;
+        public int TimeRetTran = 30*60000;
         public bool active = false;
         public bool error = false;
 
@@ -1859,6 +1999,8 @@ namespace DataManager
         private bool disconnectopcua = false;
 
         System.Timers.Timer timercheckCount = null;
+
+        public System.Timers.Timer timerRetTran = null;
 
         public event StateChangeEventHandler ODBCConnStateChange;
         public event StatisticsEventHandler Statistics;   
@@ -1916,10 +2058,13 @@ namespace DataManager
 
             bgwTransact = new BackgroundWorker();
             bgwTransact.DoWork += MakeTransactions;
-            bgwTransact.WorkerSupportsCancellation = true;
+            bgwTransact.WorkerSupportsCancellation = true;         
 
-            
-            
+            timerRetTran = new System.Timers.Timer(300000);
+            timerRetTran.Enabled = false;
+            timerRetTran.Elapsed += RetrieveTransactions;
+
+
 
         }
         public void ConnectToODBC()
@@ -1938,6 +2083,8 @@ namespace DataManager
                 bgwODBCConn.CancelAsync();
                 while (bgwODBCConn.IsBusy) Application.DoEvents();
             }
+            timerRetTran.Elapsed -= TickDataChanged;
+            timerRetTran.Stop();
             if (odbcConn.State != ConnectionState.Closed) odbcConn.Disconnect();
         }
 
@@ -2160,6 +2307,7 @@ namespace DataManager
         }
         private void ODBCConnected(object sender, RunWorkerCompletedEventArgs e)
         {
+            
             if (!e.Cancelled)
             {
                 if (toOPCflag)
@@ -2172,12 +2320,13 @@ namespace DataManager
                 }
             }
 
-
+            timerRetTran.Start();
             if (e.Cancelled)
             {
                 try
                 {
                     if (odbcConn.State != ConnectionState.Closed) odbcConn.Disconnect();
+                    timerRetTran.Stop();
                 }
                 catch (Exception ex)
                 {
@@ -2244,10 +2393,42 @@ namespace DataManager
                 }
             }
         }
+        private void RetrieveTransactions(object sender, ElapsedEventArgs e)
+           
+            {
+          
+            bool retrieveOK;
 
-        // Events
-        //-------OPCUA------------
-        private void OPCUADataChanged(object sender, OPCUADataEventArgs e)
+           
+            
+                Application.DoEvents();
+                if (odbcConn.State == ConnectionState.Open)
+                {
+                    try
+                    {
+                        NLogger.logger.Error("RetrieveTranzaction call");
+                        retrieveOK = odbcConn.RetrieveTransactionDB(this);
+
+                        
+                    }
+                    catch
+                    {
+                        retrieveOK = false;
+                        NLogger.logger.Error("ошибка выполнения восстановления транзакции");
+                        log.WriteEntry("MakeTransaction Error");
+                    }
+
+                }
+            }
+        
+
+
+
+
+
+            // Events
+            //-------OPCUA------------
+            private void OPCUADataChanged(object sender, OPCUADataEventArgs e)
         {
            
             int count = e.Value is int ? (int)e.Value : 0;

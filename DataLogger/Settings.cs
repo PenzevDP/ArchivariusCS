@@ -232,6 +232,7 @@ namespace Settings
         public string Driver_Type;
         public DataSet TransactionBase;
         public int UpdateRate;
+        public int UpdateRateRetTran;
         public bool Running;
 
         //---toOPCUA---
@@ -435,6 +436,10 @@ namespace Settings
 
             dc = new DataColumn("P2", System.Type.GetType("System.String"));
             dc.DefaultValue = "p2";
+            dt.Columns.Add(dc);
+
+            dc = new DataColumn("TimeRet", System.Type.GetType("System.Int32"));
+            dc.DefaultValue = "30";
             dt.Columns.Add(dc);
 
 
