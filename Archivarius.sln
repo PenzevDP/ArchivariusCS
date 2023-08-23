@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archivarius", "DataLogger\Archivarius.csproj", "{D685C6C7-EBD6-4424-91D9-F105B93FFB32}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{0B6A0F80-810E-4647-926C-FB1E2E037465}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D685C6C7-EBD6-4424-91D9-F105B93FFB32}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D685C6C7-EBD6-4424-91D9-F105B93FFB32}.Release|x86.ActiveCfg = Release|x86
 		{D685C6C7-EBD6-4424-91D9-F105B93FFB32}.Release|x86.Build.0 = Release|x86
+		{0B6A0F80-810E-4647-926C-FB1E2E037465}.Debug|Any CPU.ActiveCfg = Debug
+		{0B6A0F80-810E-4647-926C-FB1E2E037465}.Debug|x86.ActiveCfg = Debug
+		{0B6A0F80-810E-4647-926C-FB1E2E037465}.Release|Any CPU.ActiveCfg = Release
+		{0B6A0F80-810E-4647-926C-FB1E2E037465}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

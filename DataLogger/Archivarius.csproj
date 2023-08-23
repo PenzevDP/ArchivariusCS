@@ -9,12 +9,12 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Archivarius</RootNamespace>
-    <AssemblyName>Archivarius</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <AssemblyName>Archivarius CS</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>Archivarius.Program</StartupObject>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <ApplicationIcon>services.ico</ApplicationIcon>
+    <ApplicationIcon>Logo.ico</ApplicationIcon>
     <ManifestCertificateThumbprint>08D78CA1F1310AB54712B898AAD92F94D8796D74</ManifestCertificateThumbprint>
     <ManifestKeyFile>
     </ManifestKeyFile>
@@ -69,6 +69,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -78,6 +79,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
@@ -246,6 +248,8 @@
     <None Include="app.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="Logo.ico" />
+    <Content Include="Logo_2 %281%29.ico" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -386,6 +390,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\RAUFFE_LOGO.png" />
+    <None Include="Resources\Icon.bmp" />
+    <Content Include="Resources\Logo.bmp" />
     <Content Include="services.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

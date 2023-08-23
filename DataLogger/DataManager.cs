@@ -456,7 +456,7 @@ namespace DataManager
                 NLogger.logger.Error("Void CreateTransact has started for 1 " + tran.TimeRetTran.ToString());
                 tran.tranName = row["Transaction Name"].ToString();
                 tran.toOPCflag = false;
-                tran.TimeRetTran = (row["TimeRet"] is int ? (int)row["TimeRet"] : 0) * 60000;
+                tran.TimeRetTran = (row["TimeRet"] is int ? (int)row["TimeRet"] : 0) * 1000;
                 //tran.timerRetTran.Interval = tran.TimeRetTran * 60000;
                 NLogger.logger.Error("Void CreateTransact has started for 2 " + tran.timerRetTran.Interval.ToString());
                 //--------OPCUA------
@@ -1599,7 +1599,7 @@ namespace DataManager
                             tran.opcuaConn.WriteDIntValue(tran.uaNSNumber, tran.uaDbName, tran.uaCounterName, 0);
                             NLogger.logger.Trace("Final COUNT is set to 0");
 
-                            if (newRecords.Rows.Count == 1 & i != 0)                             
+                            if (newRecords.Rows.Count == 1 & trnfail)                             
                             {
                                 string path = "BadRecords_"+ tran.tranName + ".csv";
                                 string trnstring;
@@ -2060,7 +2060,7 @@ namespace DataManager
             bgwTransact.DoWork += MakeTransactions;
             bgwTransact.WorkerSupportsCancellation = true;         
 
-            timerRetTran = new System.Timers.Timer(300000);
+            timerRetTran = new System.Timers.Timer(10000);
             timerRetTran.Enabled = false;
             timerRetTran.Elapsed += RetrieveTransactions;
 
