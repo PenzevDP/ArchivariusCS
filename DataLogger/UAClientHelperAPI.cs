@@ -1474,7 +1474,7 @@ namespace Siemens.UAClientHelper
 
                 // this code would normally be called as part of the installer - called here to illustrate.
                 // create a new certificate an place it in the current user certificate store.
-                clientCertificate = CertificateFactory.CreateCertificate(
+                clientCertificate = CertificateFactory.CreateCertificate( 
                     configuration.SecurityConfiguration.ApplicationCertificate.StoreType,
                     configuration.SecurityConfiguration.ApplicationCertificate.StorePath,
                     configuration.ApplicationUri,
